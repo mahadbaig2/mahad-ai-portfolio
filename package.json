@@ -1,0 +1,22 @@
+{
+  "name": "mahad-ai-portfolio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Mahad's AI Product Engineering Portfolio and Talk to Mahad Assistant",
+  "packageManager": "pnpm@11.25.0",
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "scripts": {
+    "dev": "pnpm --parallel --filter \"./apps/*\" dev",
+    "build": "pnpm --filter \"./packages/*\" build && pnpm --filter \"./apps/*\" build",
+    "lint": "pnpm --recursive run lint",
+    "typecheck": "pnpm --recursive run typecheck",
+    "test": "pnpm --recursive run test",
+    "test:integration": "pnpm --recursive run test:integration"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.2"
+  }
+}

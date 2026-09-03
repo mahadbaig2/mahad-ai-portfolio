@@ -1,0 +1,77 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+.npm/
+
+# Build outputs & caches
+dist/
+build/
+out/
+.next/
+.turbo/
+coverage/
+
+# Python & ML
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+build/
+develop-eggs/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+mlruns/
+*.onnx
+*.safetensors
+*.bin
+*.pt
+*.pth
+
+# Private audio, datasets, voice recordings
+recordings/
+raw_audio/
+voice_samples/
+*.wav
+*.mp3
+*.m4a
+*.flac
+*.ogg
+
+# Environment variables & secrets (CRITICAL: NEVER COMMIT SECRETS)
+.env
+.env.local
+.env.*.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.pem
+*.key
+*.cert
+
+# Operating System & IDE files
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/
+*.swp
+*.swo
+*~

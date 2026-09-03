@@ -1,0 +1,13 @@
+{
+  "name": "@mahad/studio",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "echo '@mahad/studio: dev placeholder'",
+    "build": "echo '@mahad/studio: build placeholder'",
+    "lint": "echo '@mahad/studio: lint placeholder'",
+    "typecheck": "echo '@mahad/studio: typecheck placeholder'",
+    "test": "echo '@mahad/studio: test placeholder'",
+    "test:integration": "echo '@mahad/studio: test:integration placeholder'"
+  }
+}

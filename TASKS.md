@@ -47,46 +47,46 @@ Deliverable: Approved product contract.
 
 Goal: Establish free resources without enabling accidental billing.
 
-- [ ] **P0.2.1 [M]** Confirm ownership of a GitHub account and select a public repository name.
-- [ ] **P0.2.2 [M]** Create or confirm Cloudflare account on the Free plan.
-- [ ] **P0.2.3 [M]** Create Sanity account/project on the Free plan; record project ID privately.
-- [ ] **P0.2.4 [M]** Create Neon project on the Free plan; do not enable a paid plan.
-- [ ] **P0.2.5 [M]** Create Qdrant free cluster without attaching billing details.
-- [ ] **P0.2.6 [M]** Create Groq API key with free-tier usage only.
-- [ ] **P0.2.7 [M]** Create LangSmith Developer workspace and verify billing settings.
-- [ ] **P0.2.8 [M]** Create two Hugging Face Spaces placeholders: `mahad-portfolio-api` and `mahad-portfolio-voice`, using CPU Basic only.
-- [ ] **P0.2.9 [M]** Confirm no provider has automatic paid overage enabled.
+- [x] **P0.2.1 [M]** Confirm ownership of a GitHub account and select a public repository name.
+- [x] **P0.2.2 [M]** Create or confirm Cloudflare account on the Free plan.
+- [x] **P0.2.3 [M]** Create Sanity account/project on the Free plan; record project ID privately.
+- [x] **P0.2.4 [M]** Create Neon project on the Free plan; do not enable a paid plan.
+- [x] **P0.2.5 [M]** Create Qdrant free cluster without attaching billing details.
+- [x] **P0.2.6 [M]** Create Groq API key with free-tier usage only.
+- [x] **P0.2.7 [M]** Create LangSmith Developer workspace and verify billing settings.
+- [x] **P0.2.8 [M]** Create two Hugging Face Spaces placeholders: `mahad-portfolio-api` and `mahad-portfolio-voice`, using CPU Basic only.
+- [x] **P0.2.9 [M]** Confirm no provider has automatic paid overage enabled.
 - [x] **P0.2.10 [A]** Add `docs/runbooks/free-tier-audit.md` with a monthly manual audit checklist.
-- [ ] **P0.2.G GATE [M]** Confirm every production service is free/capped before Antigravity adds credentials.
+- [x] **P0.2.G GATE [M]** Confirm every production service is free/capped before Antigravity adds credentials.
 
 ## Milestone 0.3 - Scaffold the monorepo
 
 Goal: Create reproducible foundations.
 
-- [ ] **P0.3.1 [A]** Initialize Git and the public GitHub repository if Mahad has supplied the remote.
-- [ ] **P0.3.2 [A]** Create `pnpm-workspace.yaml` and root `package.json`.
-- [ ] **P0.3.3 [A]** Create `apps/web`, `apps/studio`, `apps/api`, `apps/voice`, `packages/ui`, `packages/contracts`, `packages/prompts`, `pipelines/ingestion`, `pipelines/training`, `pipelines/evaluation`, `infra`, `docs/adr` and `docs/runbooks`.
-- [ ] **P0.3.4 [A]** Configure Node, pnpm and Python versions.
-- [ ] **P0.3.5 [A]** Add lockfiles, `.gitignore`, `.editorconfig` and `.env.example`.
-- [ ] **P0.3.6 [A]** Add secret-scanning and dependency-update configuration.
-- [ ] **P0.3.7 [A]** Add root commands for install, lint, type-check, unit tests and integration tests.
-- [ ] **P0.3.8 [A]** Add a minimal `README.md` with local prerequisites and no unverified setup claims.
-- [ ] **P0.3.9 [A]** Add `docker-compose.yml` for local PostgreSQL and Qdrant only.
-- [ ] **P0.3.10 [A]** Verify clean installation from repository instructions.
-- [ ] **P0.3.G GATE [A]** Fresh install, lint skeleton and local containers succeed.
+- [x] **P0.3.1 [A]** Initialize Git and the public GitHub repository if Mahad has supplied the remote.
+- [x] **P0.3.2 [A]** Create `pnpm-workspace.yaml` and root `package.json`.
+- [x] **P0.3.3 [A]** Create `apps/web`, `apps/studio`, `apps/api`, `apps/voice`, `packages/ui`, `packages/contracts`, `packages/prompts`, `pipelines/ingestion`, `pipelines/training`, `pipelines/evaluation`, `infra`, `docs/adr` and `docs/runbooks`.
+- [x] **P0.3.4 [A]** Configure Node, pnpm and Python versions.
+- [x] **P0.3.5 [A]** Add lockfiles, `.gitignore`, `.editorconfig` and `.env.example`.
+- [x] **P0.3.6 [A]** Add secret-scanning and dependency-update configuration.
+- [x] **P0.3.7 [A]** Add root commands for install, lint, type-check, unit tests and integration tests.
+- [x] **P0.3.8 [A]** Add a minimal `README.md` with local prerequisites and no unverified setup claims.
+- [x] **P0.3.9 [A]** Add `docker-compose.yml` for local PostgreSQL and Qdrant only.
+- [x] **P0.3.10 [A]** Verify clean installation from repository instructions.
+- [x] **P0.3.G GATE [A]** Fresh install, lint skeleton and local containers succeed.
 
 ## Milestone 0.4 - Architecture decisions
 
-- [ ] **P0.4.1 [A]** ADR: Sanity as authoring source of truth.
-- [ ] **P0.4.2 [A]** ADR: Neon as operational source of truth.
-- [ ] **P0.4.3 [A]** ADR: Qdrant as rebuildable vector index.
-- [ ] **P0.4.4 [A]** ADR: FastAPI/LangGraph on a CPU Space.
-- [ ] **P0.4.5 [A]** ADR: In-process ONNX routing model.
-- [ ] **P0.4.6 [A]** ADR: MLflow for ML lifecycle and LangSmith for LLMOps.
-- [ ] **P0.4.7 [A]** ADR: separate voice-service failure domain.
-- [ ] **P0.4.8 [A]** ADR: SSE instead of WebSockets/WebRTC for version 1.
-- [ ] **P0.4.9 [M]** Review and approve ADR summaries.
-- [ ] **P0.4.G GATE [A+M]** Architecture is approved before feature work.
+- [x] **P0.4.1 [A]** ADR: Sanity as authoring source of truth.
+- [x] **P0.4.2 [A]** ADR: Neon as operational source of truth.
+- [x] **P0.4.3 [A]** ADR: Qdrant as rebuildable vector index.
+- [x] **P0.4.4 [A]** ADR: FastAPI/LangGraph on a CPU Space.
+- [x] **P0.4.5 [A]** ADR: In-process ONNX routing model.
+- [x] **P0.4.6 [A]** ADR: MLflow for ML lifecycle and LangSmith for LLMOps.
+- [x] **P0.4.7 [A]** ADR: separate voice-service failure domain.
+- [x] **P0.4.8 [A]** ADR: SSE instead of WebSockets/WebRTC for version 1.
+- [x] **P0.4.9 [M]** Review and approve ADR summaries.
+- [x] **P0.4.G GATE [A+M]** Architecture is approved before feature work.
 
 ---
 

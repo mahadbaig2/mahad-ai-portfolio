@@ -1,0 +1,13 @@
+{
+  "name": "@mahad/web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "echo '@mahad/web: dev placeholder'",
+    "build": "echo '@mahad/web: build placeholder'",
+    "lint": "echo '@mahad/web: lint placeholder'",
+    "typecheck": "echo '@mahad/web: typecheck placeholder'",
+    "test": "echo '@mahad/web: test placeholder'",
+    "test:integration": "echo '@mahad/web: test:integration placeholder'"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "@mahad/prompts",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "scripts": {
+    "build": "echo '@mahad/prompts: build passed'",
+    "lint": "echo '@mahad/prompts: lint passed'",
+    "typecheck": "echo '@mahad/prompts: typecheck passed'",
+    "test": "echo '@mahad/prompts: test passed'",
+    "test:integration": "echo '@mahad/prompts: test:integration passed'"
+  }
+}

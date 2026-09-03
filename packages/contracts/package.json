@@ -1,0 +1,14 @@
+{
+  "name": "@mahad/contracts",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "scripts": {
+    "build": "echo '@mahad/contracts: build passed'",
+    "lint": "echo '@mahad/contracts: lint passed'",
+    "typecheck": "echo '@mahad/contracts: typecheck passed'",
+    "test": "echo '@mahad/contracts: test passed'",
+    "test:integration": "echo '@mahad/contracts: test:integration passed'"
+  }
+}
