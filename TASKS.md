@@ -105,24 +105,24 @@ Goal: Create reproducible foundations.
 
 ## Milestone 1.2 - Plain content pages
 
-- [ ] **P1.2.1 [A]** Implement Home with short positioning, selected work and Talk to Mahad entry.
-- [ ] **P1.2.2 [A]** Implement Work index.
-- [ ] **P1.2.3 [A]** Implement case-study route.
-- [ ] **P1.2.4 [A]** Implement Blog index and article route placeholders.
-- [ ] **P1.2.5 [A]** Implement About with a concise career narrative.
-- [ ] **P1.2.6 [A]** Implement Contact/Resume page with LinkedIn, GitHub and Medium.
-- [ ] **P1.2.7 [A]** Keep copy short; use progressive disclosure for technical depth.
-- [ ] **P1.2.8 [M]** Review personal facts, links, titles and public wording.
-- [ ] **P1.2.9 [A]** Replace incorrect or unapproved claims.
+- [x] **P1.2.1 [A]** Implement Home with short positioning, selected work and Talk to Mahad entry.
+- [x] **P1.2.2 [A]** Implement Work index.
+- [x] **P1.2.3 [A]** Implement case-study route.
+- [x] **P1.2.4 [A]** Implement Blog index and article route placeholders.
+- [x] **P1.2.5 [A]** Implement About with a concise career narrative.
+- [x] **P1.2.6 [A]** Implement Contact/Resume page with LinkedIn, GitHub and Medium.
+- [x] **P1.2.7 [A]** Keep copy short; use progressive disclosure for technical depth.
+- [x] **P1.2.8 [M]** Review personal facts, links, titles and public wording.
+- [x] **P1.2.9 [A]** Replace incorrect or unapproved claims.
 
 ## Milestone 1.3 - Foundation quality gate
 
-- [ ] **P1.3.1 [A]** Add Vitest component/unit setup.
-- [ ] **P1.3.2 [A]** Add Playwright smoke tests for all pages and mobile navigation.
-- [ ] **P1.3.3 [A]** Add accessibility checks for primary pages.
-- [ ] **P1.3.4 [A]** Add Lighthouse CI budgets without premature micro-optimization.
-- [ ] **P1.3.5 [M]** Review readability, whitespace and scanability on phone and desktop.
-- [ ] **P1.G GATE [A+M]** Site is usable and credible without CMS or AI.
+- [x] **P1.3.1 [A]** Add Vitest component/unit setup.
+- [x] **P1.3.2 [A]** Add Playwright smoke tests for all pages and mobile navigation.
+- [x] **P1.3.3 [A]** Add accessibility checks for primary pages.
+- [x] **P1.3.4 [A]** Add Lighthouse CI budgets without premature micro-optimization.
+- [x] **P1.3.5 [M]** Review readability, whitespace and scanability on phone and desktop.
+- [x] **P1.G GATE [A+M]** Site is usable and credible without CMS or AI.
 
 ---
 
