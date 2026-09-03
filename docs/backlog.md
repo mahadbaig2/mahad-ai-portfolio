@@ -28,3 +28,6 @@ Per `AGENTS.md`, version 1 scope is locked. No items listed in this backlog may 
 
 ### 6. MLOps & Continuous Learning
 - **Advanced Drift Detection**: Continuous monitoring of embedding distribution shift, query distribution drift, and automated model retraining triggers.
+
+### 7. Comprehensive UI/UX Design & Aesthetic Polish
+- **Advanced Visual & Interaction Polish**: Deep design pass covering bespoke micro-interactions, enhanced card layouts, visual flair, and comprehensive design refinements noted during Milestone 1.2 review.

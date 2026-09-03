@@ -72,7 +72,7 @@ export default async function ArticlePage({
           </div>
         </header>
 
-        <div className="mt-8 flex flex-col gap-6 text-sm text-foreground leading-relaxed">
+        <div className="mt-8 flex flex-col gap-6 text-base sm:text-lg text-foreground leading-relaxed">
           {article.content.map((paragraph, idx) => (
             <p key={idx}>{paragraph}</p>
           ))}

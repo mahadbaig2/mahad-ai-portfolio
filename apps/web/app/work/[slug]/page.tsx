@@ -98,7 +98,7 @@ export default async function CaseStudyPage({
             <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               Overview & Summary
             </h2>
-            <p className="mt-3 text-sm text-foreground leading-relaxed">
+            <p className="mt-3 text-base text-foreground leading-relaxed">
               {project.summary}
             </p>
           </section>
@@ -108,7 +108,7 @@ export default async function CaseStudyPage({
             <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               The Engineering Challenge
             </h2>
-            <p className="mt-3 text-sm text-foreground leading-relaxed">
+            <p className="mt-3 text-base text-foreground leading-relaxed">
               {project.problem}
             </p>
           </section>
@@ -118,7 +118,7 @@ export default async function CaseStudyPage({
             <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               System Architecture & Topology
             </h2>
-            <p className="mt-3 text-sm text-foreground leading-relaxed">
+            <p className="mt-3 text-base text-foreground leading-relaxed">
               {project.architecture}
             </p>
           </section>
@@ -134,7 +134,7 @@ export default async function CaseStudyPage({
                   key={index}
                   className="group rounded border border-border bg-white p-4 transition-colors"
                 >
-                  <summary className="flex cursor-pointer list-none items-center justify-between text-xs font-medium text-foreground">
+                  <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-medium text-foreground">
                     <span className="flex items-center gap-2">
                       <CheckCircle2 className="h-4 w-4 text-foreground shrink-0" />
                       <span>Decision {index + 1}: Key Trade-off</span>
@@ -143,7 +143,7 @@ export default async function CaseStudyPage({
                       ↓
                     </span>
                   </summary>
-                  <p className="mt-3 text-xs text-muted-foreground leading-relaxed border-t border-border pt-3">
+                  <p className="mt-3 text-sm text-muted-foreground leading-relaxed border-t border-border pt-3">
                     {decision}
                   </p>
                 </details>

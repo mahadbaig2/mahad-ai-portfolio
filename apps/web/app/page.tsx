@@ -86,7 +86,7 @@ export default function HomePage() {
                     {project.title}
                   </Link>
                 </h3>
-                <p className="mt-2 text-xs text-muted-foreground leading-relaxed line-clamp-2">
+                <p className="mt-2 text-sm text-muted-foreground leading-relaxed line-clamp-2">
                   {project.summary}
                 </p>
 
@@ -160,7 +160,7 @@ export default function HomePage() {
                 <h3 className="text-sm font-semibold text-foreground hover:underline">
                   <Link href={`/blog/${article.slug}`}>{article.title}</Link>
                 </h3>
-                <p className="mt-1 text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+                <p className="mt-1 text-sm text-muted-foreground line-clamp-2 leading-relaxed">
                   {article.summary}
                 </p>
               </div>

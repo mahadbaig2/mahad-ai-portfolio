@@ -41,7 +41,7 @@ export default function BlogPage() {
                   <Link href={`/blog/${article.slug}`}>{article.title}</Link>
                 </h2>
 
-                <p className="mt-2 text-xs text-muted-foreground leading-relaxed">
+                <p className="mt-2 text-sm sm:text-base text-muted-foreground leading-relaxed">
                   {article.summary}
                 </p>
 

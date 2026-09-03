@@ -42,7 +42,7 @@ export default function WorkPage() {
                   {project.tagline}
                 </p>
 
-                <p className="mt-3 text-xs text-muted-foreground leading-relaxed">
+                <p className="mt-3 text-sm sm:text-base text-muted-foreground leading-relaxed">
                   {project.summary}
                 </p>
 

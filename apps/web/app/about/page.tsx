@@ -45,7 +45,7 @@ export default function AboutPage() {
 
       <div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-3">
         {/* Main Narrative */}
-        <div className="flex flex-col gap-8 lg:col-span-2 text-sm text-foreground leading-relaxed max-w-prose">
+        <div className="flex flex-col gap-8 lg:col-span-2 text-base text-foreground leading-relaxed max-w-prose">
           <section>
             <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
               Career Narrative
