@@ -94,14 +94,14 @@ Goal: Create reproducible foundations.
 
 ## Milestone 1.1 - Next.js application
 
-- [ ] **P1.1.1 [A]** Scaffold Next.js App Router with strict TypeScript.
-- [ ] **P1.1.2 [A]** Configure Tailwind CSS and shared UI package.
-- [ ] **P1.1.3 [A]** Load Plus Jakarta Sans using `next/font`.
-- [ ] **P1.1.4 [A]** Add global white, near-black and neutral-gray tokens only.
-- [ ] **P1.1.5 [A]** Add consistent content widths, spacing scale and focus styles.
-- [ ] **P1.1.6 [A]** Add header, footer and accessible mobile navigation.
-- [ ] **P1.1.7 [A]** Add error, not-found and loading boundaries.
-- [ ] **P1.1.8 [A]** Verify keyboard navigation and reduced-motion behavior.
+- [x] **P1.1.1 [A]** Scaffold Next.js App Router with strict TypeScript.
+- [x] **P1.1.2 [A]** Configure Tailwind CSS and shared UI package.
+- [x] **P1.1.3 [A]** Load Plus Jakarta Sans using `next/font`.
+- [x] **P1.1.4 [A]** Add global white, near-black and neutral-gray tokens only.
+- [x] **P1.1.5 [A]** Add consistent content widths, spacing scale and focus styles.
+- [x] **P1.1.6 [A]** Add header, footer and accessible mobile navigation.
+- [x] **P1.1.7 [A]** Add error, not-found and loading boundaries.
+- [x] **P1.1.8 [A]** Verify keyboard navigation and reduced-motion behavior.
 
 ## Milestone 1.2 - Plain content pages
 

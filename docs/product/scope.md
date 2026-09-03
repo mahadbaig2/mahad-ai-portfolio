@@ -2,7 +2,7 @@
 
 ## Project Identity
 
-This repository contains Mahad's AI Product Engineering portfolio and the "Talk to Mahad" assistant. The website is both a usable portfolio and an intentionally over-engineered, demonstrable AI system designed to showcase deep AI product engineering capabilities, architectural rigor, and end-to-end craftsmanship.
+This repository contains Mahad's AI Product Engineering portfolio and the "Talk to Mahad" assistant. The website is both a usable portfolio and an intentionally over-engineered, demonstrable AI system designed to showcase deep AI Product Engineering, product design, and strategic decision-making capabilities, architectural rigor, and end-to-end craftsmanship.
 
 The assistant answers questions about Mahad's experience, projects, articles and engineering decisions using managed, cited sources. It supports text and voice, English and Roman Urdu, an inspectable RAG pipeline, a custom ML query router, LangGraph orchestration, LangSmith evaluation and an experimental cloned voice.
 

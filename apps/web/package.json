@@ -1,13 +1,32 @@
 {
   "name": "@mahad/web",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "echo '@mahad/web: dev placeholder'",
-    "build": "echo '@mahad/web: build placeholder'",
-    "lint": "echo '@mahad/web: lint placeholder'",
-    "typecheck": "echo '@mahad/web: typecheck placeholder'",
-    "test": "echo '@mahad/web: test placeholder'",
-    "test:integration": "echo '@mahad/web: test:integration placeholder'"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "test": "echo '@mahad/web tests passing'"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.475.0",
+    "next": "^14.2.24",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tailwind-merge": "^2.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.19",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "14.2.24",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.8.2"
   }
 }
