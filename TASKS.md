@@ -105,13 +105,13 @@ Goal: Create reproducible foundations.
 
 ## Milestone 1.2 - Plain content pages
 
-- [ ] **P1.2.1 [A]** Implement Home with short positioning, selected work and Talk to Mahad entry.
-- [ ] **P1.2.2 [A]** Implement Work index.
-- [ ] **P1.2.3 [A]** Implement case-study route.
-- [ ] **P1.2.4 [A]** Implement Blog index and article route placeholders.
-- [ ] **P1.2.5 [A]** Implement About with a concise career narrative.
-- [ ] **P1.2.6 [A]** Implement Contact/Resume page with LinkedIn, GitHub and Medium.
-- [ ] **P1.2.7 [A]** Keep copy short; use progressive disclosure for technical depth.
+- [x] **P1.2.1 [A]** Implement Home with short positioning, selected work and Talk to Mahad entry.
+- [x] **P1.2.2 [A]** Implement Work index.
+- [x] **P1.2.3 [A]** Implement case-study route.
+- [x] **P1.2.4 [A]** Implement Blog index and article route placeholders.
+- [x] **P1.2.5 [A]** Implement About with a concise career narrative.
+- [x] **P1.2.6 [A]** Implement Contact/Resume page with LinkedIn, GitHub and Medium.
+- [x] **P1.2.7 [A]** Keep copy short; use progressive disclosure for technical depth.
 - [ ] **P1.2.8 [M]** Review personal facts, links, titles and public wording.
 - [ ] **P1.2.9 [A]** Replace incorrect or unapproved claims.
 
