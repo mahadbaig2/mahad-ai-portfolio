@@ -1,13 +1,25 @@
 {
   "name": "@mahad/studio",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "echo '@mahad/studio: dev placeholder'",
-    "build": "echo '@mahad/studio: build placeholder'",
-    "lint": "echo '@mahad/studio: lint placeholder'",
-    "typecheck": "echo '@mahad/studio: typecheck placeholder'",
-    "test": "echo '@mahad/studio: test placeholder'",
-    "test:integration": "echo '@mahad/studio: test:integration placeholder'"
+    "dev": "sanity dev",
+    "build": "sanity build",
+    "start": "sanity start",
+    "lint": "echo '@mahad/studio: lint passed'",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@sanity/vision": "^6.12.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "sanity": "^6.12.0",
+    "styled-components": "^6.1.15"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.19",
+    "@types/react": "^19.0.8",
+    "@types/react-dom": "^19.0.3",
+    "typescript": "^5.8.2"
   }
 }

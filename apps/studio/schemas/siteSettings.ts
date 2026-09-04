@@ -1,0 +1,117 @@
+import { defineType, defineField } from 'sanity';
+
+export const siteSettings = defineType({
+  name: 'siteSettings',
+  title: 'Site Settings & Profile',
+  type: 'document',
+  groups: [
+    { name: 'profile', title: 'Profile & Bio', default: true },
+    { name: 'social', title: 'Social & Contact' },
+    { name: 'resume', title: 'Résumé & Documents' },
+  ],
+  fields: [
+    defineField({
+      name: 'authorName',
+      title: 'Author Name',
+      type: 'string',
+      group: 'profile',
+      initialValue: 'Mahad Baig',
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'targetRole',
+      title: 'Target Role',
+      type: 'string',
+      group: 'profile',
+      initialValue: 'AI Product Engineer',
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'headline',
+      title: 'Homepage Headline',
+      type: 'string',
+      group: 'profile',
+      initialValue: 'AI Product Engineer building grounded RAG systems, query-routing models, and production LLM interfaces.',
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'shortBio',
+      title: 'Short Bio',
+      type: 'text',
+      group: 'profile',
+      rows: 4,
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'location',
+      title: 'Location',
+      type: 'string',
+      group: 'profile',
+      initialValue: 'Remote / Karachi, Pakistan',
+    }),
+    defineField({
+      name: 'avatar',
+      title: 'Profile Photo / Headshot',
+      type: 'image',
+      group: 'profile',
+      options: { hotspot: true },
+      fields: [
+        {
+          name: 'alt',
+          type: 'string',
+          title: 'Alt Text',
+          validation: (Rule) => Rule.required(),
+        },
+      ],
+    }),
+    defineField({
+      name: 'email',
+      title: 'Primary Contact Email',
+      type: 'string',
+      group: 'social',
+      initialValue: 'mahadmirza681@gmail.com',
+      validation: (Rule) => Rule.required().email(),
+    }),
+    defineField({
+      name: 'linkedinUrl',
+      title: 'LinkedIn URL',
+      type: 'url',
+      group: 'social',
+      initialValue: 'https://linkedin.com/in/mahadbaig',
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'githubUrl',
+      title: 'GitHub URL',
+      type: 'url',
+      group: 'social',
+      initialValue: 'https://github.com/mahadbaig2',
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'mediumUrl',
+      title: 'Medium Profile URL',
+      type: 'url',
+      group: 'social',
+      initialValue: 'https://medium.com/@mirza.mahad',
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'resumePdf',
+      title: 'Verified Résumé PDF',
+      type: 'file',
+      group: 'resume',
+      description: 'Upload your verified résumé PDF here. This provides the direct download source for the portfolio contact page.',
+      options: {
+        accept: '.pdf',
+      },
+    }),
+  ],
+  preview: {
+    select: {
+      title: 'authorName',
+      subtitle: 'targetRole',
+      media: 'avatar',
+    },
+  },
+});
