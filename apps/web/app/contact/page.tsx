@@ -17,20 +17,20 @@ export default function ContactPage() {
     },
     {
       name: "LinkedIn",
-      href: "https://linkedin.com",
+      href: "https://linkedin.com/in/mahadbaig",
       description: "Professional background, recommendations, and direct messaging.",
       icon: Linkedin,
     },
     {
       name: "Medium",
-      href: "https://medium.com",
+      href: "https://medium.com/@mirza.mahad",
       description: "Long-form engineering articles and technical breakdowns.",
       icon: BookOpen,
     },
     {
       name: "Email",
-      href: "mailto:contact@mahad.dev",
-      description: "Direct email inquiry for consulting, roles, and speaking.",
+      href: "mailto:mahadmirza681@gmail.com",
+      description: "Direct email inquiry for consulting, roles, and technical questions.",
       icon: Mail,
     },
   ];
@@ -42,15 +42,15 @@ export default function ContactPage() {
           Contact & Resume
         </h1>
         <p className="mt-3 text-base text-muted-foreground leading-relaxed">
-          Open to senior and staff AI Product Engineering roles, strategic
-          technical advisory, and high-impact agentic product design.
+          Open to AI Product Engineer roles, technical product design, and
+          demonstrable AI system engineering.
         </p>
       </header>
 
       <div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-3">
         {/* Contact Links & Resume */}
         <div className="flex flex-col gap-6 lg:col-span-2">
-          {/* Resume Download Box */}
+          {/* Resume Box */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between rounded border border-border p-6 bg-white gap-4">
             <div className="flex items-start gap-4">
               <div className="rounded border border-border p-2.5 bg-muted/40">
@@ -61,17 +61,16 @@ export default function ContactPage() {
                   Mahad — AI Product Engineering Resume
                 </h2>
                 <p className="mt-1 text-xs text-muted-foreground">
-                  Complete technical summary, verified achievements, and metrics
-                  (PDF format).
+                  Full résumé will be authorable and uploaded via Sanity CMS in Phase 2.
+                  Available immediately upon request.
                 </p>
               </div>
             </div>
             <a
-              href="/resume.pdf"
-              download
-              className="inline-flex items-center justify-center rounded bg-foreground px-4 py-2 text-xs font-medium text-white transition-opacity hover:opacity-90 shrink-0"
+              href="mailto:mahadmirza681@gmail.com?subject=Resume%20Request%20-%20Mahad"
+              className="inline-flex items-center justify-center rounded border border-border bg-white px-4 py-2 text-xs font-medium text-foreground transition-colors hover:border-foreground shrink-0"
             >
-              Download PDF
+              Request via Email
             </a>
           </div>
 
