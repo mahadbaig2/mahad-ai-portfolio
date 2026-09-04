@@ -35,7 +35,7 @@ export default function HomePage() {
             className="inline-flex items-center gap-2 rounded bg-foreground px-4 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90"
           >
             <Terminal className="h-4 w-4" />
-            <span>Talk to Mahad Assistant</span>
+            <span>Talk to Mahad (In Development)</span>
             <ArrowRight className="h-4 w-4" />
           </Link>
           <Link
@@ -177,7 +177,7 @@ export default function HomePage() {
       {/* System Highlights / Architecture Callouts */}
       <section className="mt-16 border-t border-border pt-12">
         <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          Core Engineering Principles
+          Target Architecture & Engineering Principles
         </h2>
 
         <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -187,8 +187,8 @@ export default function HomePage() {
               <span>In-Process ML Router</span>
             </div>
             <p className="mt-2 text-xs text-muted-foreground leading-relaxed">
-              Custom classifier exported to ONNX serving intent, route, and Roman
-              Urdu predictions in &lt; 5ms without LLM latency.
+              Target design: Custom classifier exported to ONNX serving intent, route,
+              and Roman Urdu predictions in &lt; 5ms without LLM latency.
             </p>
           </div>
 
@@ -198,8 +198,8 @@ export default function HomePage() {
               <span>Hydrated RAG</span>
             </div>
             <p className="mt-2 text-xs text-muted-foreground leading-relaxed">
-              Qdrant vector index paired with Neon PostgreSQL canonical chunks.
-              100% rebuildable, versioned, and cited.
+              Target architecture: Qdrant vector index paired with Neon PostgreSQL
+              canonical chunks. 100% rebuildable, versioned, and cited.
             </p>
           </div>
 
@@ -209,8 +209,8 @@ export default function HomePage() {
               <span>LangGraph Workflow</span>
             </div>
             <p className="mt-2 text-xs text-muted-foreground leading-relaxed">
-              Typed state graph with conditional edges, bounded retry, and
-              observable Execution Inspector for full transparency.
+              Target state engine: Typed graph with conditional retry edges and
+              inspectable execution telemetry for full transparency.
             </p>
           </div>
 
@@ -220,8 +220,8 @@ export default function HomePage() {
               <span>Strict Zero-Cost Ops</span>
             </div>
             <p className="mt-2 text-xs text-muted-foreground leading-relaxed">
-              Engineered exclusively on permanent free tiers with strict
-              quota-capping and monthly audit runbooks.
+              Operational constraint: Engineered strictly within permanent free-tier
+              quotas with automated budget audit runbooks.
             </p>
           </div>
         </div>

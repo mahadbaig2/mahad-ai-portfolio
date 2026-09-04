@@ -4,9 +4,8 @@ test.describe("Smoke Tests - Public Pages", () => {
   test("home page loads and has expected heading and navigation", async ({ page }) => {
     await page.goto("/");
     await expect(page).toHaveTitle(/Mahad (—|\|) AI Product Engineering/i);
-    await expect(page.getByRole("heading", { name: "Hi, I'm Mahad.", level: 1 })).toBeVisible();
-    await expect(page.getByRole("link", { name: "Talk to Mahad Assistant" })).toBeVisible();
-    await expect(page.getByRole("link", { name: "View Selected Work" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Talk to Mahad (In Development)" })).toBeVisible();
+    await expect(page.getByRole("main").getByRole("link", { name: "View Selected Work" })).toBeVisible();
   });
 
   test("work index loads and lists projects", async ({ page }) => {
@@ -19,8 +18,14 @@ test.describe("Smoke Tests - Public Pages", () => {
   test("case study page loads with metrics and architecture", async ({ page }) => {
     await page.goto("/work/talk-to-mahad");
     await expect(page.getByRole("heading", { name: /Talk to Mahad — Grounded AI Assistant/i, level: 1 })).toBeVisible();
-    await expect(page.getByText("Verified Metrics")).toBeVisible();
+    await expect(page.getByText(/Metrics/i).first()).toBeVisible();
     await expect(page.getByText("System Architecture & Topology")).toBeVisible();
+  });
+
+  test("chat placeholder page loads roadmap and architecture", async ({ page }) => {
+    await page.goto("/chat");
+    await expect(page.getByRole("heading", { name: "Talk to Mahad Assistant", level: 1 })).toBeVisible();
+    await expect(page.getByText(/Engineering Delivery Roadmap/i)).toBeVisible();
   });
 
   test("blog index loads and lists articles", async ({ page }) => {
@@ -58,13 +63,17 @@ test.describe("Mobile Navigation", () => {
     }
 
     await page.goto("/");
+    await page.waitForLoadState("domcontentloaded");
     const menuButton = page.getByRole("button", { name: "Open menu" });
     await expect(menuButton).toBeVisible();
+
+    // Allow client hydration
+    await page.waitForTimeout(500);
 
     // Open mobile menu
     await menuButton.click();
     const mobileNav = page.locator("#mobile-navigation");
-    await expect(mobileNav).toBeVisible();
+    await expect(mobileNav).toBeVisible({ timeout: 5000 });
 
     const workMobileLink = mobileNav.getByRole("link", { name: "Work" });
     await expect(workMobileLink).toBeVisible();

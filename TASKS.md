@@ -112,7 +112,7 @@ Goal: Create reproducible foundations.
 - [x] **P1.2.5 [A]** Implement About with a concise career narrative.
 - [x] **P1.2.6 [A]** Implement Contact/Resume page with LinkedIn, GitHub and Medium.
 - [x] **P1.2.7 [A]** Keep copy short; use progressive disclosure for technical depth.
-- [x] **P1.2.8 [M]** Review personal facts, links, titles and public wording.
+- [ ] **P1.2.8 [M]** Review personal facts, links, titles and public wording.
 - [x] **P1.2.9 [A]** Replace incorrect or unapproved claims.
 
 ## Milestone 1.3 - Foundation quality gate
@@ -121,8 +121,8 @@ Goal: Create reproducible foundations.
 - [x] **P1.3.2 [A]** Add Playwright smoke tests for all pages and mobile navigation.
 - [x] **P1.3.3 [A]** Add accessibility checks for primary pages.
 - [x] **P1.3.4 [A]** Add Lighthouse CI budgets without premature micro-optimization.
-- [x] **P1.3.5 [M]** Review readability, whitespace and scanability on phone and desktop.
-- [x] **P1.G GATE [A+M]** Site is usable and credible without CMS or AI.
+- [ ] **P1.3.5 [M]** Review readability, whitespace and scanability on phone and desktop.
+- [ ] **P1.G GATE [A+M]** Site is usable and credible without CMS or AI.
 
 ---
 

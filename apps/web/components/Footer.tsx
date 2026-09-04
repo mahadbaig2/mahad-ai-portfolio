@@ -24,7 +24,7 @@ export function Footer() {
             GitHub
           </Link>
           <Link
-            href="https://linkedin.com"
+            href="https://linkedin.com/in/mahadbaig"
             target="_blank"
             rel="noopener noreferrer"
             className="transition-colors hover:text-foreground hover:underline"
@@ -32,7 +32,7 @@ export function Footer() {
             LinkedIn
           </Link>
           <Link
-            href="https://medium.com"
+            href="https://medium.com/@mirza.mahad"
             target="_blank"
             rel="noopener noreferrer"
             className="transition-colors hover:text-foreground hover:underline"

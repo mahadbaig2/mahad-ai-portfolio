@@ -72,18 +72,18 @@ export default function AboutPage() {
               Why This Portfolio is Over-Engineered
             </h2>
             <p>
-              This website is intentionally designed as a working proof of
-              capability. It is not a static brochure with an LLM chat widget. It
-              is a full microservice architecture featuring an in-process ML
-              classifier, dual-persistence RAG (Neon + Qdrant), LangGraph state
-              machine with explicit conditional recovery, push-to-talk voice, and
-              a live Execution Inspector.
+              This website is being built milestone-by-milestone as an observable
+              proof of capability. Rather than a static brochure with an ungrounded
+              API call, its target architecture spans an in-process ML query router,
+              dual-persistence RAG (Neon + Qdrant), LangGraph orchestration with
+              conditional recovery, push-to-talk voice, and an inspectable execution
+              trace.
             </p>
             <p className="mt-4">
-              Crucially, every component operates entirely on free-tier
-              infrastructure with $0.00 in monthly bills, proving that
-              world-class AI engineering is driven by architectural elegance
-              rather than unbounded compute spending.
+              Every phase is implemented under strict quality gates and governed by
+              permanent free-tier constraints ($0.00/mo operating cost target),
+              demonstrating that world-class AI engineering is rooted in
+              architectural rigor rather than unbounded cloud spend.
             </p>
           </section>
 
@@ -156,7 +156,7 @@ export default function AboutPage() {
               href="/chat"
               className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-foreground hover:underline"
             >
-              <span>Launch Assistant &rarr;</span>
+              <span>View Development Status &rarr;</span>
             </Link>
           </div>
         </aside>

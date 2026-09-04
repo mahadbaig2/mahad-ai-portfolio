@@ -71,7 +71,11 @@ export default async function CaseStudyPage({
               className="inline-flex items-center gap-1.5 rounded bg-foreground px-3.5 py-2 text-white hover:opacity-90"
             >
               <Terminal className="h-3.5 w-3.5" />
-              <span>Launch Live System</span>
+              <span>
+                {project.slug === "talk-to-mahad"
+                  ? "View Development Roadmap"
+                  : "Launch Live System"}
+              </span>
             </Link>
           )}
 
@@ -157,7 +161,7 @@ export default async function CaseStudyPage({
           {/* Measured Outcomes */}
           <div>
             <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Verified Metrics
+              Target & System Metrics
             </h3>
             <div className="mt-4 grid grid-cols-2 gap-3">
               {project.metrics.map((metric) => (

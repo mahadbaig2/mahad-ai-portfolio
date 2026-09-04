@@ -7,9 +7,10 @@ test.describe("Accessibility (WCAG 2.1 AA Compliance)", () => {
     "/work",
     "/work/talk-to-mahad",
     "/blog",
-    "/blog/rag-pipeline-lessons",
+    "/blog/architecting-an-intentionally-over-engineered-portfolio",
     "/about",
     "/contact",
+    "/chat",
   ];
 
   for (const route of routes) {
