@@ -5,7 +5,7 @@
   "description": "Mahad's AI Product Engineering Portfolio and Talk to Mahad Assistant",
   "packageManager": "pnpm@11.25.0",
   "engines": {
-    "node": ">=20.0.0",
+    "node": ">=22.13.0",
     "pnpm": ">=9.0.0"
   },
   "scripts": {
