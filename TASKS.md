@@ -140,13 +140,13 @@ Goal: Create reproducible foundations.
 
 ## Milestone 2.2 - CMS integration
 
-- [ ] **P2.2.1 [A]** Create typed Sanity client and query layer.
-- [ ] **P2.2.2 [A]** Implement GROQ queries for all public pages.
-- [ ] **P2.2.3 [A]** Implement Portable Text rendering with safe link handling.
-- [ ] **P2.2.4 [A]** Implement image dimensions, alt text and responsive loading.
-- [ ] **P2.2.5 [A]** Add preview mode without exposing write credentials.
-- [ ] **P2.2.6 [A]** Remove duplicated hard-coded production content.
-- [ ] **P2.2.7 [A]** Add empty-state behavior when collections have no content.
+- [x] **P2.2.1 [A]** Create typed Sanity client and query layer.
+- [x] **P2.2.2 [A]** Implement GROQ queries for all public pages.
+- [x] **P2.2.3 [A]** Implement Portable Text rendering with safe link handling.
+- [x] **P2.2.4 [A]** Implement image dimensions, alt text and responsive loading.
+- [x] **P2.2.5 [A]** Add preview mode without exposing write credentials.
+- [x] **P2.2.6 [A]** Remove duplicated hard-coded production content.
+- [x] **P2.2.7 [A]** Add empty-state behavior when collections have no content.
 
 ## Milestone 2.3 - Mahad content entry
 

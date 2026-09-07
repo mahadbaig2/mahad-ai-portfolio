@@ -1,10 +1,16 @@
 import Link from "next/link";
 import { ArrowRight, Terminal, Cpu, Database, Network, ExternalLink } from "lucide-react";
-import { PROJECTS, ARTICLES } from "@/lib/data";
+import { getProjects, getArticles, getSiteSettings } from "@/lib/sanity/loadData";
 
-export default function HomePage() {
-  const featuredProjects = PROJECTS.slice(0, 2);
-  const featuredArticles = ARTICLES.slice(0, 2);
+export default async function HomePage() {
+  const [projects, articles, siteSettings] = await Promise.all([
+    getProjects(),
+    getArticles(),
+    getSiteSettings(),
+  ]);
+
+  const featuredProjects = projects.slice(0, 2);
+  const featuredArticles = articles.slice(0, 2);
 
   return (
     <div className="mx-auto max-w-content px-4 py-16 sm:px-6 sm:py-24">

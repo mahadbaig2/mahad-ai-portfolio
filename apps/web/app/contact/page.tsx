@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { Github, Linkedin, BookOpen, Mail, FileText, Terminal, ArrowRight } from "lucide-react";
+import { Github, Linkedin, BookOpen, Mail, FileText, Terminal, ArrowRight, Download } from "lucide-react";
+import { getSiteSettings } from "@/lib/sanity/loadData";
 
 export const metadata = {
   title: "Contact & Resume | Mahad",
@@ -7,29 +8,31 @@ export const metadata = {
     "Direct contact links, professional profiles, resume, and recruiter inquiries.",
 };
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const siteSettings = await getSiteSettings();
+
   const links = [
     {
       name: "GitHub",
-      href: "https://github.com/mahadbaig2",
+      href: siteSettings.githubUrl,
       description: "Open-source repositories, architectural code, and pipelines.",
       icon: Github,
     },
     {
       name: "LinkedIn",
-      href: "https://linkedin.com/in/mahadbaig",
+      href: siteSettings.linkedinUrl,
       description: "Professional background, recommendations, and direct messaging.",
       icon: Linkedin,
     },
     {
       name: "Medium",
-      href: "https://medium.com/@mirza.mahad",
+      href: siteSettings.mediumUrl,
       description: "Long-form engineering articles and technical breakdowns.",
       icon: BookOpen,
     },
     {
       name: "Email",
-      href: "mailto:mahadmirza681@gmail.com",
+      href: `mailto:${siteSettings.email}`,
       description: "Direct email inquiry for consulting, roles, and technical questions.",
       icon: Mail,
     },
@@ -61,17 +64,30 @@ export default function ContactPage() {
                   Mahad — AI Product Engineering Resume
                 </h2>
                 <p className="mt-1 text-xs text-muted-foreground">
-                  Full résumé will be authorable and uploaded via Sanity CMS in Phase 2.
-                  Available immediately upon request.
+                  {siteSettings.resumePdfUrl
+                    ? "Verified résumé PDF managed via Sanity CMS."
+                    : "Verified résumé PDF. Authorable via Sanity Studio or available upon request."}
                 </p>
               </div>
             </div>
-            <a
-              href="mailto:mahadmirza681@gmail.com?subject=Resume%20Request%20-%20Mahad"
-              className="inline-flex items-center justify-center rounded border border-border bg-white px-4 py-2 text-xs font-medium text-foreground transition-colors hover:border-foreground shrink-0"
-            >
-              Request via Email
-            </a>
+            {siteSettings.resumePdfUrl ? (
+              <a
+                href={siteSettings.resumePdfUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-1.5 rounded border border-border bg-foreground text-white px-4 py-2 text-xs font-medium transition-opacity hover:opacity-90 shrink-0"
+              >
+                <Download className="h-3.5 w-3.5" />
+                <span>Download Résumé</span>
+              </a>
+            ) : (
+              <a
+                href={`mailto:${siteSettings.email}?subject=Resume%20Request%20-%20Mahad`}
+                className="inline-flex items-center justify-center rounded border border-border bg-white px-4 py-2 text-xs font-medium text-foreground transition-colors hover:border-foreground shrink-0"
+              >
+                Request via Email
+              </a>
+            )}
           </div>
 
           {/* Direct Channels */}

@@ -1,10 +1,12 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { ARTICLES } from "@/lib/data";
+import { getArticles, getArticle } from "@/lib/sanity/loadData";
+import { PortableText } from "@/components/PortableText";
 
 export async function generateStaticParams() {
-  return ARTICLES.map((a) => ({
+  const articles = await getArticles();
+  return articles.map((a) => ({
     slug: a.slug,
   }));
 }
@@ -15,7 +17,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const article = ARTICLES.find((a) => a.slug === slug);
+  const article = await getArticle(slug);
   if (!article) return { title: "Article Not Found" };
 
   return {
@@ -30,7 +32,7 @@ export default async function ArticlePage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const article = ARTICLES.find((a) => a.slug === slug);
+  const article = await getArticle(slug);
 
   if (!article) {
     notFound();
@@ -73,9 +75,13 @@ export default async function ArticlePage({
         </header>
 
         <div className="mt-8 flex flex-col gap-6 text-base sm:text-lg text-foreground leading-relaxed">
-          {article.content.map((paragraph, idx) => (
-            <p key={idx}>{paragraph}</p>
-          ))}
+          {article.body ? (
+            <PortableText value={article.body} />
+          ) : (
+            article.content?.map((paragraph, idx) => (
+              <p key={idx}>{paragraph}</p>
+            ))
+          )}
         </div>
       </article>
     </div>
