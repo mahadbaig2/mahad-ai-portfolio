@@ -7,7 +7,7 @@ import { deskStructure } from './structure/deskStructure';
 const projectId =
   process.env.SANITY_STUDIO_PROJECT_ID ||
   process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ||
-  'placeholder-project-id';
+  'rnjj6f7w';
 
 const dataset =
   process.env.SANITY_STUDIO_DATASET ||
