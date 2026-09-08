@@ -29,6 +29,8 @@ SANITY_WEBHOOK_SECRET="your_webhook_secret"
 > [!NOTE]
 > When running locally without active credentials, the studio defaults to a placeholder project ID and allows schema validation and preview structure inspection.
 
+For complete step-by-step instructions on publishing content, see the [Content Entry Guide & Checklist](../../docs/runbooks/content-entry-guide.md).
+
 ---
 
 ## Available Commands

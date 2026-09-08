@@ -150,7 +150,7 @@ Goal: Create reproducible foundations.
 
 ## Milestone 2.3 - Mahad content entry
 
-- [ ] **P2.3.1 [A]** Provide a concise content-entry guide and required-field checklist.
+- [x] **P2.3.1 [A]** Provide a concise content-entry guide and required-field checklist.
 - [ ] **P2.3.2 [M]** Enter approved profile and contact information.
 - [ ] **P2.3.3 [M]** Enter at least three projects/case studies.
 - [ ] **P2.3.4 [M]** Enter at least one blog article or architecture note.
