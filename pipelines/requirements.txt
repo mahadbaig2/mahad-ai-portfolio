@@ -14,3 +14,5 @@ sqlalchemy==2.0.52
 asyncpg==0.30.0
 psycopg2-binary==2.9.12
 alembic==1.14.1
+qdrant-client==1.19.0
+

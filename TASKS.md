@@ -234,33 +234,34 @@ Goal: Create reproducible foundations.
 
 ## Milestone 5.1 - Collection and indexing
 
-- [ ] **P5.1.1 [A]** Add Qdrant provider adapter.
-- [ ] **P5.1.2 [A]** Create collection configuration with cosine distance and verified model dimension.
-- [ ] **P5.1.3 [A]** Create payload indexes for document type, project, audience, language and active version.
-- [ ] **P5.1.4 [A]** Use PostgreSQL chunk mapping UUID as Qdrant point ID.
-- [ ] **P5.1.5 [A]** Store compact payload and only a short debug preview.
-- [ ] **P5.1.6 [A]** Implement batch upsert and deletion with retries.
-- [ ] **P5.1.7 [M]** Store Qdrant URL/key as secrets.
+- [x] **P5.1.1 [A]** Add Qdrant provider adapter.
+- [x] **P5.1.2 [A]** Create collection configuration with cosine distance and verified model dimension.
+- [x] **P5.1.3 [A]** Create payload indexes for document type, project, audience, language and active version.
+- [x] **P5.1.4 [A]** Use PostgreSQL chunk mapping UUID as Qdrant point ID.
+- [x] **P5.1.5 [A]** Store compact payload and only a short debug preview.
+- [x] **P5.1.6 [A]** Implement batch upsert and deletion with retries.
+- [x] **P5.1.7 [M]** Store Qdrant URL/key as secrets.
 
 ## Milestone 5.2 - Retrieval and hydration
 
-- [ ] **P5.2.1 [A]** Embed queries using the exact indexed model/version.
-- [ ] **P5.2.2 [A]** Retrieve top 12 with optional metadata filters.
-- [ ] **P5.2.3 [A]** Hydrate canonical content from PostgreSQL by point ID.
-- [ ] **P5.2.4 [A]** Reject inactive, missing or mismatched-version rows.
-- [ ] **P5.2.5 [A]** Deduplicate adjacent/near-identical chunks.
-- [ ] **P5.2.6 [A]** Select up to five chunks within a configurable context budget.
-- [ ] **P5.2.7 [A]** Create CLI retrieval inspector with query, filters, ranks and sources.
+- [x] **P5.2.1 [A]** Embed queries using the exact indexed model/version.
+- [x] **P5.2.2 [A]** Retrieve top 12 with optional metadata filters.
+- [x] **P5.2.3 [A]** Hydrate canonical content from PostgreSQL by point ID.
+- [x] **P5.2.4 [A]** Reject inactive, missing or mismatched-version rows.
+- [x] **P5.2.5 [A]** Deduplicate adjacent/near-identical chunks.
+- [x] **P5.2.6 [A]** Select up to five chunks within a configurable context budget.
+- [x] **P5.2.7 [A]** Create CLI retrieval inspector with query, filters, ranks and sources.
 
 ## Milestone 5.3 - Retrieval evaluation and recovery
 
 - [ ] **P5.3.1 [A+M]** Draft at least 50 expected-query/source pairs; Mahad verifies relevance.
-- [ ] **P5.3.2 [A]** Measure hit rate at K and mean reciprocal rank.
-- [ ] **P5.3.3 [A]** Calibrate initial score thresholds from evaluation data.
-- [ ] **P5.3.4 [A]** Implement full index rebuild behind explicit confirmation flags.
-- [ ] **P5.3.5 [A]** Delete local/test Qdrant collection and prove successful rebuild.
-- [ ] **P5.3.6 [A]** Document free-cluster suspension/deletion recovery.
+- [x] **P5.3.2 [A]** Measure hit rate at K and mean reciprocal rank.
+- [x] **P5.3.3 [A]** Calibrate initial score thresholds from evaluation data.
+- [x] **P5.3.4 [A]** Implement full index rebuild behind explicit confirmation flags.
+- [x] **P5.3.5 [A]** Delete local/test Qdrant collection and prove successful rebuild.
+- [x] **P5.3.6 [A]** Document free-cluster suspension/deletion recovery.
 - [ ] **P5.G GATE [A+M]** Retrieval meets agreed test quality and the index is demonstrably rebuildable.
+
 
 ---
 

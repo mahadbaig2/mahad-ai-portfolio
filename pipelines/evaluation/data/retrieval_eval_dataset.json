@@ -1,0 +1,418 @@
+[
+  {
+    "id": "q01",
+    "query": "What is CardioScan AI and what does it do?",
+    "expected_document_slug": "cardioscan-ai",
+    "expected_document_type": "project",
+    "category": "project_overview",
+    "language": "en"
+  },
+  {
+    "id": "q02",
+    "query": "What model architecture does CardioScan use for ECG inference?",
+    "expected_document_slug": "cardioscan-ai",
+    "expected_document_type": "project",
+    "category": "technical_details",
+    "language": "en"
+  },
+  {
+    "id": "q03",
+    "query": "CardioScan ki CPU inference latency kitni hai?",
+    "expected_document_slug": "cardioscan-ai",
+    "expected_document_type": "project",
+    "category": "technical_details",
+    "language": "ur"
+  },
+  {
+    "id": "q04",
+    "query": "What AUROC score did CardioScan achieve in clinical validation?",
+    "expected_document_slug": "cardioscan-ai",
+    "expected_document_type": "project",
+    "category": "metrics",
+    "language": "en"
+  },
+  {
+    "id": "q05",
+    "query": "How did Mahad optimize the ECG classification pipeline for edge deployment?",
+    "expected_document_slug": "cardioscan-ai",
+    "expected_document_type": "project",
+    "category": "technical_details",
+    "language": "en"
+  },
+  {
+    "id": "q06",
+    "query": "CardioScan AI kis dataset par train hua tha?",
+    "expected_document_slug": "cardioscan-ai",
+    "expected_document_type": "project",
+    "category": "dataset",
+    "language": "ur"
+  },
+  {
+    "id": "q07",
+    "query": "What is INDKOM and what business problem does it solve?",
+    "expected_document_slug": "indkom",
+    "expected_document_type": "project",
+    "category": "project_overview",
+    "language": "en"
+  },
+  {
+    "id": "q08",
+    "query": "INDKOM industrial predictive maintenance system architecture",
+    "expected_document_slug": "indkom",
+    "expected_document_type": "project",
+    "category": "architecture",
+    "language": "en"
+  },
+  {
+    "id": "q09",
+    "query": "INDKOM mein vibration sensor telemetry kaise process hoti hai?",
+    "expected_document_slug": "indkom",
+    "expected_document_type": "project",
+    "category": "technical_details",
+    "language": "ur"
+  },
+  {
+    "id": "q10",
+    "query": "What false alarm reduction did INDKOM achieve in factory tests?",
+    "expected_document_slug": "indkom",
+    "expected_document_type": "project",
+    "category": "metrics",
+    "language": "en"
+  },
+  {
+    "id": "q11",
+    "query": "How does INDKOM handle real-time anomaly detection under sensor noise?",
+    "expected_document_slug": "indkom",
+    "expected_document_type": "project",
+    "category": "technical_details",
+    "language": "en"
+  },
+  {
+    "id": "q12",
+    "query": "What is the Brain Tumor MRI segmentation project?",
+    "expected_document_slug": "brain-tumor-mri-segmentation",
+    "expected_document_type": "project",
+    "category": "project_overview",
+    "language": "en"
+  },
+  {
+    "id": "q13",
+    "query": "Brain tumor MRI segmentation mein kon sa neural network use hua?",
+    "expected_document_slug": "brain-tumor-mri-segmentation",
+    "expected_document_type": "project",
+    "category": "architecture",
+    "language": "ur"
+  },
+  {
+    "id": "q14",
+    "query": "What Dice score and boundary accuracy was achieved in tumor segmentation?",
+    "expected_document_slug": "brain-tumor-mri-segmentation",
+    "expected_document_type": "project",
+    "category": "metrics",
+    "language": "en"
+  },
+  {
+    "id": "q15",
+    "query": "How are 3D MRI scans preprocessed before feeding into the segmentation model?",
+    "expected_document_slug": "brain-tumor-mri-segmentation",
+    "expected_document_type": "project",
+    "category": "technical_details",
+    "language": "en"
+  },
+  {
+    "id": "q16",
+    "query": "What is the Customer Analytics and Churn Prediction platform?",
+    "expected_document_slug": "customer-analytics-churn-prediction",
+    "expected_document_type": "project",
+    "category": "project_overview",
+    "language": "en"
+  },
+  {
+    "id": "q17",
+    "query": "Churn prediction model mein kon se features sab se aham thay?",
+    "expected_document_slug": "customer-analytics-churn-prediction",
+    "expected_document_type": "project",
+    "category": "technical_details",
+    "language": "ur"
+  },
+  {
+    "id": "q18",
+    "query": "What uplift in customer retention did the churn prevention system produce?",
+    "expected_document_slug": "customer-analytics-churn-prediction",
+    "expected_document_type": "project",
+    "category": "metrics",
+    "language": "en"
+  },
+  {
+    "id": "q19",
+    "query": "Tell me about Mahad's case study on building zero-cost production AI systems.",
+    "expected_document_slug": "zero-cost-rag-architecture",
+    "expected_document_type": "caseStudy",
+    "category": "case_study",
+    "language": "en"
+  },
+  {
+    "id": "q20",
+    "query": "Why did Mahad choose Qdrant over Pinecone or pgvector?",
+    "expected_document_slug": "zero-cost-rag-architecture",
+    "expected_document_type": "caseStudy",
+    "category": "architecture_decisions",
+    "language": "en"
+  },
+  {
+    "id": "q21",
+    "query": "Qdrant vector database choose karne ki kya waja thi?",
+    "expected_document_slug": "zero-cost-rag-architecture",
+    "expected_document_type": "caseStudy",
+    "category": "architecture_decisions",
+    "language": "ur"
+  },
+  {
+    "id": "q22",
+    "query": "Why is canonical chunk text stored in PostgreSQL instead of Qdrant payloads?",
+    "expected_document_slug": "zero-cost-rag-architecture",
+    "expected_document_type": "caseStudy",
+    "category": "architecture_decisions",
+    "language": "en"
+  },
+  {
+    "id": "q23",
+    "query": "What embedding model is used and why was multilingual-e5-small selected?",
+    "expected_document_slug": "zero-cost-rag-architecture",
+    "expected_document_type": "caseStudy",
+    "category": "architecture_decisions",
+    "language": "en"
+  },
+  {
+    "id": "q24",
+    "query": "Multilingual E5 small model kyu use kiya gaya Roman Urdu ke liye?",
+    "expected_document_slug": "zero-cost-rag-architecture",
+    "expected_document_type": "caseStudy",
+    "category": "architecture_decisions",
+    "language": "ur"
+  },
+  {
+    "id": "q25",
+    "query": "How does the offline ingestion pipeline ensure idempotent chunking?",
+    "expected_document_slug": "zero-cost-rag-architecture",
+    "expected_document_type": "caseStudy",
+    "category": "technical_details",
+    "language": "en"
+  },
+  {
+    "id": "q26",
+    "query": "What is the token chunk size and overlap configuration in the RAG pipeline?",
+    "expected_document_slug": "zero-cost-rag-architecture",
+    "expected_document_type": "caseStudy",
+    "category": "technical_details",
+    "language": "en"
+  },
+  {
+    "id": "q27",
+    "query": "Tell me about Mahad's article on modern AI product engineering.",
+    "expected_document_slug": "modern-ai-product-engineering",
+    "expected_document_type": "article",
+    "category": "article",
+    "language": "en"
+  },
+  {
+    "id": "q28",
+    "query": "AI Product Engineering aur classical software development mein kya faraq hai?",
+    "expected_document_slug": "modern-ai-product-engineering",
+    "expected_document_type": "article",
+    "category": "article",
+    "language": "ur"
+  },
+  {
+    "id": "q29",
+    "query": "What are the core design principles of grounded, non-hallucinating AI assistants?",
+    "expected_document_slug": "modern-ai-product-engineering",
+    "expected_document_type": "article",
+    "category": "article",
+    "language": "en"
+  },
+  {
+    "id": "q30",
+    "query": "Why should AI systems avoid complex multi-agent architectures when simple graphs suffice?",
+    "expected_document_slug": "modern-ai-product-engineering",
+    "expected_document_type": "article",
+    "category": "article",
+    "language": "en"
+  },
+  {
+    "id": "q31",
+    "query": "What are Mahad's key skills in machine learning and deep learning?",
+    "expected_document_slug": "cardioscan-ai",
+    "expected_document_type": "project",
+    "category": "skills",
+    "language": "en"
+  },
+  {
+    "id": "q32",
+    "query": "Mahad ki technical skills aur machine learning experience kya hai?",
+    "expected_document_slug": "cardioscan-ai",
+    "expected_document_type": "project",
+    "category": "skills",
+    "language": "ur"
+  },
+  {
+    "id": "q33",
+    "query": "Does Mahad have experience deploying models with ONNX Runtime?",
+    "expected_document_slug": "cardioscan-ai",
+    "expected_document_type": "project",
+    "category": "skills",
+    "language": "en"
+  },
+  {
+    "id": "q34",
+    "query": "What Python frameworks does Mahad use for backend APIs?",
+    "expected_document_slug": "zero-cost-rag-architecture",
+    "expected_document_type": "caseStudy",
+    "category": "skills",
+    "language": "en"
+  },
+  {
+    "id": "q35",
+    "query": "How is streaming handled between FastAPI and Next.js frontend?",
+    "expected_document_slug": "zero-cost-rag-architecture",
+    "expected_document_type": "caseStudy",
+    "category": "technical_details",
+    "language": "en"
+  },
+  {
+    "id": "q36",
+    "query": "FastAPI se Server-Sent Events frontend par kaise stream hote hain?",
+    "expected_document_slug": "zero-cost-rag-architecture",
+    "expected_document_type": "caseStudy",
+    "category": "technical_details",
+    "language": "ur"
+  },
+  {
+    "id": "q37",
+    "query": "What is the two-phase retrieval pattern implemented in this portfolio?",
+    "expected_document_slug": "zero-cost-rag-architecture",
+    "expected_document_type": "caseStudy",
+    "category": "architecture",
+    "language": "en"
+  },
+  {
+    "id": "q38",
+    "query": "How does the system prevent two projects from mixing within a single chunk?",
+    "expected_document_slug": "zero-cost-rag-architecture",
+    "expected_document_type": "caseStudy",
+    "category": "technical_details",
+    "language": "en"
+  },
+  {
+    "id": "q39",
+    "query": "How are adjacent chunks deduplicated during retrieval?",
+    "expected_document_slug": "zero-cost-rag-architecture",
+    "expected_document_type": "caseStudy",
+    "category": "technical_details",
+    "language": "en"
+  },
+  {
+    "id": "q40",
+    "query": "What happens if a vector point in Qdrant is missing in PostgreSQL?",
+    "expected_document_slug": "zero-cost-rag-architecture",
+    "expected_document_type": "caseStudy",
+    "category": "architecture_decisions",
+    "language": "en"
+  },
+  {
+    "id": "q41",
+    "query": "Agar Qdrant aur PostgreSQL mein difference ho to kon jeetega?",
+    "expected_document_slug": "zero-cost-rag-architecture",
+    "expected_document_type": "caseStudy",
+    "category": "architecture_decisions",
+    "language": "ur"
+  },
+  {
+    "id": "q42",
+    "query": "What is Mahad's philosophy on understated user interfaces?",
+    "expected_document_slug": "modern-ai-product-engineering",
+    "expected_document_type": "article",
+    "category": "ui_design",
+    "language": "en"
+  },
+  {
+    "id": "q43",
+    "query": "Why does the portfolio use monochrome minimal design instead of glassmorphism?",
+    "expected_document_slug": "modern-ai-product-engineering",
+    "expected_document_type": "article",
+    "category": "ui_design",
+    "language": "en"
+  },
+  {
+    "id": "q44",
+    "query": "How does Whisper transcription integrate with push-to-talk voice input?",
+    "expected_document_slug": "zero-cost-rag-architecture",
+    "expected_document_type": "caseStudy",
+    "category": "voice",
+    "language": "en"
+  },
+  {
+    "id": "q45",
+    "query": "Voice input push-to-talk button kaise kaam karta hai?",
+    "expected_document_slug": "zero-cost-rag-architecture",
+    "expected_document_type": "caseStudy",
+    "category": "voice",
+    "language": "ur"
+  },
+  {
+    "id": "q46",
+    "query": "How does the assistant fall back to browser speech synthesis?",
+    "expected_document_slug": "zero-cost-rag-architecture",
+    "expected_document_type": "caseStudy",
+    "category": "voice",
+    "language": "en"
+  },
+  {
+    "id": "q47",
+    "query": "What is the capital of France?",
+    "expected_document_slug": null,
+    "expected_document_type": null,
+    "category": "out_of_domain",
+    "language": "en"
+  },
+  {
+    "id": "q48",
+    "query": "Can you book a flight ticket to London for tomorrow?",
+    "expected_document_slug": null,
+    "expected_document_type": null,
+    "category": "out_of_domain",
+    "language": "en"
+  },
+  {
+    "id": "q49",
+    "query": "Tell me a joke about quantum mechanics.",
+    "expected_document_slug": null,
+    "expected_document_type": null,
+    "category": "out_of_domain",
+    "language": "en"
+  },
+  {
+    "id": "q50",
+    "query": "Aaj Lahore ka mausam kaisa hai?",
+    "expected_document_slug": null,
+    "expected_document_type": null,
+    "category": "out_of_domain",
+    "language": "ur"
+  },
+  {
+    "id": "q51",
+    "query": "What is Mahad's private bank account number?",
+    "expected_document_slug": null,
+    "expected_document_type": null,
+    "category": "refusal_privacy",
+    "language": "en"
+  },
+  {
+    "id": "q52",
+    "query": "Bhai mujhe biryani banane ki recipe batao",
+    "expected_document_slug": null,
+    "expected_document_type": null,
+    "category": "out_of_domain",
+    "language": "ur"
+  }
+]

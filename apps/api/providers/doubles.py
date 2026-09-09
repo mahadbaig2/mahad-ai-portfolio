@@ -15,9 +15,11 @@ class MockVectorProvider(VectorProvider):
     """In-memory test double for VectorProvider."""
 
     def __init__(self, initial_points: list[dict[str, Any]] | None = None) -> None:
-        self.points: dict[str, dict[str, Any]] = {
-            p["id"]: p for p in (initial_points or [])
-        }
+        self.points: dict[str, dict[str, Any]] = {}
+        if initial_points:
+            for p in initial_points:
+                pid = str(p.get("id") or p.get("point_id") or "")
+                self.points[pid] = p
         self.is_healthy: bool = True
 
     async def search(
@@ -36,7 +38,8 @@ class MockVectorProvider(VectorProvider):
 
     async def upsert(self, points: list[dict[str, Any]]) -> int:
         for p in points:
-            self.points[p["id"]] = p
+            pid = str(p.get("id") or p.get("point_id") or "")
+            self.points[pid] = p
         return len(points)
 
     async def delete(self, point_ids: list[str]) -> int:
@@ -49,6 +52,10 @@ class MockVectorProvider(VectorProvider):
 
     async def health_check(self) -> bool:
         return self.is_healthy
+
+
+VectorStoreDouble = MockVectorProvider
+
 
 
 class MockLLMProvider(LLMProvider):

@@ -11,6 +11,8 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_asyn
 
 from apps.api.core.config import get_settings
 from apps.api.db.models.document import IndexRun
+from apps.api.providers.base import VectorProvider
+from apps.api.providers.qdrant import QdrantVectorProvider
 from apps.api.repositories.document_repo import DocumentRepository
 from pipelines.ingestion.chunker import HeadingAwareChunker
 from pipelines.ingestion.embedder import (
@@ -18,7 +20,10 @@ from pipelines.ingestion.embedder import (
     DeterministicMockEmbedder,
     MultilingualE5Embedder,
 )
-from pipelines.ingestion.normalizer import normalize_sanity_document
+from pipelines.ingestion.normalizer import (
+    derive_canonical_url,
+    normalize_sanity_document,
+)
 from pipelines.ingestion.sanity_extractor import SanityExtractor
 
 logger = logging.getLogger("ingestion.pipeline")
@@ -34,6 +39,8 @@ class IngestionResult(BaseModel):
     documents_skipped: int = 0
     chunks_created: int = 0
     chunks_deactivated: int = 0
+    vectors_upserted: int = 0
+    vectors_deleted: int = 0
     dry_run: bool = False
     duration_seconds: float = 0.0
     embedding_model: str = ""
@@ -49,12 +56,15 @@ class IngestionPipeline:
         embedder: BaseEmbedder | None = None,
         chunker: HeadingAwareChunker | None = None,
         extractor: SanityExtractor | None = None,
+        vector_provider: VectorProvider | None = None,
     ) -> None:
         self.session = session
         self.embedder = embedder or MultilingualE5Embedder()
         self.chunker = chunker or HeadingAwareChunker()
         self.extractor = extractor or SanityExtractor()
+        self.vector_provider = vector_provider
         self.doc_repo = DocumentRepository(session)
+
 
     async def ingest(
         self,
@@ -120,7 +130,7 @@ class IngestionPipeline:
             # Batch embed chunks with 'passage: ' prefix
             chunk_texts = [c.content for c in chunks]
             # Batch embedding (P4.3.3)
-            _vectors = self.embedder.embed_passages(chunk_texts, batch_size=32)
+            vectors = self.embedder.embed_passages(chunk_texts, batch_size=32)
 
             # Upsert source document manifest in PostgreSQL (P4.3.4)
             db_doc = await self.doc_repo.upsert_source_document(
@@ -153,6 +163,29 @@ class IngestionPipeline:
                 )
                 result.chunks_created += 1
 
+            # P5.1.4, P5.1.5, P5.1.6: Upsert points into vector provider if configured
+            if self.vector_provider:
+                points = []
+                for i, c in enumerate(chunks):
+                    points.append({
+                        "id": str(c.chunk_id),
+                        "vector": vectors[i],
+                        "payload": {
+                            "document_id": str(db_doc.id),
+                            "document_type": norm_doc.document_type,
+                            "project_slug": norm_doc.slug,
+                            "language": norm_doc.language,
+                            "target_audiences": norm_doc.target_audiences,
+                            "heading_path": " > ".join(c.heading_path) if c.heading_path else "",
+                            "canonical_url": derive_canonical_url(norm_doc.document_type, norm_doc.slug),
+                            "embedding_version": self.embedder.model_version,
+                            "is_active": True,
+                            "text_preview": c.content[:160],
+                        },
+                    })
+                upserted = await self.vector_provider.upsert(points)
+                result.vectors_upserted += upserted
+
             result.documents_indexed += 1
 
         # 3. Record audit IndexRun if not dry-run
@@ -181,6 +214,7 @@ async def run_cli() -> None:
     parser.add_argument("--document-id", type=str, help="Ingest a single Sanity document by ID")
     parser.add_argument("--dry-run", action="store_true", help="Simulate extraction and chunking without DB writes")
     parser.add_argument("--mock-embedder", action="store_true", help="Use deterministic mock embedder without neural weights")
+    parser.add_argument("--sync-qdrant", action="store_true", help="Sync embedded vectors into Qdrant collection")
     parser.add_argument("--env", type=str, default="development", help="Target environment")
 
     args = parser.parse_args()
@@ -199,9 +233,15 @@ async def run_cli() -> None:
     else:
         embedder = MultilingualE5Embedder()
 
+    vector_provider: VectorProvider | None = None
+    if args.sync_qdrant and not args.dry_run:
+        qdrant = QdrantVectorProvider()
+        await qdrant.ensure_collection_exists()
+        vector_provider = qdrant
+
     async with session_factory() as session:
-        pipeline = IngestionPipeline(session=session, embedder=embedder)
-        print(f"=== Starting Ingestion Pipeline (dry_run={args.dry_run}) ===")
+        pipeline = IngestionPipeline(session=session, embedder=embedder, vector_provider=vector_provider)
+        print(f"=== Starting Ingestion Pipeline (dry_run={args.dry_run}, sync_qdrant={args.sync_qdrant}) ===")
         res = await pipeline.ingest(document_id=args.document_id, dry_run=args.dry_run)
         print(f"=== Completed in {res.duration_seconds}s ===")
         print(f"Documents Scanned:     {res.documents_scanned}")
@@ -209,8 +249,13 @@ async def run_cli() -> None:
         print(f"Documents Skipped:     {res.documents_skipped}")
         print(f"Chunks Created:        {res.chunks_created}")
         print(f"Chunks Deactivated:    {res.chunks_deactivated}")
+        print(f"Vectors Upserted:      {res.vectors_upserted}")
+
+    if vector_provider and hasattr(vector_provider, "close"):
+        await vector_provider.close()
 
     await engine.dispose()
+
 
 
 if __name__ == "__main__":

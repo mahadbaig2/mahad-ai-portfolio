@@ -15,6 +15,8 @@ alembic>=1.14.0,<1.15.0
 # HTTP client & utilities
 httpx>=0.28.0,<0.29.0
 python-dotenv>=1.0.1,<1.1.0
+qdrant-client>=1.19.0,<1.20.0
+
 
 # Development, Linting & Testing
 aiosqlite>=0.20.0,<0.21.0

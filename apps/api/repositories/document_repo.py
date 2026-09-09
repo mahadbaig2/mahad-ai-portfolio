@@ -102,8 +102,11 @@ class DocumentRepository:
         """
         if not point_ids:
             return []
+        from sqlalchemy.orm import selectinload
+
         stmt = (
             select(DocumentChunk)
+            .options(selectinload(DocumentChunk.document))
             .where(DocumentChunk.id.in_(point_ids), DocumentChunk.is_active.is_(True))
         )
         result = await self.session.execute(stmt)
