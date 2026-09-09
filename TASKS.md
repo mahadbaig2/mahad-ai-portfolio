@@ -199,13 +199,13 @@ Goal: Create reproducible foundations.
 
 ## Milestone 4.1 - Sanity extraction and normalization
 
-- [ ] **P4.1.1 [A]** Define normalized document and chunk contracts.
-- [ ] **P4.1.2 [A]** Fetch one document and resolve referenced content.
-- [ ] **P4.1.3 [A]** Convert Portable Text into structured normalized text.
-- [ ] **P4.1.4 [A]** Preserve headings, lists, captions, code and canonical source path.
-- [ ] **P4.1.5 [A]** Normalize whitespace and Unicode without destroying Urdu text.
-- [ ] **P4.1.6 [A]** Compute deterministic SHA-256 document hashes.
-- [ ] **P4.1.7 [A]** Add fixtures and normalization snapshot tests.
+- [x] **P4.1.1 [A]** Define normalized document and chunk contracts.
+- [x] **P4.1.2 [A]** Fetch one document and resolve referenced content.
+- [x] **P4.1.3 [A]** Convert Portable Text into structured normalized text.
+- [x] **P4.1.4 [A]** Preserve headings, lists, captions, code and canonical source path.
+- [x] **P4.1.5 [A]** Normalize whitespace and Unicode without destroying Urdu text.
+- [x] **P4.1.6 [A]** Compute deterministic SHA-256 document hashes.
+- [x] **P4.1.7 [A]** Add fixtures and normalization snapshot tests.
 
 ## Milestone 4.2 - Chunking
 
