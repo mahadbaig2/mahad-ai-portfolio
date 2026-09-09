@@ -219,14 +219,14 @@ Goal: Create reproducible foundations.
 
 ## Milestone 4.3 - Embeddings and PostgreSQL manifest
 
-- [ ] **P4.3.1 [A]** Pin `intfloat/multilingual-e5-small` and tokenizer versions.
-- [ ] **P4.3.2 [A]** Implement E5 `passage:` and `query:` conventions.
-- [ ] **P4.3.3 [A]** Implement batch embedding with normalized vectors.
-- [ ] **P4.3.4 [A]** Persist canonical documents/chunks and embedding metadata to PostgreSQL.
-- [ ] **P4.3.5 [A]** Skip unchanged hashes.
-- [ ] **P4.3.6 [A]** Add `--dry-run`, `--document-id` and safe environment targeting.
-- [ ] **P4.3.7 [A]** Verify a second identical run creates no duplicates or extra embedding work.
-- [ ] **P4.G GATE [A]** Deterministic, idempotent offline ingestion works without Qdrant or an LLM.
+- [x] **P4.3.1 [A]** Pin `intfloat/multilingual-e5-small` and tokenizer versions.
+- [x] **P4.3.2 [A]** Implement E5 `passage:` and `query:` conventions.
+- [x] **P4.3.3 [A]** Implement batch embedding with normalized vectors.
+- [x] **P4.3.4 [A]** Persist canonical documents/chunks and embedding metadata to PostgreSQL.
+- [x] **P4.3.5 [A]** Skip unchanged hashes.
+- [x] **P4.3.6 [A]** Add `--dry-run`, `--document-id` and safe environment targeting.
+- [x] **P4.3.7 [A]** Verify a second identical run creates no duplicates or extra embedding work.
+- [x] **P4.G GATE [A]** Deterministic, idempotent offline ingestion works without Qdrant or an LLM.
 
 ---
 

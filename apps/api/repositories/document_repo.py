@@ -109,6 +109,16 @@ class DocumentRepository:
         result = await self.session.execute(stmt)
         return list(result.scalars().all())
 
+    async def get_active_chunks_by_document(self, document_id: uuid.UUID) -> list[DocumentChunk]:
+        """Fetch all active chunks belonging to a document ordered by chunk_index."""
+        stmt = (
+            select(DocumentChunk)
+            .where(DocumentChunk.document_id == document_id, DocumentChunk.is_active.is_(True))
+            .order_by(DocumentChunk.chunk_index.asc())
+        )
+        result = await self.session.execute(stmt)
+        return list(result.scalars().all())
+
     async def deactivate_chunks(self, document_id: uuid.UUID) -> int:
         """Mark all chunks for a document as inactive."""
         stmt = (
