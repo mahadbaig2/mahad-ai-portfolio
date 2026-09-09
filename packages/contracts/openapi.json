@@ -71,6 +71,73 @@
           }
         }
       }
+    },
+    "/api/v1/webhooks/sanity": {
+      "post": {
+        "tags": [
+          "Webhooks"
+        ],
+        "summary": "Handle Sanity Webhook",
+        "description": "Receive and process Sanity published/updated/deleted webhooks.",
+        "operationId": "handle_sanity_webhook_api_v1_webhooks_sanity_post",
+        "parameters": [
+          {
+            "name": "sanity-webhook-signature",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Sanity-Webhook-Signature"
+            }
+          },
+          {
+            "name": "sanity-signature",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Sanity-Signature"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Handle Sanity Webhook Api V1 Webhooks Sanity Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -119,6 +186,19 @@
           "status"
         ],
         "title": "DependencyCheck"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
       },
       "HealthLiveResponse": {
         "properties": {
@@ -207,6 +287,39 @@
           "timestamp"
         ],
         "title": "HealthReadyResponse"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
       },
       "VersionResponse": {
         "properties": {

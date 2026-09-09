@@ -270,24 +270,25 @@ Goal: Create reproducible foundations.
 
 ## Milestone 6.1 - Incremental synchronization
 
-- [ ] **P6.1.1 [A]** Implement create, update, unpublish and delete ingestion events.
-- [ ] **P6.1.2 [A]** Write new chunks/vectors before deactivating old versions.
-- [ ] **P6.1.3 [A]** Delete stale Qdrant points after new version validation.
-- [ ] **P6.1.4 [A]** Record every run and error summary in `index_runs`.
-- [ ] **P6.1.5 [A]** Preserve the previous active version after partial failure.
-- [ ] **P6.1.6 [A]** Add reconciliation command comparing Sanity, PostgreSQL and Qdrant.
+- [x] **P6.1.1 [A]** Implement create, update, unpublish and delete ingestion events.
+- [x] **P6.1.2 [A]** Write new chunks/vectors before deactivating old versions.
+- [x] **P6.1.3 [A]** Delete stale Qdrant points after new version validation.
+- [x] **P6.1.4 [A]** Record every run and error summary in `index_runs`.
+- [x] **P6.1.5 [A]** Preserve the previous active version after partial failure.
+- [x] **P6.1.6 [A]** Add reconciliation command comparing Sanity, PostgreSQL and Qdrant.
 
 ## Milestone 6.2 - Webhook and CI
 
-- [ ] **P6.2.1 [A]** Implement a signature-validating Cloudflare webhook endpoint.
-- [ ] **P6.2.2 [A]** Dispatch GitHub ingestion workflow without exposing its token.
-- [ ] **P6.2.3 [A]** Add `ingest-content.yml` for targeted updates.
-- [ ] **P6.2.4 [A]** Add scheduled full reconciliation.
-- [ ] **P6.2.5 [A]** Add concurrency control so two index runs cannot corrupt active versions.
+- [x] **P6.2.1 [A]** Implement a signature-validating Cloudflare webhook endpoint.
+- [x] **P6.2.2 [A]** Dispatch GitHub ingestion workflow without exposing its token.
+- [x] **P6.2.3 [A]** Add `ingest-content.yml` for targeted updates.
+- [x] **P6.2.4 [A]** Add scheduled full reconciliation.
+- [x] **P6.2.5 [A]** Add concurrency control so two index runs cannot corrupt active versions.
 - [ ] **P6.2.6 [M]** Add webhook and CI secrets through dashboards.
 - [ ] **P6.2.7 [M]** Configure Sanity webhook using Antigravity's exact instructions.
-- [ ] **P6.2.8 [A]** Test publish, edit, unpublish, deletion, replay and failed-run paths.
+- [x] **P6.2.8 [A]** Test publish, edit, unpublish, deletion, replay and failed-run paths.
 - [ ] **P6.G GATE [A+M]** A real Sanity update produces a verified incremental index update.
+
 
 ---
 

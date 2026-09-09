@@ -19,6 +19,7 @@ from apps.api.core.errors import (
 from apps.api.core.logging import setup_logging
 from apps.api.middleware.body_size import BodySizeLimitMiddleware
 from apps.api.middleware.correlation import CorrelationIdMiddleware
+from apps.api.routers.webhook import router as webhook_router
 from apps.api.routes.health import router as health_router
 
 
@@ -76,8 +77,10 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     # Routers
     # --------------------------------------------------------------------------
     app.include_router(health_router)
+    app.include_router(webhook_router, prefix="/api/v1")
 
     return app
+
 
 
 # Default ASGI application instance

@@ -152,9 +152,16 @@ def normalize_sanity_document(raw_doc: dict[str, Any]) -> NormalizedDocument:
     # Extract structured sections
     sections: list[DocumentSection] = []
 
-    # 1. Summary / Description if present
-    summary = raw_doc.get("summary") or raw_doc.get("description") or raw_doc.get("shortSummary") or ""
+    # 1. Summary / Description / Overview if present
+    summary = (
+        raw_doc.get("summary")
+        or raw_doc.get("description")
+        or raw_doc.get("shortSummary")
+        or raw_doc.get("overview")
+        or ""
+    )
     if summary and isinstance(summary, str):
+
         clean_summary = normalize_whitespace(normalize_unicode(summary))
         sections.append(
             DocumentSection(
@@ -221,8 +228,21 @@ def normalize_sanity_document(raw_doc: dict[str, Any]) -> NormalizedDocument:
                 )
             )
 
+    # Fallback: if document has no body or summary yet, preserve title section
+    if not sections and title:
+        sections.append(
+            DocumentSection(
+                heading=title,
+                heading_level=1,
+                heading_path=[title],
+                content=f"[{title}]",
+                section_type=SectionType.PROSE,
+            )
+        )
+
     # Assemble full raw text
     text_blocks = []
+
     for sec in sections:
         if sec.heading and sec.heading != title:
             text_blocks.append(f"## {sec.heading}\n{sec.content}")
