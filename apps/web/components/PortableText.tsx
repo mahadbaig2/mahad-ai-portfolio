@@ -75,7 +75,10 @@ const components: PortableTextComponents = {
       if (!value?.asset?._ref) {
         return null;
       }
-      const imageUrl = urlForImage(value).width(1200).url();
+      const imageUrl = urlForImage(value)?.width(1200).url();
+      if (!imageUrl) {
+        return null;
+      }
       return (
         <figure className="my-6">
           <div className="relative aspect-video w-full overflow-hidden rounded border border-neutral-200 bg-neutral-50">

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { getArticles, getArticle } from "@/lib/sanity/loadData";
 import { PortableText } from "@/components/PortableText";
+import { urlForImage } from "@/lib/sanity/image";
 
 export async function generateStaticParams() {
   const articles = await getArticles();
@@ -38,6 +39,8 @@ export default async function ArticlePage({
     notFound();
   }
 
+  const heroImageUrl = article.heroImage ? urlForImage(article.heroImage)?.url() : null;
+
   return (
     <div className="mx-auto max-w-content px-4 py-16 sm:px-6 sm:py-24">
       <Link
@@ -72,6 +75,16 @@ export default async function ArticlePage({
             <span>•</span>
             <span>{article.readingTime}</span>
           </div>
+
+          {heroImageUrl && (
+            <div className="mt-6 overflow-hidden rounded border border-border bg-muted/10">
+              <img
+                src={heroImageUrl}
+                alt={article.heroImage?.alt || article.title}
+                className="w-full h-auto max-h-[420px] object-cover"
+              />
+            </div>
+          )}
         </header>
 
         <div className="mt-8 flex flex-col gap-6 text-base sm:text-lg text-foreground leading-relaxed">

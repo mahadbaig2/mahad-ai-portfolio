@@ -1,6 +1,9 @@
 import { createClient } from 'next-sanity';
 
-export const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || '';
+export const projectId =
+  process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ||
+  process.env.SANITY_STUDIO_PROJECT_ID ||
+  'rnjj6f7w';
 export const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || 'production';
 export const apiVersion = process.env.NEXT_PUBLIC_SANITY_API_VERSION || '2024-03-01';
 
@@ -44,12 +47,15 @@ export async function sanityFetch<T>({
     return null;
   }
 
+  const isDev = process.env.NODE_ENV === 'development';
+
   try {
     return await client.fetch<T>(query, params, {
       next: {
-        revalidate: tags.length ? false : revalidate,
+        revalidate: isDev ? 0 : tags.length ? false : revalidate,
         tags,
       },
+      cache: isDev ? 'no-store' : undefined,
     });
   } catch (error) {
     console.warn(
