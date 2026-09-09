@@ -1,0 +1,263 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Mahad AI Portfolio API",
+    "description": "FastAPI backend and LangGraph orchestrator for Mahad's AI Product Engineering Portfolio assistant.",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/health/live": {
+      "get": {
+        "tags": [
+          "Health & Diagnostics"
+        ],
+        "summary": "Liveness Probe",
+        "description": "Returns HTTP 200 as long as the API process is running and responding.",
+        "operationId": "get_liveness_health_live_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthLiveResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health/ready": {
+      "get": {
+        "tags": [
+          "Health & Diagnostics"
+        ],
+        "summary": "Readiness Probe",
+        "description": "Returns HTTP 200 when backing dependencies (database, storage) are available.",
+        "operationId": "get_readiness_health_ready_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthReadyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health/version": {
+      "get": {
+        "tags": [
+          "Health & Diagnostics"
+        ],
+        "summary": "Version Metadata",
+        "description": "Returns application version and runtime environment information.",
+        "operationId": "get_version_health_version_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VersionResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "DependencyCheck": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "ok",
+              "warning",
+              "error",
+              "skipped"
+            ],
+            "title": "Status",
+            "examples": [
+              "ok"
+            ]
+          },
+          "latency_ms": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Latency Ms",
+            "description": "Latency of check in ms"
+          },
+          "details": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Details"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "title": "DependencyCheck"
+      },
+      "HealthLiveResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "alive",
+              "degraded",
+              "dead"
+            ],
+            "title": "Status",
+            "description": "Liveness status of the API service process",
+            "default": "alive",
+            "examples": [
+              "alive"
+            ]
+          },
+          "service": {
+            "type": "string",
+            "title": "Service",
+            "default": "mahad-portfolio-api"
+          },
+          "environment": {
+            "type": "string",
+            "title": "Environment",
+            "examples": [
+              "development",
+              "production"
+            ]
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Timestamp",
+            "description": "UTC timestamp of the probe response"
+          }
+        },
+        "type": "object",
+        "required": [
+          "environment",
+          "timestamp"
+        ],
+        "title": "HealthLiveResponse"
+      },
+      "HealthReadyResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "ready",
+              "not_ready"
+            ],
+            "title": "Status",
+            "description": "Readiness status indicating if the service can handle live requests",
+            "default": "ready",
+            "examples": [
+              "ready"
+            ]
+          },
+          "service": {
+            "type": "string",
+            "title": "Service",
+            "default": "mahad-portfolio-api"
+          },
+          "environment": {
+            "type": "string",
+            "title": "Environment"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Timestamp"
+          },
+          "checks": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/DependencyCheck"
+            },
+            "type": "object",
+            "title": "Checks",
+            "description": "Individual status of backing dependencies"
+          }
+        },
+        "type": "object",
+        "required": [
+          "environment",
+          "timestamp"
+        ],
+        "title": "HealthReadyResponse"
+      },
+      "VersionResponse": {
+        "properties": {
+          "version": {
+            "type": "string",
+            "title": "Version",
+            "examples": [
+              "1.0.0"
+            ]
+          },
+          "service": {
+            "type": "string",
+            "title": "Service",
+            "default": "mahad-portfolio-api"
+          },
+          "environment": {
+            "type": "string",
+            "title": "Environment",
+            "examples": [
+              "development",
+              "production"
+            ]
+          },
+          "python_version": {
+            "type": "string",
+            "title": "Python Version",
+            "examples": [
+              "3.12.10"
+            ]
+          },
+          "docs_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Docs Url",
+            "default": "/docs"
+          }
+        },
+        "type": "object",
+        "required": [
+          "version",
+          "environment",
+          "python_version"
+        ],
+        "title": "VersionResponse"
+      }
+    }
+  }
+}

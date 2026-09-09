@@ -164,13 +164,13 @@ Goal: Create reproducible foundations.
 
 ## Milestone 3.1 - API skeleton
 
-- [ ] **P3.1.1 [A]** Scaffold FastAPI with settings loaded through Pydantic.
-- [ ] **P3.1.2 [A]** Add structured JSON logging and correlation IDs.
-- [ ] **P3.1.3 [A]** Add `/health/live`, `/health/ready` and version endpoints.
-- [ ] **P3.1.4 [A]** Add explicit CORS allowlist and body-size limits.
-- [ ] **P3.1.5 [A]** Add stable error response schema.
-- [ ] **P3.1.6 [A]** Add provider interfaces and test doubles.
-- [ ] **P3.1.7 [A]** Generate an OpenAPI artifact and validate it in CI.
+- [x] **P3.1.1 [A]** Scaffold FastAPI with settings loaded through Pydantic.
+- [x] **P3.1.2 [A]** Add structured JSON logging and correlation IDs.
+- [x] **P3.1.3 [A]** Add `/health/live`, `/health/ready` and version endpoints.
+- [x] **P3.1.4 [A]** Add explicit CORS allowlist and body-size limits.
+- [x] **P3.1.5 [A]** Add stable error response schema.
+- [x] **P3.1.6 [A]** Add provider interfaces and test doubles.
+- [x] **P3.1.7 [A]** Generate an OpenAPI artifact and validate it in CI.
 
 ## Milestone 3.2 - Database schema
 
