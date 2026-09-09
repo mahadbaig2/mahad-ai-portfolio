@@ -63,6 +63,34 @@ class Settings(BaseSettings):
         description="Sync connection string for Alembic migrations",
     )
 
+    @field_validator("DATABASE_URL", mode="before")
+    @classmethod
+    def assemble_async_db_url(cls, v: str) -> str:
+        if isinstance(v, str):
+            import urllib.parse
+            parsed = urllib.parse.urlparse(v)
+            scheme = parsed.scheme
+            if scheme in ("postgresql", "postgres"):
+                scheme = "postgresql+asyncpg"
+            query_dict = urllib.parse.parse_qs(parsed.query)
+            # asyncpg accepts ssl via connect_args={'ssl': 'require'}, not query string
+            clean_query = urllib.parse.urlencode(
+                {k: val for k, val in query_dict.items() if k not in ("sslmode", "channel_binding")},
+                doseq=True,
+            )
+            return urllib.parse.urlunparse(parsed._replace(scheme=scheme, query=clean_query))
+        return v
+
+    @field_validator("DATABASE_URL_SYNC", mode="before")
+    @classmethod
+    def assemble_sync_db_url(cls, v: str) -> str:
+        if isinstance(v, str):
+            if v.startswith("postgresql+asyncpg://"):
+                return v.replace("postgresql+asyncpg://", "postgresql://", 1)
+            if v.startswith("postgres://"):
+                return v.replace("postgres://", "postgresql://", 1)
+        return v
+
     # --------------------------------------------------------------------------
     # Qdrant Vector Database
     # --------------------------------------------------------------------------

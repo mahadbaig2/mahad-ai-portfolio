@@ -174,15 +174,15 @@ Goal: Create reproducible foundations.
 
 ## Milestone 3.2 - Database schema
 
-- [ ] **P3.2.1 [A]** Configure async SQLAlchemy 2.x.
-- [ ] **P3.2.2 [A]** Configure Alembic.
-- [ ] **P3.2.3 [A]** Add enums and tables for source documents, document chunks and index runs.
-- [ ] **P3.2.4 [A]** Add tables for consented chat sessions, redacted messages, retrieval events and feedback.
-- [ ] **P3.2.5 [A]** Add model-release metadata table.
-- [ ] **P3.2.6 [A]** Add foreign keys, uniqueness constraints and query indexes.
-- [ ] **P3.2.7 [A]** Add repository/service boundaries; do not query ORM models from route handlers.
-- [ ] **P3.2.8 [A]** Add migration-up and migration-from-clean-database tests.
-- [ ] **P3.2.9 [A]** Add retention/deletion method for expired sessions.
+- [x] **P3.2.1 [A]** Configure async SQLAlchemy 2.x.
+- [x] **P3.2.2 [A]** Configure Alembic.
+- [x] **P3.2.3 [A]** Add enums and tables for source documents, document chunks and index runs.
+- [x] **P3.2.4 [A]** Add tables for consented chat sessions, redacted messages, retrieval events and feedback.
+- [x] **P3.2.5 [A]** Add model-release metadata table.
+- [x] **P3.2.6 [A]** Add foreign keys, uniqueness constraints and query indexes.
+- [x] **P3.2.7 [A]** Add repository/service boundaries; do not query ORM models from route handlers.
+- [x] **P3.2.8 [A]** Add migration-up and migration-from-clean-database tests.
+- [x] **P3.2.9 [A]** Add retention/deletion method for expired sessions.
 
 ## Milestone 3.3 - Neon connection
 
