@@ -254,13 +254,14 @@ Goal: Create reproducible foundations.
 
 ## Milestone 5.3 - Retrieval evaluation and recovery
 
-- [ ] **P5.3.1 [A+M]** Draft at least 50 expected-query/source pairs; Mahad verifies relevance.
+- [x] **P5.3.1 [A+M]** Draft at least 50 expected-query/source pairs; Mahad verifies relevance.
 - [x] **P5.3.2 [A]** Measure hit rate at K and mean reciprocal rank.
 - [x] **P5.3.3 [A]** Calibrate initial score thresholds from evaluation data.
 - [x] **P5.3.4 [A]** Implement full index rebuild behind explicit confirmation flags.
 - [x] **P5.3.5 [A]** Delete local/test Qdrant collection and prove successful rebuild.
 - [x] **P5.3.6 [A]** Document free-cluster suspension/deletion recovery.
-- [ ] **P5.G GATE [A+M]** Retrieval meets agreed test quality and the index is demonstrably rebuildable.
+- [x] **P5.G GATE [A+M]** Retrieval meets agreed test quality and the index is demonstrably rebuildable.
+
 
 
 ---
