@@ -209,13 +209,13 @@ Goal: Create reproducible foundations.
 
 ## Milestone 4.2 - Chunking
 
-- [ ] **P4.2.1 [A]** Implement heading-aware recursive chunking.
-- [ ] **P4.2.2 [A]** Target 350-500 tokens and 50-75-token overlap through configuration.
-- [ ] **P4.2.3 [A]** Keep project identity and heading path in each chunk.
-- [ ] **P4.2.4 [A]** Prevent two projects from sharing a chunk.
-- [ ] **P4.2.5 [A]** Keep list introductions with their lists.
-- [ ] **P4.2.6 [A]** Compute chunk hashes and deterministic order.
-- [ ] **P4.2.7 [A]** Test short documents, long sections, lists, code, Urdu and empty blocks.
+- [x] **P4.2.1 [A]** Implement heading-aware recursive chunking.
+- [x] **P4.2.2 [A]** Target 350-500 tokens and 50-75-token overlap through configuration.
+- [x] **P4.2.3 [A]** Keep project identity and heading path in each chunk.
+- [x] **P4.2.4 [A]** Prevent two projects from sharing a chunk.
+- [x] **P4.2.5 [A]** Keep list introductions with their lists.
+- [x] **P4.2.6 [A]** Compute chunk hashes and deterministic order.
+- [x] **P4.2.7 [A]** Test short documents, long sections, lists, code, Urdu and empty blocks.
 
 ## Milestone 4.3 - Embeddings and PostgreSQL manifest
 
