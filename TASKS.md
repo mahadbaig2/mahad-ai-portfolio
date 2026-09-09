@@ -186,12 +186,12 @@ Goal: Create reproducible foundations.
 
 ## Milestone 3.3 - Neon connection
 
-- [ ] **P3.3.1 [A]** Document required Neon variables in `.env.example`.
-- [ ] **P3.3.2 [M]** Store Neon credentials in local and deployment secret managers, never Git.
-- [ ] **P3.3.3 [A]** Run migrations against a non-production Neon branch.
-- [ ] **P3.3.4 [A]** Verify SSL, connection timeout and wake-from-zero behavior.
-- [ ] **P3.3.5 [A]** Document backup/export and migration recovery.
-- [ ] **P3.G GATE [A]** API health, clean migrations and database integration tests pass.
+- [x] **P3.3.1 [A]** Document required Neon variables in `.env.example`.
+- [x] **P3.3.2 [M]** Store Neon credentials in local and deployment secret managers, never Git.
+- [x] **P3.3.3 [A]** Run migrations against a non-production Neon branch.
+- [x] **P3.3.4 [A]** Verify SSL, connection timeout and wake-from-zero behavior.
+- [x] **P3.3.5 [A]** Document backup/export and migration recovery.
+- [x] **P3.G GATE [A]** API health, clean migrations and database integration tests pass.
 
 ---
 

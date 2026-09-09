@@ -76,6 +76,16 @@ class ChatRepository:
         await self.session.flush()
         return msg
 
+    async def get_messages(self, session_id: uuid.UUID) -> list[ChatMessage]:
+        """Fetch all messages for a session ordered by creation time."""
+        stmt = (
+            select(ChatMessage)
+            .where(ChatMessage.session_id == session_id)
+            .order_by(ChatMessage.created_at.asc())
+        )
+        result = await self.session.execute(stmt)
+        return list(result.scalars().all())
+
     async def record_retrieval(
         self,
         query_text: str,
