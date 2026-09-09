@@ -151,12 +151,12 @@ Goal: Create reproducible foundations.
 ## Milestone 2.3 - Mahad content entry
 
 - [x] **P2.3.1 [A]** Provide a concise content-entry guide and required-field checklist.
-- [ ] **P2.3.2 [M]** Enter approved profile and contact information.
-- [ ] **P2.3.3 [M]** Enter at least three projects/case studies.
-- [ ] **P2.3.4 [M]** Enter at least one blog article or architecture note.
-- [ ] **P2.3.5 [M]** Mark sensitive/private material as non-indexable.
-- [ ] **P2.3.6 [M]** Review every source that the assistant may cite.
-- [ ] **P2.G GATE [A+M]** A CMS edit updates the site without a code change, and all published facts are approved.
+- [x] **P2.3.2 [M]** Enter approved profile and contact information.
+- [x] **P2.3.3 [M]** Enter at least three projects/case studies.
+- [x] **P2.3.4 [M]** Enter at least one blog article or architecture note.
+- [x] **P2.3.5 [M]** Mark sensitive/private material as non-indexable.
+- [x] **P2.3.6 [M]** Review every source that the assistant may cite.
+- [x] **P2.G GATE [A+M]** A CMS edit updates the site without a code change, and all published facts are approved.
 
 ---
 
