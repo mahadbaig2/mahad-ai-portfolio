@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { ArrowRight, Terminal, CheckCircle2 } from "lucide-react";
+import { ArrowRight, Terminal, CheckCircle2, Briefcase, GraduationCap } from "lucide-react";
+import { getExperiences, getEducation, getSkills, getSiteSettings } from "@/lib/sanity/loadData";
 
 export const metadata = {
   title: "About Mahad | AI Product Engineering",
@@ -7,29 +8,13 @@ export const metadata = {
     "Career narrative, engineering philosophy, and technical depth of Mahad.",
 };
 
-export default function AboutPage() {
-  const competencies = [
-    {
-      area: "AI Product Engineering",
-      skills:
-        "FastAPI, LangGraph, Qdrant, PostgreSQL, ONNX Runtime, Groq, Whisper, OpenVoice, Prompt Engineering, Semantic Caching",
-    },
-    {
-      area: "Product Design & Architecture",
-      skills:
-        "Information Hierarchy, High-Craft Interaction, WCAG AA Accessibility, Progressive Disclosure, Design Systems, State Management",
-    },
-    {
-      area: "MLOps & LLMOps",
-      skills:
-        "LangSmith Evaluation, MLflow Experiment Tracking, Dataset Curation, Classification Metrics, Retrieval Evaluation (Hit@K, MRR)",
-    },
-    {
-      area: "Frontend & Full Stack",
-      skills:
-        "Next.js 15, React 19, TypeScript (Strict), Tailwind CSS, Python 3.11+, Docker, Cloudflare Pages/Workers, CI/CD",
-    },
-  ];
+export default async function AboutPage() {
+  const [experiences, educations, skills, siteSettings] = await Promise.all([
+    getExperiences(),
+    getEducation(),
+    getSkills(),
+    getSiteSettings(),
+  ]);
 
   return (
     <div className="mx-auto max-w-content px-4 py-16 sm:px-6 sm:py-24">
@@ -118,6 +103,60 @@ export default function AboutPage() {
               </li>
             </ul>
           </section>
+
+          {/* Work Experience */}
+          <section className="border-t border-border pt-8">
+            <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-6 flex items-center gap-2">
+              <Briefcase className="h-4 w-4" />
+              <span>Career Experience</span>
+            </h2>
+            <div className="flex flex-col gap-8">
+              {experiences.map((exp, idx) => (
+                <div key={idx} className="flex flex-col gap-2">
+                  <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between text-sm">
+                    <h3 className="font-semibold text-foreground">
+                      {exp.role} · <span className="font-normal text-muted-foreground">{exp.company}</span>
+                    </h3>
+                    <span className="text-xs text-muted-foreground">
+                      {exp.startDate} — {exp.isCurrent ? "Present" : exp.endDate || ""}
+                    </span>
+                  </div>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    {exp.summary}
+                  </p>
+                  {exp.highlights && exp.highlights.length > 0 && (
+                    <ul className="mt-1 space-y-1 list-disc list-inside text-xs text-muted-foreground">
+                      {exp.highlights.map((h, hIdx) => (
+                        <li key={hIdx} className="leading-relaxed">{h}</li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Education */}
+          {educations.length > 0 && (
+            <section className="border-t border-border pt-8">
+              <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-4 flex items-center gap-2">
+                <GraduationCap className="h-4 w-4" />
+                <span>Education</span>
+              </h2>
+              <div className="flex flex-col gap-4">
+                {educations.map((edu, idx) => (
+                  <div key={idx} className="text-sm">
+                    <h3 className="font-semibold text-foreground">
+                      {edu.degree} in {edu.fieldOfStudy}
+                    </h3>
+                    <p className="text-xs text-muted-foreground">
+                      {edu.institution} · Class of {edu.graduationYear}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
         </div>
 
         {/* Competencies Sidebar */}
@@ -127,17 +166,19 @@ export default function AboutPage() {
               Technical Competencies
             </h3>
             <div className="mt-4 flex flex-col gap-4">
-              {competencies.map((comp) => (
+              {skills.map((skill) => (
                 <div
-                  key={comp.area}
+                  key={skill.name}
                   className="rounded border border-border p-4"
                 >
                   <div className="text-xs font-semibold text-foreground">
-                    {comp.area}
+                    {skill.name}
                   </div>
-                  <p className="mt-2 text-[11px] text-muted-foreground leading-relaxed">
-                    {comp.skills}
-                  </p>
+                  {skill.description && (
+                    <p className="mt-2 text-[11px] text-muted-foreground leading-relaxed">
+                      {skill.description}
+                    </p>
+                  )}
                 </div>
               ))}
             </div>

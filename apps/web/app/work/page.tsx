@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, ExternalLink, Github } from "lucide-react";
-import { PROJECTS } from "@/lib/data";
+import { getProjects } from "@/lib/sanity/loadData";
 
 export const metadata = {
   title: "Work & Case Studies | Mahad",
@@ -8,7 +8,8 @@ export const metadata = {
     "Selected engineering projects, production AI architectures, and technical case studies.",
 };
 
-export default function WorkPage() {
+export default async function WorkPage() {
+  const projects = await getProjects();
   return (
     <div className="mx-auto max-w-content px-4 py-16 sm:px-6 sm:py-24">
       <header className="max-w-prose">
@@ -21,8 +22,13 @@ export default function WorkPage() {
         </p>
       </header>
 
-      <div className="mt-12 flex flex-col divide-y divide-border border-y border-border">
-        {PROJECTS.map((project) => (
+      {projects.length === 0 ? (
+        <div className="mt-12 rounded border border-border p-12 text-center text-sm text-muted-foreground">
+          No projects published yet. Published case studies from Sanity CMS will appear here.
+        </div>
+      ) : (
+        <div className="mt-12 flex flex-col divide-y divide-border border-y border-border">
+          {projects.map((project) => (
           <article key={project.slug} className="py-10">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
               <div className="max-w-2xl">
@@ -111,7 +117,8 @@ export default function WorkPage() {
             </div>
           </article>
         ))}
-      </div>
+        </div>
+      )}
     </div>
   );
 }

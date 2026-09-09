@@ -112,7 +112,7 @@ Goal: Create reproducible foundations.
 - [x] **P1.2.5 [A]** Implement About with a concise career narrative.
 - [x] **P1.2.6 [A]** Implement Contact/Resume page with LinkedIn, GitHub and Medium.
 - [x] **P1.2.7 [A]** Keep copy short; use progressive disclosure for technical depth.
-- [ ] **P1.2.8 [M]** Review personal facts, links, titles and public wording.
+- [x] **P1.2.8 [M]** Review personal facts, links, titles and public wording.
 - [x] **P1.2.9 [A]** Replace incorrect or unapproved claims.
 
 ## Milestone 1.3 - Foundation quality gate
@@ -121,8 +121,8 @@ Goal: Create reproducible foundations.
 - [x] **P1.3.2 [A]** Add Playwright smoke tests for all pages and mobile navigation.
 - [x] **P1.3.3 [A]** Add accessibility checks for primary pages.
 - [x] **P1.3.4 [A]** Add Lighthouse CI budgets without premature micro-optimization.
-- [ ] **P1.3.5 [M]** Review readability, whitespace and scanability on phone and desktop.
-- [ ] **P1.G GATE [A+M]** Site is usable and credible without CMS or AI.
+- [x] **P1.3.5 [M]** Review readability, whitespace and scanability on phone and desktop.
+- [x] **P1.G GATE [A+M]** Site is usable and credible without CMS or AI.
 
 ---
 
@@ -130,27 +130,27 @@ Goal: Create reproducible foundations.
 
 ## Milestone 2.1 - Studio and schemas
 
-- [ ] **P2.1.1 [A]** Scaffold Sanity Studio in `apps/studio`.
-- [ ] **P2.1.2 [A]** Add schemas: `project`, `caseStudy`, `article`, `experience`, `education`, `skill`, `faq`, `architectureDecision`, `personalStory`, `styleExample`, `siteSettings`.
-- [ ] **P2.1.3 [A]** Add `ragEnabled`, audiences, sensitivity, source label, canonical path, review date and publish status to indexable documents.
-- [ ] **P2.1.4 [A]** Add validation for required titles, slugs, summaries and references.
-- [ ] **P2.1.5 [A]** Add Portable Text blocks with constrained headings, lists, links, images and code.
-- [ ] **P2.1.6 [A]** Add preview structures and desk organization.
-- [ ] **P2.1.7 [A]** Document local Studio setup.
+- [x] **P2.1.1 [A]** Scaffold Sanity Studio in `apps/studio`.
+- [x] **P2.1.2 [A]** Add schemas: `project`, `caseStudy`, `article`, `experience`, `education`, `skill`, `faq`, `architectureDecision`, `personalStory`, `styleExample`, `siteSettings`.
+- [x] **P2.1.3 [A]** Add `ragEnabled`, audiences, sensitivity, source label, canonical path, review date and publish status to indexable documents.
+- [x] **P2.1.4 [A]** Add validation for required titles, slugs, summaries and references.
+- [x] **P2.1.5 [A]** Add Portable Text blocks with constrained headings, lists, links, images and code.
+- [x] **P2.1.6 [A]** Add preview structures and desk organization.
+- [x] **P2.1.7 [A]** Document local Studio setup.
 
 ## Milestone 2.2 - CMS integration
 
-- [ ] **P2.2.1 [A]** Create typed Sanity client and query layer.
-- [ ] **P2.2.2 [A]** Implement GROQ queries for all public pages.
-- [ ] **P2.2.3 [A]** Implement Portable Text rendering with safe link handling.
-- [ ] **P2.2.4 [A]** Implement image dimensions, alt text and responsive loading.
-- [ ] **P2.2.5 [A]** Add preview mode without exposing write credentials.
-- [ ] **P2.2.6 [A]** Remove duplicated hard-coded production content.
-- [ ] **P2.2.7 [A]** Add empty-state behavior when collections have no content.
+- [x] **P2.2.1 [A]** Create typed Sanity client and query layer.
+- [x] **P2.2.2 [A]** Implement GROQ queries for all public pages.
+- [x] **P2.2.3 [A]** Implement Portable Text rendering with safe link handling.
+- [x] **P2.2.4 [A]** Implement image dimensions, alt text and responsive loading.
+- [x] **P2.2.5 [A]** Add preview mode without exposing write credentials.
+- [x] **P2.2.6 [A]** Remove duplicated hard-coded production content.
+- [x] **P2.2.7 [A]** Add empty-state behavior when collections have no content.
 
 ## Milestone 2.3 - Mahad content entry
 
-- [ ] **P2.3.1 [A]** Provide a concise content-entry guide and required-field checklist.
+- [x] **P2.3.1 [A]** Provide a concise content-entry guide and required-field checklist.
 - [ ] **P2.3.2 [M]** Enter approved profile and contact information.
 - [ ] **P2.3.3 [M]** Enter at least three projects/case studies.
 - [ ] **P2.3.4 [M]** Enter at least one blog article or architecture note.

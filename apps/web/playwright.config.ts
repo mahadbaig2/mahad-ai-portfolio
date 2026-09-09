@@ -8,7 +8,7 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: "list",
   use: {
-    baseURL: process.env.PLAYWRIGHT_TEST_BASE_URL || "http://localhost:3000",
+    baseURL: process.env.PLAYWRIGHT_TEST_BASE_URL || "http://localhost:3001",
     trace: "on-first-retry",
   },
   projects: [
@@ -22,9 +22,9 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: "pnpm run start",
-    url: "http://localhost:3000",
-    reuseExistingServer: false,
+    command: "pnpm exec next start -p 3001",
+    url: "http://localhost:3001",
+    reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000,
   },
 });

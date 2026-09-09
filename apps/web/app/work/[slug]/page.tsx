@@ -1,10 +1,12 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, ExternalLink, Github, Terminal, CheckCircle2 } from "lucide-react";
-import { PROJECTS, Project } from "@/lib/data";
+import { getProjects, getProject, getCaseStudy } from "@/lib/sanity/loadData";
+import { PortableText } from "@/components/PortableText";
 
 export async function generateStaticParams() {
-  return PROJECTS.map((p) => ({
+  const projects = await getProjects();
+  return projects.map((p) => ({
     slug: p.slug,
   }));
 }
@@ -15,7 +17,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const project = PROJECTS.find((p) => p.slug === slug);
+  const project = await getProject(slug);
   if (!project) return { title: "Project Not Found" };
 
   return {
@@ -30,7 +32,10 @@ export default async function CaseStudyPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const project = PROJECTS.find((p) => p.slug === slug);
+  const [project, caseStudy] = await Promise.all([
+    getProject(slug),
+    getCaseStudy(slug),
+  ]);
 
   if (!project) {
     notFound();
@@ -103,7 +108,7 @@ export default async function CaseStudyPage({
               Overview & Summary
             </h2>
             <p className="mt-3 text-base text-foreground leading-relaxed">
-              {project.summary}
+              {caseStudy?.summary || project.summary}
             </p>
           </section>
 
@@ -112,9 +117,15 @@ export default async function CaseStudyPage({
             <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               The Engineering Challenge
             </h2>
-            <p className="mt-3 text-base text-foreground leading-relaxed">
-              {project.problem}
-            </p>
+            {Array.isArray(caseStudy?.contextAndProblem) ? (
+              <div className="mt-3">
+                <PortableText value={caseStudy.contextAndProblem} />
+              </div>
+            ) : (
+              <p className="mt-3 text-base text-foreground leading-relaxed">
+                {project.problem}
+              </p>
+            )}
           </section>
 
           {/* Architecture */}
@@ -122,9 +133,15 @@ export default async function CaseStudyPage({
             <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               System Architecture & Topology
             </h2>
-            <p className="mt-3 text-base text-foreground leading-relaxed">
-              {project.architecture}
-            </p>
+            {Array.isArray(caseStudy?.engineeringApproach) ? (
+              <div className="mt-3">
+                <PortableText value={caseStudy.engineeringApproach} />
+              </div>
+            ) : (
+              <p className="mt-3 text-base text-foreground leading-relaxed">
+                {project.architecture}
+              </p>
+            )}
           </section>
 
           {/* Key Architectural Decisions (Progressive Disclosure) */}
