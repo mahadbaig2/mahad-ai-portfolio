@@ -1,0 +1,222 @@
+[
+  {
+    "id": "q025",
+    "text": "What frontend, backend and retrieval technologies are used in Legal AI?",
+    "group_id": "legal_ai_architecture",
+    "route": "rag_retrieval",
+    "intent": "project_technical",
+    "answerability": "answerable",
+    "language": "en",
+    "expected_document_slug": "legal-ai",
+    "origin": "synthetic"
+  },
+  {
+    "id": "q026",
+    "text": "How does Legal AI perform semantic search over an uploaded document?",
+    "group_id": "legal_ai_architecture",
+    "route": "rag_retrieval",
+    "intent": "project_technical",
+    "answerability": "answerable",
+    "language": "en",
+    "expected_document_slug": "legal-ai",
+    "origin": "synthetic"
+  },
+  {
+    "id": "q027",
+    "text": "Legal AI mein Streamlit aur FastAPI ka kya role hai?",
+    "group_id": "legal_ai_architecture",
+    "route": "rag_retrieval",
+    "intent": "project_technical",
+    "answerability": "answerable",
+    "language": "ur",
+    "expected_document_slug": "legal-ai",
+    "origin": "synthetic"
+  },
+  {
+    "id": "q028",
+    "text": "Agar ChromaDB available na ho to Legal AI search kaise handle karta hai?",
+    "group_id": "legal_ai_architecture",
+    "route": "rag_retrieval",
+    "intent": "project_technical",
+    "answerability": "answerable",
+    "language": "ur",
+    "expected_document_slug": "legal-ai",
+    "origin": "synthetic"
+  },
+  {
+    "id": "q029",
+    "text": "What is the Mahad AI Portfolio project?",
+    "group_id": "portfolio_overview",
+    "route": "rag_retrieval",
+    "intent": "project_overview",
+    "answerability": "answerable",
+    "language": "en",
+    "expected_document_slug": "mahad-ai-portfolio",
+    "origin": "synthetic"
+  },
+  {
+    "id": "q030",
+    "text": "Why is Mahad treating his portfolio as an AI product instead of a static website?",
+    "group_id": "portfolio_overview",
+    "route": "rag_retrieval",
+    "intent": "project_overview",
+    "answerability": "answerable",
+    "language": "en",
+    "expected_document_slug": "mahad-ai-portfolio",
+    "origin": "synthetic"
+  },
+  {
+    "id": "q031",
+    "text": "What capabilities is the AI-native portfolio intended to demonstrate?",
+    "group_id": "portfolio_overview",
+    "route": "rag_retrieval",
+    "intent": "project_overview",
+    "answerability": "answerable",
+    "language": "en",
+    "expected_document_slug": "mahad-ai-portfolio",
+    "origin": "synthetic"
+  },
+  {
+    "id": "q032",
+    "text": "Mahad ka AI portfolio normal portfolio website se different kaise hai?",
+    "group_id": "portfolio_overview",
+    "route": "rag_retrieval",
+    "intent": "project_overview",
+    "answerability": "answerable",
+    "language": "ur",
+    "expected_document_slug": "mahad-ai-portfolio",
+    "origin": "synthetic"
+  },
+  {
+    "id": "q057",
+    "text": "Good morning",
+    "group_id": "time_based_greeting",
+    "route": "direct_chat",
+    "intent": "greeting",
+    "answerability": "answerable",
+    "language": "en",
+    "expected_document_slug": null,
+    "origin": "synthetic"
+  },
+  {
+    "id": "q058",
+    "text": "Good evening, hope you're doing well.",
+    "group_id": "time_based_greeting",
+    "route": "direct_chat",
+    "intent": "greeting",
+    "answerability": "answerable",
+    "language": "en",
+    "expected_document_slug": null,
+    "origin": "synthetic"
+  },
+  {
+    "id": "q059",
+    "text": "Subah bakhair",
+    "group_id": "time_based_greeting",
+    "route": "direct_chat",
+    "intent": "greeting",
+    "answerability": "answerable",
+    "language": "ur",
+    "expected_document_slug": null,
+    "origin": "synthetic"
+  },
+  {
+    "id": "q060",
+    "text": "Assalam o Alaikum, umeed hai sab theek hoga.",
+    "group_id": "time_based_greeting",
+    "route": "direct_chat",
+    "intent": "greeting",
+    "answerability": "answerable",
+    "language": "ur",
+    "expected_document_slug": null,
+    "origin": "synthetic"
+  },
+  {
+    "id": "q079",
+    "text": "What is the capital of France?",
+    "group_id": "general_knowledge_out_of_domain",
+    "route": "refusal",
+    "intent": "out_of_domain",
+    "answerability": "unanswerable",
+    "language": "en",
+    "expected_document_slug": null,
+    "origin": "synthetic"
+  },
+  {
+    "id": "q080",
+    "text": "Who was the first person to walk on the moon?",
+    "group_id": "general_knowledge_out_of_domain",
+    "route": "refusal",
+    "intent": "out_of_domain",
+    "answerability": "unanswerable",
+    "language": "en",
+    "expected_document_slug": null,
+    "origin": "synthetic"
+  },
+  {
+    "id": "q081",
+    "text": "Explain the causes of the Second World War.",
+    "group_id": "general_knowledge_out_of_domain",
+    "route": "refusal",
+    "intent": "out_of_domain",
+    "answerability": "unanswerable",
+    "language": "en",
+    "expected_document_slug": null,
+    "origin": "synthetic"
+  },
+  {
+    "id": "q082",
+    "text": "Pakistan ka sab se bara shehar konsa hai?",
+    "group_id": "general_knowledge_out_of_domain",
+    "route": "refusal",
+    "intent": "out_of_domain",
+    "answerability": "unanswerable",
+    "language": "ur",
+    "expected_document_slug": null,
+    "origin": "synthetic"
+  },
+  {
+    "id": "q083",
+    "text": "Can you book a flight from Islamabad to London?",
+    "group_id": "travel_booking_out_of_domain",
+    "route": "refusal",
+    "intent": "out_of_domain",
+    "answerability": "unanswerable",
+    "language": "en",
+    "expected_document_slug": null,
+    "origin": "synthetic"
+  },
+  {
+    "id": "q084",
+    "text": "Find me the cheapest hotel in Dubai for next weekend.",
+    "group_id": "travel_booking_out_of_domain",
+    "route": "refusal",
+    "intent": "out_of_domain",
+    "answerability": "unanswerable",
+    "language": "en",
+    "expected_document_slug": null,
+    "origin": "synthetic"
+  },
+  {
+    "id": "q085",
+    "text": "Mere liye Karachi ki flight book kar do.",
+    "group_id": "travel_booking_out_of_domain",
+    "route": "refusal",
+    "intent": "out_of_domain",
+    "answerability": "unanswerable",
+    "language": "ur",
+    "expected_document_slug": null,
+    "origin": "synthetic"
+  },
+  {
+    "id": "q086",
+    "text": "Islamabad mein koi sasta hotel reserve karwa do.",
+    "group_id": "travel_booking_out_of_domain",
+    "route": "refusal",
+    "intent": "out_of_domain",
+    "answerability": "unanswerable",
+    "language": "ur",
+    "expected_document_slug": null,
+    "origin": "synthetic"
+  }
+]

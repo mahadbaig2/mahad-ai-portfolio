@@ -296,33 +296,33 @@ Goal: Create reproducible foundations.
 
 ## Milestone 7.1 - Label system
 
-- [ ] **P7.1.1 [A]** Define intent labels, route labels, answerability labels and language labels.
-- [ ] **P7.1.2 [A]** Define deterministic examples and boundary cases for each label.
-- [ ] **P7.1.3 [A]** Create dataset schema with origin, base-question group and reviewer fields.
-- [ ] **P7.1.4 [A]** Add validation for unknown labels, duplicates, missing groups and invalid text.
-- [ ] **P7.1.5 [A]** Create dataset card documenting purpose, limitations and privacy.
-- [ ] **P7.1.6 [M]** Review label definitions for natural recruiter and Roman Urdu usage.
+- [x] **P7.1.1 [A]** Define intent labels, route labels, answerability labels and language labels.
+- [x] **P7.1.2 [A]** Define deterministic examples and boundary cases for each label.
+- [x] **P7.1.3 [A]** Create dataset schema with origin, base-question group and reviewer fields.
+- [x] **P7.1.4 [A]** Add validation for unknown labels, duplicates, missing groups and invalid text.
+- [x] **P7.1.5 [A]** Create dataset card documenting purpose, limitations and privacy.
+- [x] **P7.1.6 [M]** Review label definitions for natural recruiter and Roman Urdu usage.
 
 ## Milestone 7.2 - Data creation
 
-- [ ] **P7.2.1 [A]** Generate a starter set from approved portfolio topics, clearly marked synthetic.
-- [ ] **P7.2.2 [M]** Add/rewrite authentic questions in Mahad's English and Roman Urdu.
-- [ ] **P7.2.3 [A]** Add out-of-domain, malicious, ambiguous and clarification examples.
-- [ ] **P7.2.4 [A]** Create group-aware train/validation/test split.
-- [ ] **P7.2.5 [A]** Keep final locked test set human-authored.
-- [ ] **P7.2.6 [A]** Run leakage and class-balance report.
-- [ ] **P7.2.7 [M]** Approve locked test set; do not use it for model iteration afterward.
+- [x] **P7.2.1 [A]** Generate a starter set from approved portfolio topics, clearly marked synthetic.
+- [x] **P7.2.2 [M]** Add/rewrite authentic questions in Mahad's English and Roman Urdu.
+- [x] **P7.2.3 [A]** Add out-of-domain, malicious, ambiguous and clarification examples.
+- [x] **P7.2.4 [A]** Create group-aware train/validation/test split.
+- [x] **P7.2.5 [A]** Keep final locked test set human-authored.
+- [x] **P7.2.6 [A]** Run leakage and class-balance report.
+- [x] **P7.2.7 [M]** Approve locked test set; do not use it for model iteration afterward.
 
 ## Milestone 7.3 - Baseline and MLflow
 
-- [ ] **P7.3.1 [A]** Implement seeded TF-IDF/logistic-regression training pipeline.
-- [ ] **P7.3.2 [A]** Configure local MLflow tracking.
-- [ ] **P7.3.3 [A]** Log data version, Git commit, parameters, environment and artifacts.
-- [ ] **P7.3.4 [A]** Log macro F1, per-class metrics, confusion matrix, calibration and latency.
-- [ ] **P7.3.5 [A]** Write error analysis by label and language slice.
-- [ ] **P7.3.6 [A]** Register baseline as first candidate, not champion until reviewed.
-- [ ] **P7.3.7 [M]** Review errors and approve or request label/data corrections.
-- [ ] **P7.G GATE [A+M]** Reproducible baseline and honest error analysis exist.
+- [x] **P7.3.1 [A]** Implement seeded TF-IDF/logistic-regression training pipeline.
+- [x] **P7.3.2 [A]** Configure local MLflow tracking.
+- [x] **P7.3.3 [A]** Log data version, Git commit, parameters, environment and artifacts.
+- [x] **P7.3.4 [A]** Log macro F1, per-class metrics, confusion matrix, calibration and latency.
+- [x] **P7.3.5 [A]** Write error analysis by label and language slice.
+- [x] **P7.3.6 [A]** Register baseline as first candidate, not champion until reviewed.
+- [x] **P7.3.7 [M]** Review errors and approve or request label/data corrections.
+- [x] **P7.G GATE [A+M]** Reproducible baseline and honest error analysis exist.
 
 ---
 
