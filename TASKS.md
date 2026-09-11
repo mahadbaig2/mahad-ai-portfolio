@@ -344,19 +344,19 @@ Goal: Create reproducible foundations.
 - [x] **P8.2.2 [A]** Verify ONNX predictions match framework predictions within tolerance.
 - [x] **P8.2.3 [A]** Evaluate quantization; retain unquantized model if quality regresses.
 - [x] **P8.2.4 [A]** Package tokenizer, labels, config, metrics and model card.
-- [ ] **P8.2.5 [A]** Publish an immutable artifact version only after Mahad approval.
-- [ ] **P8.2.6 [M]** Approve champion based on evidence, not architecture preference.
-- [ ] **P8.2.7 [A]** Mirror champion metadata in PostgreSQL.
+- [x] **P8.2.5 [A]** Publish an immutable artifact version only after Mahad approval.
+- [x] **P8.2.6 [M]** Approve champion based on evidence, not architecture preference.
+- [x] **P8.2.7 [A]** Mirror champion metadata in PostgreSQL.
 
 ## Milestone 8.3 - In-process serving
 
-- [ ] **P8.3.1 [A]** Download/pin the immutable model during backend build.
-- [ ] **P8.3.2 [A]** Load one ONNX Runtime session at application startup.
-- [ ] **P8.3.3 [A]** Implement identical training/serving preprocessing.
-- [ ] **P8.3.4 [A]** Return labels, confidence, model version and safe fallback.
-- [ ] **P8.3.5 [A]** Add concurrency and cold-start latency tests.
-- [ ] **P8.3.6 [A]** Add configuration-based rollback to the prior artifact.
-- [ ] **P8.G GATE [A+M]** Champion is reproducible, approved, served locally and rollback-tested.
+- [x] **P8.3.1 [A]** Download/pin the immutable model during backend build.
+- [x] **P8.3.2 [A]** Load one ONNX Runtime session at application startup.
+- [x] **P8.3.3 [A]** Implement identical training/serving preprocessing.
+- [x] **P8.3.4 [A]** Return labels, confidence, model version and safe fallback.
+- [x] **P8.3.5 [A]** Add concurrency and cold-start latency tests.
+- [x] **P8.3.6 [A]** Add configuration-based rollback to the prior artifact.
+- [x] **P8.G GATE [A+M]** Champion is reproducible, approved, served locally and rollback-tested.
 
 ---
 

@@ -138,10 +138,61 @@
           }
         }
       }
+    },
+    "/api/v1/router/classify": {
+      "post": {
+        "tags": [
+          "Query Router"
+        ],
+        "summary": "Classify user query using in-process ONNX model",
+        "description": "Returns predicted route, intent, answerability, language, confidence, and fallback status.",
+        "operationId": "classify_query_api_v1_router_classify_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RouterPredictionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RouterPredictionResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "AnswerabilityLabel": {
+        "type": "string",
+        "enum": [
+          "answerable",
+          "unanswerable"
+        ],
+        "title": "AnswerabilityLabel",
+        "description": "Whether query is answerable from portfolio grounding data."
+      },
       "DependencyCheck": {
         "properties": {
           "status": {
@@ -287,6 +338,122 @@
           "timestamp"
         ],
         "title": "HealthReadyResponse"
+      },
+      "IntentLabel": {
+        "type": "string",
+        "enum": [
+          "project_technical",
+          "project_overview",
+          "career_skills",
+          "article_discussion",
+          "contact_info",
+          "greeting",
+          "general_chitchat",
+          "out_of_domain",
+          "prompt_injection"
+        ],
+        "title": "IntentLabel",
+        "description": "Semantic intent of incoming user query."
+      },
+      "LanguageLabel": {
+        "type": "string",
+        "enum": [
+          "en",
+          "ur"
+        ],
+        "title": "LanguageLabel",
+        "description": "Detected language: en (English) or ur (Roman Urdu)."
+      },
+      "RouteLabel": {
+        "type": "string",
+        "enum": [
+          "rag_retrieval",
+          "direct_chat",
+          "refusal"
+        ],
+        "title": "RouteLabel",
+        "description": "Execution route decided by query router."
+      },
+      "RouterPredictionRequest": {
+        "properties": {
+          "text": {
+            "type": "string",
+            "maxLength": 1000,
+            "minLength": 1,
+            "title": "Text",
+            "description": "User query text"
+          }
+        },
+        "type": "object",
+        "required": [
+          "text"
+        ],
+        "title": "RouterPredictionRequest",
+        "description": "Input payload for query router classification."
+      },
+      "RouterPredictionResponse": {
+        "properties": {
+          "text": {
+            "type": "string",
+            "title": "Text"
+          },
+          "route": {
+            "$ref": "#/components/schemas/RouteLabel"
+          },
+          "route_confidence": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Route Confidence"
+          },
+          "intent": {
+            "$ref": "#/components/schemas/IntentLabel"
+          },
+          "intent_confidence": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Intent Confidence"
+          },
+          "answerability": {
+            "$ref": "#/components/schemas/AnswerabilityLabel"
+          },
+          "language": {
+            "$ref": "#/components/schemas/LanguageLabel"
+          },
+          "model_name": {
+            "type": "string",
+            "title": "Model Name"
+          },
+          "model_version": {
+            "type": "string",
+            "title": "Model Version"
+          },
+          "is_fallback": {
+            "type": "boolean",
+            "title": "Is Fallback",
+            "default": false
+          },
+          "latency_ms": {
+            "type": "number",
+            "title": "Latency Ms"
+          }
+        },
+        "type": "object",
+        "required": [
+          "text",
+          "route",
+          "route_confidence",
+          "intent",
+          "intent_confidence",
+          "answerability",
+          "language",
+          "model_name",
+          "model_version",
+          "latency_ms"
+        ],
+        "title": "RouterPredictionResponse",
+        "description": "Prediction output from the in-process ONNX query router."
       },
       "ValidationError": {
         "properties": {

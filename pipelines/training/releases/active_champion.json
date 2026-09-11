@@ -1,0 +1,69 @@
+{
+  "model_name": "query-router-minilm",
+  "model_version": "v1.0.0",
+  "model_type": "transformer_onnx_int8",
+  "role": "champion",
+  "is_champion": true,
+  "status": "promoted_champion",
+  "approved_by": "Mahad",
+  "promoted_at": "2026-09-11T00:19:53.659253+00:00",
+  "artifact_path": "pipelines/training/releases/champion_v1.0.0",
+  "manifest": {
+    "config.json": "74dbbb41aaae521eb76afd3b300f6a6d0146c6f6b209840fc540e015ca30da36",
+    "metrics.json": "634b91e1ea2bdb2c231e60f47a6085935146d576bb9928e7018573722795302d",
+    "model.onnx": "8fd329f6615e6eea28ec9f08bb6823a5286d0fc1a8370f6b273b6e0506ef3235",
+    "MODEL_CARD.md": "f921b2121f2b5763381a181aa79894338d354aa3fa2964166dfa299f80a4ab8a",
+    "tokenizer/special_tokens_map.json": "5aa43c2f985a25296d5a5ce621c2f77376ca8091a47993c492fd5460b895b140",
+    "tokenizer/tokenizer.json": "da0e79933b9ed51798a3ae27893d3c5fa4a201126cef75586296df9b4d2c62a0",
+    "tokenizer/tokenizer_config.json": "46ac231e9b955a8af80fc7f23a0ecc65b524f1df84a02c2c82cbca354fb207b4",
+    "tokenizer/vocab.txt": "07eced375cec144d27c900241f3e339478dec958f92fddbc551f295c992038a3"
+  },
+  "metrics": {
+    "test_route_acc": 0.85,
+    "test_route_macro_f1": 0.8321678321678322,
+    "test_intent_acc": 0.35,
+    "test_intent_macro_f1": 0.23809523809523808,
+    "test_ans_f1": 0.6865203761755485,
+    "test_lang_acc": 0.8,
+    "test_roman_urdu_route_f1": 0.8666666666666667,
+    "test_english_route_f1": 0.8055555555555555,
+    "test_refusal_recall": 0.625,
+    "test_p50_latency_ms": 14.818899999227142,
+    "test_p95_latency_ms": 16.77000000127009
+  },
+  "quantization_evaluation": {
+    "unquantized": {
+      "size_mb": 86.22955703735352,
+      "metrics": {
+        "route_macro_f1": 0.8321678321678322,
+        "intent_macro_f1": 0.23809523809523808,
+        "refusal_recall": 0.625,
+        "p50_latency_ms": 4.411250003613532,
+        "p95_latency_ms": 6.079744997623493
+      }
+    },
+    "quantized": {
+      "size_mb": 21.838333129882812,
+      "metrics": {
+        "route_macro_f1": 0.8857142857142857,
+        "intent_macro_f1": 0.19047619047619047,
+        "refusal_recall": 0.75,
+        "p50_latency_ms": 3.47564999901806,
+        "p95_latency_ms": 6.811495000147262
+      }
+    },
+    "quality_regressed": false,
+    "decision": "Retain quantized model (quality_regressed=False)",
+    "selected_model": "quantized"
+  },
+  "onnx_tolerance": {
+    "tolerance_passed": true,
+    "max_diff_route": 1.3262033462524414e-06,
+    "max_diff_intent": 1.430511474609375e-06,
+    "max_diff_ans": 8.493661880493164e-07,
+    "max_diff_lang": 5.364418029785156e-07,
+    "label_match_rate_route": 1.0,
+    "label_match_rate_intent": 1.0,
+    "tolerance_threshold": 0.0001
+  }
+}
