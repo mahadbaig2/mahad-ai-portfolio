@@ -330,13 +330,13 @@ Goal: Create reproducible foundations.
 
 ## Milestone 8.1 - Fine-tuning
 
-- [ ] **P8.1.1 [A]** Select MiniLM or DistilBERT based on model-size/language experiments; record ADR.
-- [ ] **P8.1.2 [A]** Implement deterministic training with checkpointing and early stopping.
-- [ ] **P8.1.3 [A]** Use class weights or sampling only when justified by data.
-- [ ] **P8.1.4 [A]** Train intent and route heads; keep answerability separate if shared training is unstable.
-- [ ] **P8.1.5 [A]** Log every formal run to MLflow.
-- [ ] **P8.1.6 [A]** Evaluate aggregate, per-class, Roman Urdu, refusal and latency slices.
-- [ ] **P8.1.7 [A]** Compare candidate against baseline using predeclared promotion rules.
+- [x] **P8.1.1 [A]** Select MiniLM or DistilBERT based on model-size/language experiments; record ADR.
+- [x] **P8.1.2 [A]** Implement deterministic training with checkpointing and early stopping.
+- [x] **P8.1.3 [A]** Use class weights or sampling only when justified by data.
+- [x] **P8.1.4 [A]** Train intent and route heads; keep answerability separate if shared training is unstable.
+- [x] **P8.1.5 [A]** Log every formal run to MLflow.
+- [x] **P8.1.6 [A]** Evaluate aggregate, per-class, Roman Urdu, refusal and latency slices.
+- [x] **P8.1.7 [A]** Compare candidate against baseline using predeclared promotion rules.
 
 ## Milestone 8.2 - Packaging
 

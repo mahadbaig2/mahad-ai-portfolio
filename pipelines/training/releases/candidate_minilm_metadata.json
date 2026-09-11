@@ -1,0 +1,59 @@
+{
+  "model_name": "query-router-minilm",
+  "model_version": "candidate-v2",
+  "role": "candidate",
+  "is_champion": false,
+  "backbone": "sentence-transformers/all-MiniLM-L6-v2",
+  "git_commit": "eb0ffae80fc5a97b5a5a39511f6d0aad6ff82906",
+  "best_epoch": 14,
+  "metrics": {
+    "test_route_acc": 0.85,
+    "test_route_macro_f1": 0.8321678321678322,
+    "test_intent_acc": 0.35,
+    "test_intent_macro_f1": 0.23809523809523808,
+    "test_ans_f1": 0.6865203761755485,
+    "test_lang_acc": 0.8,
+    "test_roman_urdu_route_f1": 0.8666666666666667,
+    "test_english_route_f1": 0.8055555555555555,
+    "test_refusal_recall": 0.625,
+    "test_p50_latency_ms": 14.818899999227142,
+    "test_p95_latency_ms": 16.77000000127009
+  },
+  "promotion_evaluation": {
+    "all_passed": true,
+    "rules": {
+      "rule_1_route_macro_f1_superior": {
+        "description": "Candidate route macro F1 must be superior to baseline",
+        "baseline": 0.6622710622710622,
+        "candidate": 0.8321678321678322,
+        "passed": true
+      },
+      "rule_2_intent_macro_f1_superior": {
+        "description": "Candidate intent macro F1 must be superior to baseline",
+        "baseline": 0.1435897435897436,
+        "candidate": 0.23809523809523808,
+        "passed": true
+      },
+      "rule_3_refusal_recall_no_regression": {
+        "description": "Critical refusal/out-of-domain recall must not regress below baseline",
+        "baseline": 0.5,
+        "candidate": 0.625,
+        "passed": true
+      },
+      "rule_4_roman_urdu_no_regression": {
+        "description": "Roman Urdu slice route F1 must not regress below baseline",
+        "baseline": 0.7222222222222222,
+        "candidate": 0.8666666666666667,
+        "passed": true
+      },
+      "rule_5_latency_under_budget": {
+        "description": "Candidate p95 latency must be under 25.0 ms",
+        "budget_ms": 25.0,
+        "candidate_ms": 16.77000000127009,
+        "passed": true
+      }
+    }
+  },
+  "checkpoint_path": "pipelines\\training\\checkpoints\\best_minilm_router.pt",
+  "status": "ready_for_onnx_packaging"
+}
