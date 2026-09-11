@@ -46,6 +46,7 @@ mlruns/
 *.bin
 *.pt
 *.pth
+*.joblib
 
 # Private audio, datasets, voice recordings
 recordings/

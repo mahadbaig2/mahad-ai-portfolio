@@ -1,0 +1,371 @@
+{
+  "model": "MiniLM-L6-v2-multitask",
+  "best_epoch": 14,
+  "metrics": {
+    "test_route_acc": 0.85,
+    "test_route_macro_f1": 0.8321678321678322,
+    "test_intent_acc": 0.35,
+    "test_intent_macro_f1": 0.23809523809523808,
+    "test_ans_f1": 0.6865203761755485,
+    "test_lang_acc": 0.8,
+    "test_roman_urdu_route_f1": 0.8666666666666667,
+    "test_english_route_f1": 0.8055555555555555,
+    "test_refusal_recall": 0.625,
+    "test_p50_latency_ms": 14.818899999227142,
+    "test_p95_latency_ms": 16.77000000127009
+  },
+  "promotion_rules": {
+    "all_passed": true,
+    "rules": {
+      "rule_1_route_macro_f1_superior": {
+        "description": "Candidate route macro F1 must be superior to baseline",
+        "baseline": 0.6622710622710622,
+        "candidate": 0.8321678321678322,
+        "passed": true
+      },
+      "rule_2_intent_macro_f1_superior": {
+        "description": "Candidate intent macro F1 must be superior to baseline",
+        "baseline": 0.1435897435897436,
+        "candidate": 0.23809523809523808,
+        "passed": true
+      },
+      "rule_3_refusal_recall_no_regression": {
+        "description": "Critical refusal/out-of-domain recall must not regress below baseline",
+        "baseline": 0.5,
+        "candidate": 0.625,
+        "passed": true
+      },
+      "rule_4_roman_urdu_no_regression": {
+        "description": "Roman Urdu slice route F1 must not regress below baseline",
+        "baseline": 0.7222222222222222,
+        "candidate": 0.8666666666666667,
+        "passed": true
+      },
+      "rule_5_latency_under_budget": {
+        "description": "Candidate p95 latency must be under 25.0 ms",
+        "budget_ms": 25.0,
+        "candidate_ms": 16.77000000127009,
+        "passed": true
+      }
+    }
+  },
+  "route_confusion_matrix": [
+    [
+      4,
+      0,
+      0
+    ],
+    [
+      0,
+      8,
+      0
+    ],
+    [
+      3,
+      0,
+      5
+    ]
+  ],
+  "route_classification_report": {
+    "direct_chat": {
+      "precision": 0.5714285714285714,
+      "recall": 1.0,
+      "f1-score": 0.7272727272727273,
+      "support": 4.0
+    },
+    "rag_retrieval": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 8.0
+    },
+    "refusal": {
+      "precision": 1.0,
+      "recall": 0.625,
+      "f1-score": 0.7692307692307693,
+      "support": 8.0
+    },
+    "accuracy": 0.85,
+    "macro avg": {
+      "precision": 0.8571428571428571,
+      "recall": 0.875,
+      "f1-score": 0.8321678321678322,
+      "support": 20.0
+    },
+    "weighted avg": {
+      "precision": 0.9142857142857143,
+      "recall": 0.85,
+      "f1-score": 0.8531468531468531,
+      "support": 20.0
+    }
+  },
+  "intent_classification_report": {
+    "career_skills": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 0.0
+    },
+    "general_chitchat": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 0.0
+    },
+    "greeting": {
+      "precision": 0.5,
+      "recall": 0.25,
+      "f1-score": 0.3333333333333333,
+      "support": 4.0
+    },
+    "out_of_domain": {
+      "precision": 1.0,
+      "recall": 0.5,
+      "f1-score": 0.6666666666666666,
+      "support": 8.0
+    },
+    "project_overview": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 4.0
+    },
+    "project_technical": {
+      "precision": 1.0,
+      "recall": 0.5,
+      "f1-score": 0.6666666666666666,
+      "support": 4.0
+    },
+    "prompt_injection": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 0.0
+    },
+    "accuracy": 0.35,
+    "macro avg": {
+      "precision": 0.35714285714285715,
+      "recall": 0.17857142857142858,
+      "f1-score": 0.23809523809523808,
+      "support": 20.0
+    },
+    "weighted avg": {
+      "precision": 0.7,
+      "recall": 0.35,
+      "f1-score": 0.4666666666666666,
+      "support": 20.0
+    }
+  },
+  "test_errors": [
+    {
+      "id": "q025",
+      "text": "What frontend, backend and retrieval technologies are used in Legal AI?",
+      "group_id": "legal_ai_architecture",
+      "language": "en",
+      "true_route": "rag_retrieval",
+      "pred_route": "rag_retrieval",
+      "route_conf": 0.8096676468849182,
+      "true_intent": "project_technical",
+      "pred_intent": "project_overview",
+      "intent_conf": 0.23961637914180756,
+      "true_answerability": "answerable",
+      "pred_answerability": "answerable",
+      "split": "test"
+    },
+    {
+      "id": "q026",
+      "text": "How does Legal AI perform semantic search over an uploaded document?",
+      "group_id": "legal_ai_architecture",
+      "language": "en",
+      "true_route": "rag_retrieval",
+      "pred_route": "rag_retrieval",
+      "route_conf": 0.7560097575187683,
+      "true_intent": "project_technical",
+      "pred_intent": "project_overview",
+      "intent_conf": 0.22326122224330902,
+      "true_answerability": "answerable",
+      "pred_answerability": "answerable",
+      "split": "test"
+    },
+    {
+      "id": "q029",
+      "text": "What is the Mahad AI Portfolio project?",
+      "group_id": "portfolio_overview",
+      "language": "en",
+      "true_route": "rag_retrieval",
+      "pred_route": "rag_retrieval",
+      "route_conf": 0.8801205158233643,
+      "true_intent": "project_overview",
+      "pred_intent": "career_skills",
+      "intent_conf": 0.2563680410385132,
+      "true_answerability": "answerable",
+      "pred_answerability": "answerable",
+      "split": "test"
+    },
+    {
+      "id": "q030",
+      "text": "Why is Mahad treating his portfolio as an AI product instead of a static website?",
+      "group_id": "portfolio_overview",
+      "language": "en",
+      "true_route": "rag_retrieval",
+      "pred_route": "rag_retrieval",
+      "route_conf": 0.8511362075805664,
+      "true_intent": "project_overview",
+      "pred_intent": "career_skills",
+      "intent_conf": 0.2288898080587387,
+      "true_answerability": "answerable",
+      "pred_answerability": "answerable",
+      "split": "test"
+    },
+    {
+      "id": "q031",
+      "text": "What capabilities is the AI-native portfolio intended to demonstrate?",
+      "group_id": "portfolio_overview",
+      "language": "en",
+      "true_route": "rag_retrieval",
+      "pred_route": "rag_retrieval",
+      "route_conf": 0.8972300887107849,
+      "true_intent": "project_overview",
+      "pred_intent": "career_skills",
+      "intent_conf": 0.27905580401420593,
+      "true_answerability": "answerable",
+      "pred_answerability": "answerable",
+      "split": "test"
+    },
+    {
+      "id": "q032",
+      "text": "Mahad ka AI portfolio normal portfolio website se different kaise hai?",
+      "group_id": "portfolio_overview",
+      "language": "ur",
+      "true_route": "rag_retrieval",
+      "pred_route": "rag_retrieval",
+      "route_conf": 0.874718189239502,
+      "true_intent": "project_overview",
+      "pred_intent": "career_skills",
+      "intent_conf": 0.21752378344535828,
+      "true_answerability": "answerable",
+      "pred_answerability": "answerable",
+      "split": "test"
+    },
+    {
+      "id": "q058",
+      "text": "Good evening, hope you're doing well.",
+      "group_id": "time_based_greeting",
+      "language": "en",
+      "true_route": "direct_chat",
+      "pred_route": "direct_chat",
+      "route_conf": 0.8418093323707581,
+      "true_intent": "greeting",
+      "pred_intent": "general_chitchat",
+      "intent_conf": 0.38256192207336426,
+      "true_answerability": "answerable",
+      "pred_answerability": "answerable",
+      "split": "test"
+    },
+    {
+      "id": "q059",
+      "text": "Subah bakhair",
+      "group_id": "time_based_greeting",
+      "language": "ur",
+      "true_route": "direct_chat",
+      "pred_route": "direct_chat",
+      "route_conf": 0.7176023721694946,
+      "true_intent": "greeting",
+      "pred_intent": "general_chitchat",
+      "intent_conf": 0.33004066348075867,
+      "true_answerability": "answerable",
+      "pred_answerability": "answerable",
+      "split": "test"
+    },
+    {
+      "id": "q060",
+      "text": "Assalam o Alaikum, umeed hai sab theek hoga.",
+      "group_id": "time_based_greeting",
+      "language": "ur",
+      "true_route": "direct_chat",
+      "pred_route": "direct_chat",
+      "route_conf": 0.9237624406814575,
+      "true_intent": "greeting",
+      "pred_intent": "general_chitchat",
+      "intent_conf": 0.45287850499153137,
+      "true_answerability": "answerable",
+      "pred_answerability": "answerable",
+      "split": "test"
+    },
+    {
+      "id": "q079",
+      "text": "What is the capital of France?",
+      "group_id": "general_knowledge_out_of_domain",
+      "language": "en",
+      "true_route": "refusal",
+      "pred_route": "direct_chat",
+      "route_conf": 0.3620453178882599,
+      "true_intent": "out_of_domain",
+      "pred_intent": "greeting",
+      "intent_conf": 0.15362559258937836,
+      "true_answerability": "unanswerable",
+      "pred_answerability": "answerable",
+      "split": "test"
+    },
+    {
+      "id": "q080",
+      "text": "Who was the first person to walk on the moon?",
+      "group_id": "general_knowledge_out_of_domain",
+      "language": "en",
+      "true_route": "refusal",
+      "pred_route": "refusal",
+      "route_conf": 0.42870351672172546,
+      "true_intent": "out_of_domain",
+      "pred_intent": "general_chitchat",
+      "intent_conf": 0.1418597251176834,
+      "true_answerability": "unanswerable",
+      "pred_answerability": "answerable",
+      "split": "test"
+    },
+    {
+      "id": "q081",
+      "text": "Explain the causes of the Second World War.",
+      "group_id": "general_knowledge_out_of_domain",
+      "language": "en",
+      "true_route": "refusal",
+      "pred_route": "direct_chat",
+      "route_conf": 0.34844234585762024,
+      "true_intent": "out_of_domain",
+      "pred_intent": "out_of_domain",
+      "intent_conf": 0.17567278444766998,
+      "true_answerability": "unanswerable",
+      "pred_answerability": "answerable",
+      "split": "test"
+    },
+    {
+      "id": "q082",
+      "text": "Pakistan ka sab se bara shehar konsa hai?",
+      "group_id": "general_knowledge_out_of_domain",
+      "language": "ur",
+      "true_route": "refusal",
+      "pred_route": "direct_chat",
+      "route_conf": 0.4856422245502472,
+      "true_intent": "out_of_domain",
+      "pred_intent": "general_chitchat",
+      "intent_conf": 0.1940823197364807,
+      "true_answerability": "unanswerable",
+      "pred_answerability": "answerable",
+      "split": "test"
+    },
+    {
+      "id": "q083",
+      "text": "Can you book a flight from Islamabad to London?",
+      "group_id": "travel_booking_out_of_domain",
+      "language": "en",
+      "true_route": "refusal",
+      "pred_route": "refusal",
+      "route_conf": 0.6360800862312317,
+      "true_intent": "out_of_domain",
+      "pred_intent": "prompt_injection",
+      "intent_conf": 0.15477417409420013,
+      "true_answerability": "unanswerable",
+      "pred_answerability": "unanswerable",
+      "split": "test"
+    }
+  ]
+}

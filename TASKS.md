@@ -270,24 +270,25 @@ Goal: Create reproducible foundations.
 
 ## Milestone 6.1 - Incremental synchronization
 
-- [ ] **P6.1.1 [A]** Implement create, update, unpublish and delete ingestion events.
-- [ ] **P6.1.2 [A]** Write new chunks/vectors before deactivating old versions.
-- [ ] **P6.1.3 [A]** Delete stale Qdrant points after new version validation.
-- [ ] **P6.1.4 [A]** Record every run and error summary in `index_runs`.
-- [ ] **P6.1.5 [A]** Preserve the previous active version after partial failure.
-- [ ] **P6.1.6 [A]** Add reconciliation command comparing Sanity, PostgreSQL and Qdrant.
+- [x] **P6.1.1 [A]** Implement create, update, unpublish and delete ingestion events.
+- [x] **P6.1.2 [A]** Write new chunks/vectors before deactivating old versions.
+- [x] **P6.1.3 [A]** Delete stale Qdrant points after new version validation.
+- [x] **P6.1.4 [A]** Record every run and error summary in `index_runs`.
+- [x] **P6.1.5 [A]** Preserve the previous active version after partial failure.
+- [x] **P6.1.6 [A]** Add reconciliation command comparing Sanity, PostgreSQL and Qdrant.
 
 ## Milestone 6.2 - Webhook and CI
 
-- [ ] **P6.2.1 [A]** Implement a signature-validating Cloudflare webhook endpoint.
-- [ ] **P6.2.2 [A]** Dispatch GitHub ingestion workflow without exposing its token.
-- [ ] **P6.2.3 [A]** Add `ingest-content.yml` for targeted updates.
-- [ ] **P6.2.4 [A]** Add scheduled full reconciliation.
-- [ ] **P6.2.5 [A]** Add concurrency control so two index runs cannot corrupt active versions.
+- [x] **P6.2.1 [A]** Implement a signature-validating Cloudflare webhook endpoint.
+- [x] **P6.2.2 [A]** Dispatch GitHub ingestion workflow without exposing its token.
+- [x] **P6.2.3 [A]** Add `ingest-content.yml` for targeted updates.
+- [x] **P6.2.4 [A]** Add scheduled full reconciliation.
+- [x] **P6.2.5 [A]** Add concurrency control so two index runs cannot corrupt active versions.
 - [ ] **P6.2.6 [M]** Add webhook and CI secrets through dashboards.
 - [ ] **P6.2.7 [M]** Configure Sanity webhook using Antigravity's exact instructions.
-- [ ] **P6.2.8 [A]** Test publish, edit, unpublish, deletion, replay and failed-run paths.
+- [x] **P6.2.8 [A]** Test publish, edit, unpublish, deletion, replay and failed-run paths.
 - [ ] **P6.G GATE [A+M]** A real Sanity update produces a verified incremental index update.
+
 
 ---
 
@@ -295,33 +296,33 @@ Goal: Create reproducible foundations.
 
 ## Milestone 7.1 - Label system
 
-- [ ] **P7.1.1 [A]** Define intent labels, route labels, answerability labels and language labels.
-- [ ] **P7.1.2 [A]** Define deterministic examples and boundary cases for each label.
-- [ ] **P7.1.3 [A]** Create dataset schema with origin, base-question group and reviewer fields.
-- [ ] **P7.1.4 [A]** Add validation for unknown labels, duplicates, missing groups and invalid text.
-- [ ] **P7.1.5 [A]** Create dataset card documenting purpose, limitations and privacy.
-- [ ] **P7.1.6 [M]** Review label definitions for natural recruiter and Roman Urdu usage.
+- [x] **P7.1.1 [A]** Define intent labels, route labels, answerability labels and language labels.
+- [x] **P7.1.2 [A]** Define deterministic examples and boundary cases for each label.
+- [x] **P7.1.3 [A]** Create dataset schema with origin, base-question group and reviewer fields.
+- [x] **P7.1.4 [A]** Add validation for unknown labels, duplicates, missing groups and invalid text.
+- [x] **P7.1.5 [A]** Create dataset card documenting purpose, limitations and privacy.
+- [x] **P7.1.6 [M]** Review label definitions for natural recruiter and Roman Urdu usage.
 
 ## Milestone 7.2 - Data creation
 
-- [ ] **P7.2.1 [A]** Generate a starter set from approved portfolio topics, clearly marked synthetic.
-- [ ] **P7.2.2 [M]** Add/rewrite authentic questions in Mahad's English and Roman Urdu.
-- [ ] **P7.2.3 [A]** Add out-of-domain, malicious, ambiguous and clarification examples.
-- [ ] **P7.2.4 [A]** Create group-aware train/validation/test split.
-- [ ] **P7.2.5 [A]** Keep final locked test set human-authored.
-- [ ] **P7.2.6 [A]** Run leakage and class-balance report.
-- [ ] **P7.2.7 [M]** Approve locked test set; do not use it for model iteration afterward.
+- [x] **P7.2.1 [A]** Generate a starter set from approved portfolio topics, clearly marked synthetic.
+- [x] **P7.2.2 [M]** Add/rewrite authentic questions in Mahad's English and Roman Urdu.
+- [x] **P7.2.3 [A]** Add out-of-domain, malicious, ambiguous and clarification examples.
+- [x] **P7.2.4 [A]** Create group-aware train/validation/test split.
+- [x] **P7.2.5 [A]** Keep final locked test set human-authored.
+- [x] **P7.2.6 [A]** Run leakage and class-balance report.
+- [x] **P7.2.7 [M]** Approve locked test set; do not use it for model iteration afterward.
 
 ## Milestone 7.3 - Baseline and MLflow
 
-- [ ] **P7.3.1 [A]** Implement seeded TF-IDF/logistic-regression training pipeline.
-- [ ] **P7.3.2 [A]** Configure local MLflow tracking.
-- [ ] **P7.3.3 [A]** Log data version, Git commit, parameters, environment and artifacts.
-- [ ] **P7.3.4 [A]** Log macro F1, per-class metrics, confusion matrix, calibration and latency.
-- [ ] **P7.3.5 [A]** Write error analysis by label and language slice.
-- [ ] **P7.3.6 [A]** Register baseline as first candidate, not champion until reviewed.
-- [ ] **P7.3.7 [M]** Review errors and approve or request label/data corrections.
-- [ ] **P7.G GATE [A+M]** Reproducible baseline and honest error analysis exist.
+- [x] **P7.3.1 [A]** Implement seeded TF-IDF/logistic-regression training pipeline.
+- [x] **P7.3.2 [A]** Configure local MLflow tracking.
+- [x] **P7.3.3 [A]** Log data version, Git commit, parameters, environment and artifacts.
+- [x] **P7.3.4 [A]** Log macro F1, per-class metrics, confusion matrix, calibration and latency.
+- [x] **P7.3.5 [A]** Write error analysis by label and language slice.
+- [x] **P7.3.6 [A]** Register baseline as first candidate, not champion until reviewed.
+- [x] **P7.3.7 [M]** Review errors and approve or request label/data corrections.
+- [x] **P7.G GATE [A+M]** Reproducible baseline and honest error analysis exist.
 
 ---
 
@@ -329,33 +330,33 @@ Goal: Create reproducible foundations.
 
 ## Milestone 8.1 - Fine-tuning
 
-- [ ] **P8.1.1 [A]** Select MiniLM or DistilBERT based on model-size/language experiments; record ADR.
-- [ ] **P8.1.2 [A]** Implement deterministic training with checkpointing and early stopping.
-- [ ] **P8.1.3 [A]** Use class weights or sampling only when justified by data.
-- [ ] **P8.1.4 [A]** Train intent and route heads; keep answerability separate if shared training is unstable.
-- [ ] **P8.1.5 [A]** Log every formal run to MLflow.
-- [ ] **P8.1.6 [A]** Evaluate aggregate, per-class, Roman Urdu, refusal and latency slices.
-- [ ] **P8.1.7 [A]** Compare candidate against baseline using predeclared promotion rules.
+- [x] **P8.1.1 [A]** Select MiniLM or DistilBERT based on model-size/language experiments; record ADR.
+- [x] **P8.1.2 [A]** Implement deterministic training with checkpointing and early stopping.
+- [x] **P8.1.3 [A]** Use class weights or sampling only when justified by data.
+- [x] **P8.1.4 [A]** Train intent and route heads; keep answerability separate if shared training is unstable.
+- [x] **P8.1.5 [A]** Log every formal run to MLflow.
+- [x] **P8.1.6 [A]** Evaluate aggregate, per-class, Roman Urdu, refusal and latency slices.
+- [x] **P8.1.7 [A]** Compare candidate against baseline using predeclared promotion rules.
 
 ## Milestone 8.2 - Packaging
 
-- [ ] **P8.2.1 [A]** Export candidate to ONNX.
-- [ ] **P8.2.2 [A]** Verify ONNX predictions match framework predictions within tolerance.
-- [ ] **P8.2.3 [A]** Evaluate quantization; retain unquantized model if quality regresses.
-- [ ] **P8.2.4 [A]** Package tokenizer, labels, config, metrics and model card.
-- [ ] **P8.2.5 [A]** Publish an immutable artifact version only after Mahad approval.
-- [ ] **P8.2.6 [M]** Approve champion based on evidence, not architecture preference.
-- [ ] **P8.2.7 [A]** Mirror champion metadata in PostgreSQL.
+- [x] **P8.2.1 [A]** Export candidate to ONNX.
+- [x] **P8.2.2 [A]** Verify ONNX predictions match framework predictions within tolerance.
+- [x] **P8.2.3 [A]** Evaluate quantization; retain unquantized model if quality regresses.
+- [x] **P8.2.4 [A]** Package tokenizer, labels, config, metrics and model card.
+- [x] **P8.2.5 [A]** Publish an immutable artifact version only after Mahad approval.
+- [x] **P8.2.6 [M]** Approve champion based on evidence, not architecture preference.
+- [x] **P8.2.7 [A]** Mirror champion metadata in PostgreSQL.
 
 ## Milestone 8.3 - In-process serving
 
-- [ ] **P8.3.1 [A]** Download/pin the immutable model during backend build.
-- [ ] **P8.3.2 [A]** Load one ONNX Runtime session at application startup.
-- [ ] **P8.3.3 [A]** Implement identical training/serving preprocessing.
-- [ ] **P8.3.4 [A]** Return labels, confidence, model version and safe fallback.
-- [ ] **P8.3.5 [A]** Add concurrency and cold-start latency tests.
-- [ ] **P8.3.6 [A]** Add configuration-based rollback to the prior artifact.
-- [ ] **P8.G GATE [A+M]** Champion is reproducible, approved, served locally and rollback-tested.
+- [x] **P8.3.1 [A]** Download/pin the immutable model during backend build.
+- [x] **P8.3.2 [A]** Load one ONNX Runtime session at application startup.
+- [x] **P8.3.3 [A]** Implement identical training/serving preprocessing.
+- [x] **P8.3.4 [A]** Return labels, confidence, model version and safe fallback.
+- [x] **P8.3.5 [A]** Add concurrency and cold-start latency tests.
+- [x] **P8.3.6 [A]** Add configuration-based rollback to the prior artifact.
+- [x] **P8.G GATE [A+M]** Champion is reproducible, approved, served locally and rollback-tested.
 
 ---
 

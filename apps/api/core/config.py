@@ -129,6 +129,20 @@ class Settings(BaseSettings):
     SANITY_API_READ_TOKEN: str = Field(default="")
     SANITY_WEBHOOK_SECRET: str = Field(default="")
 
+    # --------------------------------------------------------------------------
+    # In-Process ONNX Query Router Model
+    # --------------------------------------------------------------------------
+    MODEL_ROUTER_DIR: str = Field(
+        default="pipelines/training/releases/champion_v1.0.0",
+        description="Path to the active champion model package directory",
+    )
+    MODEL_ROUTER_CONFIDENCE_THRESHOLD: float = Field(
+        default=0.50,
+        ge=0.0,
+        le=1.0,
+        description="Minimum confidence threshold for predicted route acceptance without fallback",
+    )
+
     @property
     def is_production(self) -> bool:
         return self.ENVIRONMENT == "production"

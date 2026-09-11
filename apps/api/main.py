@@ -19,7 +19,10 @@ from apps.api.core.errors import (
 from apps.api.core.logging import setup_logging
 from apps.api.middleware.body_size import BodySizeLimitMiddleware
 from apps.api.middleware.correlation import CorrelationIdMiddleware
+from apps.api.routers.webhook import router as webhook_router
 from apps.api.routes.health import router as health_router
+from apps.api.routes.router import router as query_router_endpoint
+from apps.api.services.query_router import get_router_service
 
 
 @asynccontextmanager
@@ -27,9 +30,14 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     """Application lifespan manager for startup and shutdown hooks."""
     settings = get_settings()
     setup_logging(level=settings.LOG_LEVEL, environment=settings.ENVIRONMENT)
-    # Startup tasks (e.g. database pool, ONNX session initialization) occur here
+    # Startup tasks: Pre-load in-process ONNX query router session once at startup (P8.3.2)
+    try:
+        get_router_service()
+    except Exception as e:
+        import logging
+        logging.getLogger(__name__).warning("Router service initialization deferred: %s", e)
     yield
-    # Shutdown tasks (e.g. closing database connections) occur here
+    # Shutdown tasks occur here
 
 
 def create_app(settings: Settings | None = None) -> FastAPI:
@@ -76,8 +84,11 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     # Routers
     # --------------------------------------------------------------------------
     app.include_router(health_router)
+    app.include_router(webhook_router, prefix="/api/v1")
+    app.include_router(query_router_endpoint, prefix="/api/v1")
 
     return app
+
 
 
 # Default ASGI application instance

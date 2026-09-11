@@ -1,0 +1,19 @@
+{
+  "model_name": "query-router-baseline-tfidf",
+  "model_version": "candidate-v1",
+  "role": "candidate",
+  "is_champion": false,
+  "description": "TF-IDF (word 1-2 + char 3-5) + Logistic Regression multi-task baseline",
+  "git_commit": "6457cf26d5d9e538b0f42e358f74de4febe2756e",
+  "training_date": "2026-09-09T18:19:30Z",
+  "metrics": {
+    "test_route_macro_f1": 0.6622710622710622,
+    "test_intent_macro_f1": 0.1435897435897436,
+    "test_roman_urdu_route_f1": 0.7222222222222222,
+    "test_english_route_f1": 0.6507936507936508,
+    "p50_latency_ms": 6.182399985846132,
+    "p95_latency_ms": 11.511860019527374
+  },
+  "artifact_path": "pipelines\\training\\releases\\candidate_baseline_tfidf.joblib",
+  "status": "pending_mahad_review"
+}

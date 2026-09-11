@@ -132,6 +132,41 @@ class DocumentRepository:
         result = await self.session.execute(stmt)
         return int(getattr(result, "rowcount", 0))
 
+    async def deactivate_chunks_by_ids(self, chunk_ids: list[uuid.UUID]) -> int:
+        """Mark specific chunks as inactive (used when replacing with new version)."""
+        if not chunk_ids:
+            return 0
+        stmt = (
+            update(DocumentChunk)
+            .where(DocumentChunk.id.in_(chunk_ids))
+            .values(is_active=False)
+        )
+        result = await self.session.execute(stmt)
+        return int(getattr(result, "rowcount", 0))
+
+    async def get_all_active_documents(self) -> list[SourceDocument]:
+        """Fetch all source documents where rag_enabled is True."""
+        stmt = (
+            select(SourceDocument)
+            .where(SourceDocument.rag_enabled.is_(True))
+            .order_by(SourceDocument.updated_at.desc())
+        )
+        result = await self.session.execute(stmt)
+        return list(result.scalars().all())
+
+    async def get_all_active_chunks(self) -> list[DocumentChunk]:
+        """Fetch all active chunks with loaded parent documents."""
+        from sqlalchemy.orm import selectinload
+
+        stmt = (
+            select(DocumentChunk)
+            .options(selectinload(DocumentChunk.document))
+            .where(DocumentChunk.is_active.is_(True))
+            .order_by(DocumentChunk.document_id, DocumentChunk.chunk_index)
+        )
+        result = await self.session.execute(stmt)
+        return list(result.scalars().all())
+
     async def delete_document(self, sanity_id: str) -> bool:
         """Delete a source document and cascade-delete its chunks."""
         doc = await self.get_by_sanity_id(sanity_id)
@@ -140,3 +175,4 @@ class DocumentRepository:
             await self.session.flush()
             return True
         return False
+

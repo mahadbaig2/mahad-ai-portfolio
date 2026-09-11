@@ -1,0 +1,43 @@
+{
+  "model_name": "query-router-minilm",
+  "model_version": "v1.0.0",
+  "backbone": "sentence-transformers/all-MiniLM-L6-v2",
+  "input_names": [
+    "input_ids",
+    "attention_mask"
+  ],
+  "output_names": [
+    "route_logits",
+    "intent_logits",
+    "ans_logits",
+    "lang_logits"
+  ],
+  "route_classes": [
+    "direct_chat",
+    "rag_retrieval",
+    "refusal"
+  ],
+  "intent_classes": [
+    "article_discussion",
+    "career_skills",
+    "contact_info",
+    "general_chitchat",
+    "greeting",
+    "out_of_domain",
+    "project_overview",
+    "project_technical",
+    "prompt_injection"
+  ],
+  "ans_classes": [
+    "answerable",
+    "unanswerable"
+  ],
+  "lang_classes": [
+    "en",
+    "ur"
+  ],
+  "confidence_threshold": 0.5,
+  "fallback_route": "rag_retrieval",
+  "max_sequence_length": 64,
+  "quantization": "quantized"
+}

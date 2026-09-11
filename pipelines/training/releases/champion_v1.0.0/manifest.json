@@ -1,0 +1,10 @@
+{
+  "config.json": "74dbbb41aaae521eb76afd3b300f6a6d0146c6f6b209840fc540e015ca30da36",
+  "metrics.json": "634b91e1ea2bdb2c231e60f47a6085935146d576bb9928e7018573722795302d",
+  "model.onnx": "8fd329f6615e6eea28ec9f08bb6823a5286d0fc1a8370f6b273b6e0506ef3235",
+  "MODEL_CARD.md": "f921b2121f2b5763381a181aa79894338d354aa3fa2964166dfa299f80a4ab8a",
+  "tokenizer/special_tokens_map.json": "5aa43c2f985a25296d5a5ce621c2f77376ca8091a47993c492fd5460b895b140",
+  "tokenizer/tokenizer.json": "da0e79933b9ed51798a3ae27893d3c5fa4a201126cef75586296df9b4d2c62a0",
+  "tokenizer/tokenizer_config.json": "46ac231e9b955a8af80fc7f23a0ecc65b524f1df84a02c2c82cbca354fb207b4",
+  "tokenizer/vocab.txt": "07eced375cec144d27c900241f3e339478dec958f92fddbc551f295c992038a3"
+}
