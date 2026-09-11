@@ -373,7 +373,7 @@ Goal: Create reproducible foundations.
 
 ## Milestone 9.2 - Deterministic and RAG routes
 
-- [ ] **P9.2.1 [A]** Implement structured contact/navigation lookup without LLM calls.
+- [x] **P9.2.1 [A]** Implement structured contact/navigation lookup without LLM calls.
 - [ ] **P9.2.2 [A]** Implement query normalization while preserving code-switching.
 - [ ] **P9.2.3 [A]** Implement filter planning.
 - [ ] **P9.2.4 [A]** Implement Qdrant retrieval and PostgreSQL hydration tool.

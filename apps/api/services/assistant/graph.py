@@ -175,6 +175,8 @@ def run_assistant_turn(
         language=lang_label,
         is_safe=final_state.get("is_safe", True),
         mode=AssistantMode(mode),
+        suggested_actions=final_state.get("suggested_actions", []),
+        navigation_target=final_state.get("navigation_target"),
         execution_steps=steps,
         errors=final_state.get("errors", []),
     )

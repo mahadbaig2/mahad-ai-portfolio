@@ -63,5 +63,7 @@ class AssistantChatResponse(BaseModel):
     language: LanguageLabel
     is_safe: bool = True
     mode: AssistantMode
+    suggested_actions: List[Dict[str, str]] = Field(default_factory=list, description="Structured links or UI actions")
+    navigation_target: Optional[Dict[str, str]] = Field(default=None, description="Direct page navigation recommendation")
     execution_steps: List[ExecutionStepPayload] = Field(default_factory=list)
     errors: List[str] = Field(default_factory=list)

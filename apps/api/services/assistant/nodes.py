@@ -126,6 +126,12 @@ def classify_query_node(state: AssistantState) -> Dict[str, Any]:
     if prediction.is_fallback:
         route = "clarification"
 
+    # P9.2.1: Check if deterministic navigation or contact override applies
+    from apps.api.services.assistant.deterministic import resolve_deterministic_turn
+    det_res = resolve_deterministic_turn(query, prediction.intent.value, prediction.language.value)
+    if det_res is not None and route != RouteLabel.REFUSAL.value:
+        route = RouteLabel.DIRECT_CHAT.value
+
     return {
         "classifier_output": pred_dict,
         "route": route,
@@ -137,40 +143,24 @@ def classify_query_node(state: AssistantState) -> Dict[str, Any]:
 
 
 def direct_response_node(state: AssistantState) -> Dict[str, Any]:
-    """Deterministic resolution for contact info, greetings, and basic chitchat."""
+    """P9.2.1: Deterministic resolution for contact info, navigation, greetings, and basic chitchat."""
     t0 = time.perf_counter()
+    query = state.get("sanitized_query") or state.get("input_text", "")
     intent = state.get("intent", "")
     language = state.get("language", "en")
 
-    if intent == IntentLabel.CONTACT_INFO.value:
-        if language == "ur":
-            answer = (
-                "Aap Mahad se in channels ke zarye contact kar sakte hain:\n\n"
-                "- **Email**: [mahadmirza681@gmail.com](mailto:mahadmirza681@gmail.com)\n"
-                "- **LinkedIn**: [linkedin.com/in/mahadbaig](https://linkedin.com/in/mahadbaig)\n"
-                "- **GitHub**: [github.com/mahadbaig2](https://github.com/mahadbaig2)\n"
-                "- **Website**: [mahad.cc/contact](https://mahad.cc/contact)"
-            )
-        else:
-            answer = (
-                "You can get in touch with Mahad directly through the following channels:\n\n"
-                "- **Email**: [mahadmirza681@gmail.com](mailto:mahadmirza681@gmail.com)\n"
-                "- **LinkedIn**: [linkedin.com/in/mahadbaig](https://linkedin.com/in/mahadbaig)\n"
-                "- **GitHub**: [github.com/mahadbaig2](https://github.com/mahadbaig2)\n"
-                "- **Contact Page**: Visit [/contact](/contact) for complete résumé details."
-            )
-    elif intent == IntentLabel.GREETING.value:
-        if language == "ur":
-            answer = (
-                "Salam! Main Mahad ka AI assistant hoon. Main unke AI projects, architecture decisions "
-                "aur technical experience ke baray mein sawalat ke jawabat de sakta hoon. Aap kya poochna chahein ge?"
-            )
-        else:
-            answer = (
-                "Hello! I am Mahad's AI Assistant. I can answer questions about his AI Product Engineering projects, "
-                "system architectures, and technical background using verified sources. What would you like to explore?"
-            )
+    from apps.api.services.assistant.deterministic import resolve_deterministic_turn
+    resolution = resolve_deterministic_turn(query, intent=intent, language=language)
+
+    if resolution:
+        answer = resolution.answer
+        actions = resolution.suggested_actions
+        nav_target = resolution.navigation_target
+        resolved_intent = resolution.intent
     else:
+        resolved_intent = intent
+        actions = [{"label": "Selected Work", "url": "/work"}]
+        nav_target = None
         if language == "ur":
             answer = "Main Mahad ke portfolio aur unke engineering work ke hawale se aap ki madad kar sakta hoon."
         else:
@@ -181,7 +171,11 @@ def direct_response_node(state: AssistantState) -> Dict[str, Any]:
         "step_name": "direct_response",
         "duration_ms": round(duration_ms, 2),
         "status": "completed",
-        "details": {"intent": intent, "language": language},
+        "details": {
+            "intent": resolved_intent,
+            "language": language,
+            "has_navigation_target": nav_target is not None,
+        },
     }
     steps = list(state.get("execution_steps", []))
     steps.append(step_telemetry)
@@ -189,6 +183,8 @@ def direct_response_node(state: AssistantState) -> Dict[str, Any]:
     return {
         "final_answer": answer,
         "citations": [],
+        "suggested_actions": actions,
+        "navigation_target": nav_target,
         "execution_steps": steps,
     }
 

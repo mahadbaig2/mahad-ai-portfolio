@@ -46,6 +46,8 @@ class AssistantState(TypedDict):
     draft_answer: str
     final_answer: str
     citations: List[str]
+    suggested_actions: List[Dict[str, str]]
+    navigation_target: Optional[Dict[str, str]]
     errors: List[str]
     execution_steps: List[Dict[str, Any]]
 
@@ -76,6 +78,8 @@ def create_initial_state(
         "draft_answer": "",
         "final_answer": "",
         "citations": [],
+        "suggested_actions": [],
+        "navigation_target": None,
         "errors": [],
         "execution_steps": [],
     }

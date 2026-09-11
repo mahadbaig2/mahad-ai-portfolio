@@ -134,7 +134,7 @@ def test_compiled_graph_traversal_direct_chat():
 
     assert final_state["is_safe"] is True
     assert final_state["route"] == RouteLabel.DIRECT_CHAT.value
-    assert "Mahad's AI Assistant" in final_state["final_answer"]
+    assert "AI Assistant" in final_state["final_answer"]
 
     step_names = [s["step_name"] for s in final_state["execution_steps"]]
     assert step_names == ["validate_input", "classify_query", "direct_response"]
@@ -189,3 +189,90 @@ def test_run_assistant_turn_public_contract():
     assert response.is_safe is True
     assert len(response.execution_steps) >= 2
     assert "Mahad" in response.answer
+
+
+# -----------------------------------------------------------------------------
+# Milestone 9.2: Deterministic Contact & Navigation Lookups (P9.2.1)
+# -----------------------------------------------------------------------------
+
+
+def test_deterministic_contact_lookup_email():
+    """P9.2.1: Specific email lookup returns mailto link and contact navigation target."""
+    session_id = str(uuid4())
+    response = run_assistant_turn("What is your email address?", session_id)
+
+    assert response.route == RouteLabel.DIRECT_CHAT
+    assert "mahadmirza681@gmail.com" in response.answer
+    assert response.navigation_target is not None
+    assert response.navigation_target["url"] == "/contact"
+    assert any(a["url"] == "/contact" for a in response.suggested_actions)
+
+
+def test_deterministic_contact_lookup_linkedin():
+    """P9.2.1: Specific LinkedIn lookup returns direct profile link."""
+    session_id = str(uuid4())
+    response = run_assistant_turn("Where is Mahad's LinkedIn profile?", session_id)
+
+    assert response.route == RouteLabel.DIRECT_CHAT
+    assert "linkedin.com/in/mahadbaig" in response.answer
+    assert response.navigation_target is not None
+
+
+def test_deterministic_contact_lookup_resume():
+    """P9.2.1: Resume/CV request guides user to the contact & resume download page."""
+    session_id = str(uuid4())
+    response = run_assistant_turn("Can I download your resume or CV?", session_id)
+
+    assert response.route == RouteLabel.DIRECT_CHAT
+    assert "/contact" in response.answer
+    assert response.navigation_target is not None
+    assert response.navigation_target["url"] == "/contact"
+
+
+def test_deterministic_navigation_work_page():
+    """P9.2.1: Project/case study navigation request deterministically targets /work."""
+    session_id = str(uuid4())
+    response = run_assistant_turn("Show me Mahad's projects and case studies", session_id)
+
+    assert response.route == RouteLabel.DIRECT_CHAT
+    assert "/work" in response.answer
+    assert response.navigation_target is not None
+    assert response.navigation_target["url"] == "/work"
+    assert "CardioScan AI" in response.answer
+
+
+def test_deterministic_navigation_blog_page():
+    """P9.2.1: Article/blog navigation request deterministically targets /blog."""
+    session_id = str(uuid4())
+    response = run_assistant_turn("Where can I read your technical articles and blog posts?", session_id)
+
+    assert response.route == RouteLabel.DIRECT_CHAT
+    assert "/blog" in response.answer
+    assert response.navigation_target is not None
+    assert response.navigation_target["url"] == "/blog"
+    assert "In-Process ML Routing" in response.answer
+
+
+def test_deterministic_navigation_about_page():
+    """P9.2.1: Bio/background navigation request deterministically targets /about."""
+    session_id = str(uuid4())
+    response = run_assistant_turn("Tell me about Mahad's background and experience", session_id)
+
+    assert response.route == RouteLabel.DIRECT_CHAT
+    assert "/about" in response.answer
+    assert response.navigation_target is not None
+    assert response.navigation_target["url"] == "/about"
+    assert "AI Product Engineer" in response.answer
+
+
+def test_deterministic_roman_urdu_contact_and_work():
+    """P9.2.1: Deterministic lookup functions accurately in Roman Urdu."""
+    session_id = str(uuid4())
+    res_contact = run_assistant_turn("Mahad se contact kaise karein?", session_id)
+    assert res_contact.route == RouteLabel.DIRECT_CHAT
+    assert "mahadmirza681@gmail.com" in res_contact.answer
+
+    res_work = run_assistant_turn("Mujhe aap ka kaam dekhna hai", session_id)
+    assert res_work.route == RouteLabel.DIRECT_CHAT
+    assert "/work" in res_work.answer
+
