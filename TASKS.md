@@ -364,12 +364,12 @@ Goal: Create reproducible foundations.
 
 ## Milestone 9.1 - Typed graph
 
-- [ ] **P9.1.1 [A]** Define graph state for input, transcript, mode, classifier output, query, evidence, retries, answer, citations and errors.
-- [ ] **P9.1.2 [A]** Implement input validation and safety node.
-- [ ] **P9.1.3 [A]** Implement ONNX classification node.
-- [ ] **P9.1.4 [A]** Implement explicit conditional edges for deterministic, RAG, agentic, clarify and refuse routes.
-- [ ] **P9.1.5 [A]** Set hard step and one-rewrite limits.
-- [ ] **P9.1.6 [A]** Add graph visualization to architecture documentation.
+- [x] **P9.1.1 [A]** Define graph state for input, transcript, mode, classifier output, query, evidence, retries, answer, citations and errors.
+- [x] **P9.1.2 [A]** Implement input validation and safety node.
+- [x] **P9.1.3 [A]** Implement ONNX classification node.
+- [x] **P9.1.4 [A]** Implement explicit conditional edges for deterministic, RAG, agentic, clarify and refuse routes.
+- [x] **P9.1.5 [A]** Set hard step and one-rewrite limits.
+- [x] **P9.1.6 [A]** Add graph visualization to architecture documentation.
 
 ## Milestone 9.2 - Deterministic and RAG routes
 

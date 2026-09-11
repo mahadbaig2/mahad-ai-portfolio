@@ -12,6 +12,10 @@ asyncpg>=0.30.0,<0.31.0
 psycopg2-binary>=2.9.10,<3.0.0
 alembic>=1.14.0,<1.15.0
 
+# Workflow & Agent Orchestration (LangGraph state machine)
+langgraph>=0.2.0,<0.3.0
+langchain-core>=0.3.0,<0.4.0
+
 # HTTP client & utilities
 httpx>=0.28.0,<0.29.0
 python-dotenv>=1.0.1,<1.1.0
