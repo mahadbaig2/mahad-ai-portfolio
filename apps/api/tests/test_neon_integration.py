@@ -53,8 +53,8 @@ async def test_neon_connection_and_wake_from_zero(neon_url: str) -> None:
         assert db_user is not None
 
     latency = time.monotonic() - start_time
-    # Wake from zero on Neon cold starts typically takes 1-3 seconds, hot takes < 300ms
-    assert latency < 15.0, f"Database ping took excessive time: {latency:.2f}s"
+    # Wake from zero on Neon cold starts typically takes 1-5 seconds, but remote trans-continental spin-ups can take up to 25s
+    assert latency < 30.0, f"Database ping took excessive time: {latency:.2f}s"
 
     await engine.dispose()
 

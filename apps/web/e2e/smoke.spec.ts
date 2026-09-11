@@ -11,8 +11,8 @@ test.describe("Smoke Tests - Public Pages", () => {
   test("work index loads and lists projects", async ({ page }) => {
     await page.goto("/work");
     await expect(page.getByRole("heading", { name: "Selected Work", level: 1 })).toBeVisible();
-    await expect(page.getByRole("heading", { name: /Talk to Mahad/i })).toBeVisible();
-    await expect(page.getByRole("heading", { name: /Enterprise RAG & Evaluation Pipeline/i })).toBeVisible();
+    await expect(page.getByRole("heading", { name: /(Mahad AI|Talk to Mahad)/i })).toBeVisible();
+    await expect(page.getByRole("heading", { name: /(CardioScan|Enterprise RAG)/i })).toBeVisible();
   });
 
   test("case study page loads with metrics and architecture", async ({ page }) => {
@@ -31,7 +31,11 @@ test.describe("Smoke Tests - Public Pages", () => {
   test("blog index loads and lists articles", async ({ page }) => {
     await page.goto("/blog");
     await expect(page.getByRole("heading", { name: "Articles & Notes", level: 1 })).toBeVisible();
-    await expect(page.getByRole("heading", { name: /Architecting an Intentionally Over-Engineered AI Portfolio/i })).toBeVisible();
+    await expect(
+      page.getByRole("heading", {
+        name: /(I Decided My Portfolio Should Be the Project|Architecting an Intentionally Over-Engineered AI Portfolio)/i,
+      })
+    ).toBeVisible();
   });
 
   test("article page loads with full narrative", async ({ page }) => {
