@@ -1,0 +1,50 @@
+{
+  "test_metrics": {
+    "test_route_acc": 0.85,
+    "test_route_macro_f1": 0.8321678321678322,
+    "test_intent_acc": 0.35,
+    "test_intent_macro_f1": 0.23809523809523808,
+    "test_ans_f1": 0.6865203761755485,
+    "test_lang_acc": 0.8,
+    "test_roman_urdu_route_f1": 0.8666666666666667,
+    "test_english_route_f1": 0.8055555555555555,
+    "test_refusal_recall": 0.625,
+    "test_p50_latency_ms": 14.818899999227142,
+    "test_p95_latency_ms": 16.77000000127009
+  },
+  "onnx_tolerance": {
+    "tolerance_passed": true,
+    "max_diff_route": 1.3262033462524414e-06,
+    "max_diff_intent": 1.430511474609375e-06,
+    "max_diff_ans": 8.493661880493164e-07,
+    "max_diff_lang": 5.364418029785156e-07,
+    "label_match_rate_route": 1.0,
+    "label_match_rate_intent": 1.0,
+    "tolerance_threshold": 0.0001
+  },
+  "quantization_evaluation": {
+    "unquantized": {
+      "size_mb": 86.22955703735352,
+      "metrics": {
+        "route_macro_f1": 0.8321678321678322,
+        "intent_macro_f1": 0.23809523809523808,
+        "refusal_recall": 0.625,
+        "p50_latency_ms": 4.411250003613532,
+        "p95_latency_ms": 6.079744997623493
+      }
+    },
+    "quantized": {
+      "size_mb": 21.838333129882812,
+      "metrics": {
+        "route_macro_f1": 0.8857142857142857,
+        "intent_macro_f1": 0.19047619047619047,
+        "refusal_recall": 0.75,
+        "p50_latency_ms": 3.47564999901806,
+        "p95_latency_ms": 6.811495000147262
+      }
+    },
+    "quality_regressed": false,
+    "decision": "Retain quantized model (quality_regressed=False)",
+    "selected_model": "quantized"
+  }
+}

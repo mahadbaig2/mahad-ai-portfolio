@@ -340,10 +340,10 @@ Goal: Create reproducible foundations.
 
 ## Milestone 8.2 - Packaging
 
-- [ ] **P8.2.1 [A]** Export candidate to ONNX.
-- [ ] **P8.2.2 [A]** Verify ONNX predictions match framework predictions within tolerance.
-- [ ] **P8.2.3 [A]** Evaluate quantization; retain unquantized model if quality regresses.
-- [ ] **P8.2.4 [A]** Package tokenizer, labels, config, metrics and model card.
+- [x] **P8.2.1 [A]** Export candidate to ONNX.
+- [x] **P8.2.2 [A]** Verify ONNX predictions match framework predictions within tolerance.
+- [x] **P8.2.3 [A]** Evaluate quantization; retain unquantized model if quality regresses.
+- [x] **P8.2.4 [A]** Package tokenizer, labels, config, metrics and model card.
 - [ ] **P8.2.5 [A]** Publish an immutable artifact version only after Mahad approval.
 - [ ] **P8.2.6 [M]** Approve champion based on evidence, not architecture preference.
 - [ ] **P8.2.7 [A]** Mirror champion metadata in PostgreSQL.
