@@ -57,7 +57,6 @@ class MockVectorProvider(VectorProvider):
 VectorStoreDouble = MockVectorProvider
 
 
-
 class MockLLMProvider(LLMProvider):
     """Deterministic test double for LLMProvider."""
 
@@ -95,8 +94,10 @@ class MockContentProvider(ContentProvider):
         rag_only: bool = True,
     ) -> list[dict[str, Any]]:
         return [
-            d for d in self.documents
-            if d.get("_type") in document_types and (not rag_only or d.get("ragEnabled") is True)
+            d
+            for d in self.documents
+            if d.get("_type") in document_types
+            and (not rag_only or d.get("ragEnabled") is True)
         ]
 
 

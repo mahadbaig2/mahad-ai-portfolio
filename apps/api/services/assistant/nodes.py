@@ -5,9 +5,12 @@ Each node has a single responsibility and updates specific fields in AssistantSt
 
 import re
 import time
-from typing import Any, Dict
+from typing import Any
 
 from apps.api.schemas.router import IntentLabel, RouteLabel
+from apps.api.services.assistant.evidence_check import evaluate_evidence_node
+from apps.api.services.assistant.generation_node import grounded_generation_node
+from apps.api.services.assistant.retrieval_node import retrieve_evidence_node
 from apps.api.services.assistant.state import AssistantState
 from apps.api.services.query_router import get_router_service
 
@@ -25,7 +28,7 @@ _INJECTION_PATTERNS = [
 _COMPILED_INJECTIONS = [re.compile(p, re.IGNORECASE) for p in _INJECTION_PATTERNS]
 
 
-def validate_input_node(state: AssistantState) -> Dict[str, Any]:
+def validate_input_node(state: AssistantState) -> dict[str, Any]:
     """P9.1.2: Validate input bounds, sanitize control characters, and evaluate safety rules."""
     t0 = time.perf_counter()
     raw_text = state.get("input_text", "")
@@ -79,7 +82,7 @@ def validate_input_node(state: AssistantState) -> Dict[str, Any]:
     }
 
 
-def classify_query_node(state: AssistantState) -> Dict[str, Any]:
+def classify_query_node(state: AssistantState) -> dict[str, Any]:
     """P9.1.3: In-process ONNX query classification node without LLM API overhead."""
     t0 = time.perf_counter()
     query = state.get("sanitized_query") or state.get("input_text", "")
@@ -128,7 +131,10 @@ def classify_query_node(state: AssistantState) -> Dict[str, Any]:
 
     # P9.2.1: Check if deterministic navigation or contact override applies
     from apps.api.services.assistant.deterministic import resolve_deterministic_turn
-    det_res = resolve_deterministic_turn(query, prediction.intent.value, prediction.language.value)
+
+    det_res = resolve_deterministic_turn(
+        query, prediction.intent.value, prediction.language.value
+    )
     if det_res is not None and route != RouteLabel.REFUSAL.value:
         route = RouteLabel.DIRECT_CHAT.value
 
@@ -142,7 +148,7 @@ def classify_query_node(state: AssistantState) -> Dict[str, Any]:
     }
 
 
-def direct_response_node(state: AssistantState) -> Dict[str, Any]:
+def direct_response_node(state: AssistantState) -> dict[str, Any]:
     """P9.2.1: Deterministic resolution for contact info, navigation, greetings, and basic chitchat."""
     t0 = time.perf_counter()
     query = state.get("sanitized_query") or state.get("input_text", "")
@@ -150,6 +156,7 @@ def direct_response_node(state: AssistantState) -> Dict[str, Any]:
     language = state.get("language", "en")
 
     from apps.api.services.assistant.deterministic import resolve_deterministic_turn
+
     resolution = resolve_deterministic_turn(query, intent=intent, language=language)
 
     if resolution:
@@ -189,7 +196,7 @@ def direct_response_node(state: AssistantState) -> Dict[str, Any]:
     }
 
 
-def refusal_node(state: AssistantState) -> Dict[str, Any]:
+def refusal_node(state: AssistantState) -> dict[str, Any]:
     """Respectful refusal node for safety violations, prompt injection, or out-of-domain inquiries."""
     t0 = time.perf_counter()
     intent = state.get("intent", "")
@@ -236,7 +243,7 @@ def refusal_node(state: AssistantState) -> Dict[str, Any]:
     }
 
 
-def clarification_node(state: AssistantState) -> Dict[str, Any]:
+def clarification_node(state: AssistantState) -> dict[str, Any]:
     """Clarification node when router confidence is low or input is ambiguous."""
     t0 = time.perf_counter()
     language = state.get("language", "en")
@@ -269,12 +276,11 @@ def clarification_node(state: AssistantState) -> Dict[str, Any]:
     }
 
 
-def retrieval_stub_node(state: AssistantState) -> Dict[str, Any]:
-    """Placeholder node for RAG retrieval in Milestone 9.1 (fully implemented in Milestone 9.2)."""
+def retrieval_stub_node(state: AssistantState) -> dict[str, Any]:
+    """Placeholder node for RAG retrieval in Milestone 9.1 (retained for backward compatibility)."""
     t0 = time.perf_counter()
     query = state.get("retrieval_query") or state.get("sanitized_query", "")
 
-    # Stub returns structured placeholder showing successful graph routing to RAG branch
     duration_ms = (time.perf_counter() - t0) * 1000.0
     step_telemetry = {
         "step_name": "retrieval_routing",
@@ -290,3 +296,17 @@ def retrieval_stub_node(state: AssistantState) -> Dict[str, Any]:
         "final_answer": f"Retrieval route verified for query: '{query}'. Grounded context synthesis active.",
         "execution_steps": steps,
     }
+
+
+__all__ = [
+    "validate_input_node",
+    "classify_query_node",
+    "direct_response_node",
+    "refusal_node",
+    "clarification_node",
+    "retrieval_stub_node",
+    "retrieve_evidence_node",
+    "evaluate_evidence_node",
+    "grounded_generation_node",
+]
+

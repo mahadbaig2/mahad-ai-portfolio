@@ -11,6 +11,7 @@ from typing import Any
 
 class VectorPoint(ABC):
     """Normalized vector point contract."""
+
     id: str
     vector: list[float]
     payload: dict[str, Any]
@@ -18,6 +19,7 @@ class VectorPoint(ABC):
 
 class VectorSearchResult(ABC):
     """Normalized search result contract."""
+
     point_id: str
     score: float
     payload: dict[str, Any]

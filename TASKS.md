@@ -374,13 +374,14 @@ Goal: Create reproducible foundations.
 ## Milestone 9.2 - Deterministic and RAG routes
 
 - [x] **P9.2.1 [A]** Implement structured contact/navigation lookup without LLM calls.
-- [ ] **P9.2.2 [A]** Implement query normalization while preserving code-switching.
-- [ ] **P9.2.3 [A]** Implement filter planning.
-- [ ] **P9.2.4 [A]** Implement Qdrant retrieval and PostgreSQL hydration tool.
-- [ ] **P9.2.5 [A]** Implement threshold-based evidence check.
-- [ ] **P9.2.6 [A]** Implement grounded prompt with explicit source IDs.
-- [ ] **P9.2.7 [A]** Implement provider-neutral Groq adapter.
+- [x] **P9.2.2 [A]** Implement query normalization while preserving code-switching.
+- [x] **P9.2.3 [A]** Implement filter planning.
+- [x] **P9.2.4 [A]** Implement Qdrant retrieval and PostgreSQL hydration tool.
+- [x] **P9.2.5 [A]** Implement threshold-based evidence check.
+- [x] **P9.2.6 [A]** Implement grounded prompt with explicit source IDs.
+- [x] **P9.2.7 [A]** Implement provider-neutral Groq adapter.
 - [ ] **P9.2.8 [M]** Add Groq key to server-side secret stores.
+
 
 ## Milestone 9.3 - Agentic recovery and citations
 

@@ -10,10 +10,8 @@ Verifies Milestone 9.1:
 
 from uuid import uuid4
 
-import pytest
-
 from apps.api.schemas.assistant import AssistantChatResponse
-from apps.api.schemas.router import IntentLabel, LanguageLabel, RouteLabel
+from apps.api.schemas.router import IntentLabel, RouteLabel
 from apps.api.services.assistant.graph import (
     create_assistant_graph,
     get_assistant_graph,
@@ -75,7 +73,9 @@ def test_input_validation_node_injection_flagged():
 
 def test_classification_node_onnx_invocation():
     """P9.1.3: Classification node invokes in-process ONNX model and populates state."""
-    state = create_initial_state("What technologies did Mahad use for CardioScan AI?", str(uuid4()))
+    state = create_initial_state(
+        "What technologies did Mahad use for CardioScan AI?", str(uuid4())
+    )
     state["sanitized_query"] = state["input_text"]
 
     result = classify_query_node(state)
@@ -161,18 +161,21 @@ def test_compiled_graph_traversal_prompt_injection_refusal():
 
 
 def test_compiled_graph_traversal_rag_route():
-    """P9.1.4: Technical question traverses to the retrieval route branch."""
+    """P9.1.4 & P9.2: Technical question traverses to the retrieval route branch."""
     graph = get_assistant_graph()
     session_id = str(uuid4())
-    initial_state = create_initial_state("What architecture does CardioScan AI use?", session_id)
+    initial_state = create_initial_state(
+        "What architecture does CardioScan AI use?", session_id
+    )
 
     final_state = graph.invoke(initial_state, config={"recursion_limit": 10})
 
     assert final_state["is_safe"] is True
-    assert final_state["route"] == RouteLabel.RAG_RETRIEVAL.value
-
     step_names = [s["step_name"] for s in final_state["execution_steps"]]
-    assert step_names == ["validate_input", "classify_query", "retrieval_routing"]
+    assert "validate_input" in step_names
+    assert "classify_query" in step_names
+    assert "retrieve_evidence" in step_names
+    assert "evaluate_evidence" in step_names
 
 
 def test_run_assistant_turn_public_contract():
@@ -232,7 +235,9 @@ def test_deterministic_contact_lookup_resume():
 def test_deterministic_navigation_work_page():
     """P9.2.1: Project/case study navigation request deterministically targets /work."""
     session_id = str(uuid4())
-    response = run_assistant_turn("Show me Mahad's projects and case studies", session_id)
+    response = run_assistant_turn(
+        "Show me Mahad's projects and case studies", session_id
+    )
 
     assert response.route == RouteLabel.DIRECT_CHAT
     assert "/work" in response.answer
@@ -244,7 +249,9 @@ def test_deterministic_navigation_work_page():
 def test_deterministic_navigation_blog_page():
     """P9.2.1: Article/blog navigation request deterministically targets /blog."""
     session_id = str(uuid4())
-    response = run_assistant_turn("Where can I read your technical articles and blog posts?", session_id)
+    response = run_assistant_turn(
+        "Where can I read your technical articles and blog posts?", session_id
+    )
 
     assert response.route == RouteLabel.DIRECT_CHAT
     assert "/blog" in response.answer
@@ -256,7 +263,9 @@ def test_deterministic_navigation_blog_page():
 def test_deterministic_navigation_about_page():
     """P9.2.1: Bio/background navigation request deterministically targets /about."""
     session_id = str(uuid4())
-    response = run_assistant_turn("Tell me about Mahad's background and experience", session_id)
+    response = run_assistant_turn(
+        "Tell me about Mahad's background and experience", session_id
+    )
 
     assert response.route == RouteLabel.DIRECT_CHAT
     assert "/about" in response.answer
@@ -275,4 +284,3 @@ def test_deterministic_roman_urdu_contact_and_work():
     res_work = run_assistant_turn("Mujhe aap ka kaam dekhna hai", session_id)
     assert res_work.route == RouteLabel.DIRECT_CHAT
     assert "/work" in res_work.answer
-

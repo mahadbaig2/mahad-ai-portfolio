@@ -57,7 +57,9 @@ class QdrantVectorProvider(VectorProvider):
             exists = False
 
         if not exists:
-            logger.info(f"Creating Qdrant collection {self.collection_name} (dim={EMBEDDING_DIMENSION}, cosine)")
+            logger.info(
+                f"Creating Qdrant collection {self.collection_name} (dim={EMBEDDING_DIMENSION}, cosine)"
+            )
             await self.client.create_collection(
                 collection_name=self.collection_name,
                 vectors_config=qmodels.VectorParams(
@@ -96,7 +98,11 @@ class QdrantVectorProvider(VectorProvider):
             raw_payload = p.get("payload", {})
 
             # P5.1.5: Compact payload with only a short debug preview (full text resides in PostgreSQL)
-            text_preview = p.get("text", "")[:160] if "text" in p else raw_payload.get("text_preview", "")
+            text_preview = (
+                p.get("text", "")[:160]
+                if "text" in p
+                else raw_payload.get("text_preview", "")
+            )
             compact_payload: dict[str, Any] = {
                 "document_id": str(raw_payload.get("document_id", "")),
                 "document_type": raw_payload.get("document_type", "general"),
@@ -105,7 +111,9 @@ class QdrantVectorProvider(VectorProvider):
                 "target_audiences": raw_payload.get("target_audiences", ["general"]),
                 "heading_path": raw_payload.get("heading_path", ""),
                 "canonical_url": raw_payload.get("canonical_url", ""),
-                "embedding_version": raw_payload.get("embedding_version", EMBEDDING_MODEL_VERSION),
+                "embedding_version": raw_payload.get(
+                    "embedding_version", EMBEDDING_MODEL_VERSION
+                ),
                 "is_active": raw_payload.get("is_active", True),
                 "text_preview": text_preview,
             }
@@ -130,11 +138,15 @@ class QdrantVectorProvider(VectorProvider):
                 return len(qdrant_points)
             except Exception as e:
                 last_exception = e
-                logger.warning(f"Qdrant upsert attempt {attempt + 1}/{max_retries} failed: {e}")
+                logger.warning(
+                    f"Qdrant upsert attempt {attempt + 1}/{max_retries} failed: {e}"
+                )
                 if attempt < max_retries - 1:
-                    await asyncio.sleep(backoff_factor ** attempt)
+                    await asyncio.sleep(backoff_factor**attempt)
 
-        raise RuntimeError(f"Qdrant upsert failed after {max_retries} attempts: {last_exception}")
+        raise RuntimeError(
+            f"Qdrant upsert failed after {max_retries} attempts: {last_exception}"
+        )
 
     async def delete(
         self,
@@ -220,7 +232,6 @@ class QdrantVectorProvider(VectorProvider):
             }
             for r in response.points
         ]
-
 
     async def health_check(self) -> bool:
         """Verify Qdrant connectivity and collection accessibility."""

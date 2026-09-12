@@ -6,7 +6,6 @@ deterministically in sub-millisecond time for both English and Roman Urdu.
 
 import re
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional
 
 from apps.api.schemas.router import IntentLabel
 
@@ -14,10 +13,11 @@ from apps.api.schemas.router import IntentLabel
 @dataclass
 class DeterministicResolution:
     """Outcome of a deterministic structured lookup."""
+
     answer: str
     intent: str
-    navigation_target: Optional[Dict[str, str]] = None
-    suggested_actions: List[Dict[str, str]] = field(default_factory=list)
+    navigation_target: dict[str, str] | None = None
+    suggested_actions: list[dict[str, str]] = field(default_factory=list)
 
 
 # Authoritative contact constants (aligned with Sanity CMS & site settings)
@@ -185,7 +185,9 @@ _NAV_ABOUT_PATTERN = re.compile(
 )
 
 
-def resolve_navigation_lookup(query: str, language: str = "en") -> Optional[DeterministicResolution]:
+def resolve_navigation_lookup(
+    query: str, language: str = "en"
+) -> DeterministicResolution | None:
     """Detect if query is an explicit request to navigate or locate a portfolio section."""
     # Check if query is seeking page navigation or listing
     has_nav_work = bool(_NAV_WORK_PATTERN.search(query))
@@ -193,11 +195,13 @@ def resolve_navigation_lookup(query: str, language: str = "en") -> Optional[Dete
     has_nav_about = bool(_NAV_ABOUT_PATTERN.search(query))
 
     # Match work/projects navigation
-    if has_nav_work and not ("technolog" in query.lower() or "architecture" in query.lower()):
+    if has_nav_work and not (
+        "technolog" in query.lower() or "architecture" in query.lower()
+    ):
         target = NAVIGATION_PAGES["work"]
         if language == "ur":
             answer = (
-                f"Mahad ke tamam production systems aur case studies **[Selected Work](/work)** page par dastyab hain.\n\n"
+                "Mahad ke tamam production systems aur case studies **[Selected Work](/work)** page par dastyab hain.\n\n"
                 "Highlights include:\n"
                 "- **Mahad AI Portfolio**: Inspectable RAG, ONNX routing, and budget-constrained architecture.\n"
                 "- **CardioScan AI**: Deep learning echocardiography proof-of-concept.\n"
@@ -206,7 +210,7 @@ def resolve_navigation_lookup(query: str, language: str = "en") -> Optional[Dete
             )
         else:
             answer = (
-                f"You can explore Mahad's engineering projects on the **[Selected Work](/work)** page.\n\n"
+                "You can explore Mahad's engineering projects on the **[Selected Work](/work)** page.\n\n"
                 "Featured case studies include:\n"
                 "- **Mahad AI Portfolio**: Inspectable RAG system with in-process ML routing on $0 cloud budget.\n"
                 "- **CardioScan AI**: Academic proof-of-concept for automated cardiac view interpretation.\n"
@@ -229,7 +233,7 @@ def resolve_navigation_lookup(query: str, language: str = "en") -> Optional[Dete
         target = NAVIGATION_PAGES["blog"]
         if language == "ur":
             answer = (
-                f"Mahad ke technical articles aur system design deep-dives **[Articles & Notes](/blog)** section mein hain.\n\n"
+                "Mahad ke technical articles aur system design deep-dives **[Articles & Notes](/blog)** section mein hain.\n\n"
                 "Featured writings:\n"
                 "- *Architecting an Intentionally Over-Engineered AI Portfolio on Free-Tier Cloud*\n"
                 "- *In-Process ML Routing: Sub-5ms Query Classification Without LLM Overhead*\n"
@@ -237,7 +241,7 @@ def resolve_navigation_lookup(query: str, language: str = "en") -> Optional[Dete
             )
         else:
             answer = (
-                f"Mahad's technical writings and architectural deep-dives are available on the **[Articles & Notes](/blog)** page.\n\n"
+                "Mahad's technical writings and architectural deep-dives are available on the **[Articles & Notes](/blog)** page.\n\n"
                 "Featured articles include:\n"
                 "- *Architecting an Intentionally Over-Engineered AI Portfolio on Free-Tier Cloud*\n"
                 "- *In-Process ML Routing: Sub-5ms Query Classification Without LLM Overhead*\n"
@@ -259,7 +263,7 @@ def resolve_navigation_lookup(query: str, language: str = "en") -> Optional[Dete
         target = NAVIGATION_PAGES["about"]
         if language == "ur":
             answer = (
-                f"Mahad Baig ke career background aur technical competencies ke liye **[About Mahad](/about)** page visit karein.\n\n"
+                "Mahad Baig ke career background aur technical competencies ke liye **[About Mahad](/about)** page visit karein.\n\n"
                 "Summary:\n"
                 "- **Role**: AI Product Engineer specializing in grounded RAG, in-process ML, and verifiable AI systems.\n"
                 "- **Focus**: Inspectable architectures, bounded latency, and strict zero-dollar operating overhead.\n"
@@ -267,7 +271,7 @@ def resolve_navigation_lookup(query: str, language: str = "en") -> Optional[Dete
             )
         else:
             answer = (
-                f"To learn more about Mahad's background, technical competencies, and philosophy, visit the **[About Mahad](/about)** page.\n\n"
+                "To learn more about Mahad's background, technical competencies, and philosophy, visit the **[About Mahad](/about)** page.\n\n"
                 "Executive Summary:\n"
                 "- **Role**: AI Product Engineer & System Architect.\n"
                 "- **Specialization**: Grounded RAG pipelines, in-process ML routing, and deterministic agent orchestration.\n"
@@ -321,7 +325,7 @@ def resolve_deterministic_turn(
     query: str,
     intent: str,
     language: str = "en",
-) -> Optional[DeterministicResolution]:
+) -> DeterministicResolution | None:
     """Top-level resolver for all deterministic non-LLM paths (P9.2.1)."""
     # 1. Contact Info lookup (explicit intent or keyword pattern with word boundaries)
     if intent == IntentLabel.CONTACT_INFO.value or bool(_CONTACT_PATTERN.search(query)):

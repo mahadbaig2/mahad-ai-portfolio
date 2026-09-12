@@ -1,6 +1,6 @@
 """Typed state definitions for the LangGraph assistant graph (P9.1.1)."""
 
-from typing import Any, Dict, List, Optional, TypedDict
+from typing import Any, TypedDict
 
 
 class AssistantState(TypedDict):
@@ -28,35 +28,36 @@ class AssistantState(TypedDict):
     - errors: Trace of non-fatal execution errors
     - execution_steps: Detailed telemetry records for the UI Execution Inspector
     """
+
     input_text: str
     session_id: str
     mode: str
-    transcript: List[Dict[str, Any]]
+    transcript: list[dict[str, Any]]
     sanitized_query: str
     is_safe: bool
-    safety_violations: List[str]
-    classifier_output: Optional[Dict[str, Any]]
+    safety_violations: list[str]
+    classifier_output: dict[str, Any] | None
     route: str
     intent: str
     language: str
     confidence: float
     retrieval_query: str
-    evidence_chunks: List[Dict[str, Any]]
+    evidence_chunks: list[dict[str, Any]]
     retrieval_retries: int
     draft_answer: str
     final_answer: str
-    citations: List[str]
-    suggested_actions: List[Dict[str, str]]
-    navigation_target: Optional[Dict[str, str]]
-    errors: List[str]
-    execution_steps: List[Dict[str, Any]]
+    citations: list[str]
+    suggested_actions: list[dict[str, str]]
+    navigation_target: dict[str, str] | None
+    errors: list[str]
+    execution_steps: list[dict[str, Any]]
 
 
 def create_initial_state(
     input_text: str,
     session_id: str,
     mode: str = "text",
-    transcript: Optional[List[Dict[str, Any]]] = None,
+    transcript: list[dict[str, Any]] | None = None,
 ) -> AssistantState:
     """Create a clean initial state for a new assistant turn."""
     return {

@@ -1,7 +1,6 @@
-"""LangGraph workflow definition, conditional edges, and execution engine (P9.1.4 & P9.1.5)."""
+"""LangGraph workflow definition, conditional edges, and execution engine (P9.1.4, P9.1.5 & P9.2)."""
 
 import logging
-from typing import Any, Dict, Optional
 from uuid import UUID
 
 from langgraph.graph import END, StateGraph
@@ -16,8 +15,10 @@ from apps.api.services.assistant.nodes import (
     clarification_node,
     classify_query_node,
     direct_response_node,
+    evaluate_evidence_node,
+    grounded_generation_node,
     refusal_node,
-    retrieval_stub_node,
+    retrieve_evidence_node,
     validate_input_node,
 )
 from apps.api.services.assistant.state import AssistantState, create_initial_state
@@ -47,14 +48,24 @@ def route_after_classification(state: AssistantState) -> str:
     elif route == "clarification":
         return "clarification"
     elif route == RouteLabel.RAG_RETRIEVAL.value:
-        return "retrieval"
+        return "retrieve_evidence"
 
     # Default fallback
-    return "retrieval"
+    return "retrieve_evidence"
+
+
+def route_after_evidence(state: AssistantState) -> str:
+    """P9.2.5: Conditional edge evaluating threshold evidence check."""
+    route = state.get("route", "")
+    if route == "grounded_generation":
+        return "grounded_generation"
+    elif route == "clarification":
+        return "clarification"
+    return "refusal"
 
 
 def create_assistant_graph():
-    """Build and compile the typed LangGraph assistant workflow."""
+    """Build and compile the typed LangGraph assistant workflow with full Milestone 9.2 RAG pipeline."""
     builder = StateGraph(AssistantState)
 
     # Register nodes
@@ -63,7 +74,9 @@ def create_assistant_graph():
     builder.add_node("direct_response", direct_response_node)
     builder.add_node("refusal", refusal_node)
     builder.add_node("clarification", clarification_node)
-    builder.add_node("retrieval", retrieval_stub_node)
+    builder.add_node("retrieve_evidence", retrieve_evidence_node)
+    builder.add_node("evaluate_evidence", evaluate_evidence_node)
+    builder.add_node("grounded_generation", grounded_generation_node)
 
     # Set entry point
     builder.set_entry_point("validate_input")
@@ -85,7 +98,20 @@ def create_assistant_graph():
             "direct_response": "direct_response",
             "refusal": "refusal",
             "clarification": "clarification",
-            "retrieval": "retrieval",
+            "retrieve_evidence": "retrieve_evidence",
+        },
+    )
+
+    # RAG pipeline edges (P9.2)
+    builder.add_edge("retrieve_evidence", "evaluate_evidence")
+
+    builder.add_conditional_edges(
+        "evaluate_evidence",
+        route_after_evidence,
+        {
+            "grounded_generation": "grounded_generation",
+            "clarification": "clarification",
+            "refusal": "refusal",
         },
     )
 
@@ -93,7 +119,7 @@ def create_assistant_graph():
     builder.add_edge("direct_response", END)
     builder.add_edge("refusal", END)
     builder.add_edge("clarification", END)
-    builder.add_edge("retrieval", END)
+    builder.add_edge("grounded_generation", END)
 
     return builder.compile()
 
@@ -114,9 +140,9 @@ def run_assistant_turn(
     message: str,
     session_id: str,
     mode: str = "text",
-    history: Optional[list] = None,
+    history: list | None = None,
 ) -> AssistantChatResponse:
-    """Execute a single assistant turn through the compiled LangGraph workflow (P9.1.5)."""
+    """Execute a single assistant turn through the compiled LangGraph workflow (P9.1.5 & P9.2)."""
     graph = get_assistant_graph()
     initial_state = create_initial_state(
         input_text=message,
