@@ -380,7 +380,8 @@ Goal: Create reproducible foundations.
 - [x] **P9.2.5 [A]** Implement threshold-based evidence check.
 - [x] **P9.2.6 [A]** Implement grounded prompt with explicit source IDs.
 - [x] **P9.2.7 [A]** Implement provider-neutral Groq adapter.
-- [ ] **P9.2.8 [M]** Add Groq key to server-side secret stores.
+- [x] **P9.2.8 [M]** Add Groq key to server-side secret stores.
+
 
 
 ## Milestone 9.3 - Agentic recovery and citations
