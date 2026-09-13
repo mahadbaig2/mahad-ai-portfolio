@@ -17,6 +17,7 @@ if (fs.existsSync(rootEnvPath) && typeof process.loadEnvFile === 'function') {
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'export',
   env: {
     NEXT_PUBLIC_SANITY_PROJECT_ID:
       process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 'rnjj6f7w',
@@ -26,6 +27,7 @@ const nextConfig = {
       process.env.NEXT_PUBLIC_SANITY_API_VERSION || '2024-03-01',
   },
   images: {
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
