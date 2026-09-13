@@ -409,11 +409,11 @@ Goal: Create reproducible foundations.
 
 ## Milestone 10.1 - Safe tracing
 
-- [ ] **P10.1.1 [A]** Add optional LangSmith configuration disabled by default locally.
-- [ ] **P10.1.2 [A]** Add trace hierarchy for classifier, retrieval, grading, generation and verification.
-- [ ] **P10.1.3 [A]** Redact secrets, raw audio and sensitive user content.
-- [ ] **P10.1.4 [A]** Add trace sampling and monthly hard-disable threshold below free allowance.
-- [ ] **P10.1.5 [A]** Prove user requests succeed when LangSmith is unavailable.
+- [x] **P10.1.1 [A]** Add optional LangSmith configuration disabled by default locally.
+- [x] **P10.1.2 [A]** Add trace hierarchy for classifier, retrieval, grading, generation and verification.
+- [x] **P10.1.3 [A]** Redact secrets, raw audio and sensitive user content.
+- [x] **P10.1.4 [A]** Add trace sampling and monthly hard-disable threshold below free allowance.
+- [x] **P10.1.5 [A]** Prove user requests succeed when LangSmith is unavailable.
 - [ ] **P10.1.6 [M]** Add LangSmith key and project name to deployment secrets.
 
 ## Milestone 10.2 - Evaluation suites

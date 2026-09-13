@@ -6,6 +6,7 @@ from uuid import UUID
 
 from langgraph.graph import END, StateGraph
 
+from apps.api.core.observability import log_safe_trace_step
 from apps.api.schemas.assistant import (
     AssistantChatResponse,
     AssistantMode,
@@ -222,6 +223,16 @@ def run_assistant_turn(
         evidence_chunks=final_state.get("evidence_chunks", []),
         cited_chunk_ids=final_state.get("citations", []),
     )
+
+    # P10.1.2: Safe hierarchy tracing to LangSmith (non-fatal)
+    for s in final_state.get("execution_steps", []):
+        log_safe_trace_step(
+            step_name=f"assistant.{s['step_name']}",
+            run_type="tool" if s["step_name"] in ("retrieve_evidence", "grade_evidence") else "chain",
+            inputs={"query": message},
+            outputs={"status": s.get("status"), "details": s.get("details", {})},
+            session_id=session_id,
+        )
 
     # Map state to typed Pydantic response contract
     steps = [

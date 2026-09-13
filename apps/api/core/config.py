@@ -109,11 +109,14 @@ class Settings(BaseSettings):
     GROQ_WHISPER_MODEL: str = "whisper-large-v3"
 
     # --------------------------------------------------------------------------
-    # LangSmith Observability
+    # LangSmith Observability (P10.1.1 & P10.1.4)
     # --------------------------------------------------------------------------
-    LANGSMITH_TRACING: bool = False
-    LANGSMITH_API_KEY: str = Field(default="")
-    LANGSMITH_PROJECT: str = "mahad-portfolio-assistant"
+    LANGSMITH_TRACING: bool = Field(default=False, alias="LANGCHAIN_TRACING_V2")
+    LANGSMITH_ENDPOINT: str = Field(default="https://api.smith.langchain.com", alias="LANGCHAIN_ENDPOINT")
+    LANGSMITH_API_KEY: str = Field(default="", alias="LANGCHAIN_API_KEY")
+    LANGSMITH_PROJECT: str = Field(default="mahad-ai-portfolio", alias="LANGCHAIN_PROJECT")
+    LANGSMITH_SAMPLE_RATE: float = Field(default=1.0, ge=0.0, le=1.0)
+    LANGSMITH_MAX_MONTHLY_TRACES: int = Field(default=4000, description="Monthly threshold safely below 5000 free tier")
 
     # --------------------------------------------------------------------------
     # Sanity CMS Integrations
