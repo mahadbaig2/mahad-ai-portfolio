@@ -414,24 +414,24 @@ Goal: Create reproducible foundations.
 - [x] **P10.1.3 [A]** Redact secrets, raw audio and sensitive user content.
 - [x] **P10.1.4 [A]** Add trace sampling and monthly hard-disable threshold below free allowance.
 - [x] **P10.1.5 [A]** Prove user requests succeed when LangSmith is unavailable.
-- [ ] **P10.1.6 [M]** Add LangSmith key and project name to deployment secrets.
+- [x] **P10.1.6 [M]** Add LangSmith key and project name to deployment secrets.
 
 ## Milestone 10.2 - Evaluation suites
 
-- [ ] **P10.2.1 [A+M]** Create recruiter, engineer and founder evaluation cases; Mahad approves expected behavior.
-- [ ] **P10.2.2 [A+M]** Create English/Roman Urdu cases; Mahad reviews naturalness.
-- [ ] **P10.2.3 [A]** Create unanswerable, incorrect-premise and prompt-injection cases.
-- [ ] **P10.2.4 [A]** Implement retrieval relevance, groundedness, citation and refusal evaluators.
-- [ ] **P10.2.5 [A]** Record prompt, model, embedding and index versions for each run.
-- [ ] **P10.2.6 [A]** Establish initial release thresholds from measured baseline results.
+- [x] **P10.2.1 [A+M]** Create recruiter, engineer and founder evaluation cases; Mahad approves expected behavior.
+- [x] **P10.2.2 [A+M]** Create English/Roman Urdu cases; Mahad reviews naturalness.
+- [x] **P10.2.3 [A]** Create unanswerable, incorrect-premise and prompt-injection cases.
+- [x] **P10.2.4 [A]** Implement retrieval relevance, groundedness, citation and refusal evaluators.
+- [x] **P10.2.5 [A]** Record prompt, model, embedding and index versions for each run.
+- [x] **P10.2.6 [A]** Establish initial release thresholds from measured baseline results.
 
 ## Milestone 10.3 - Release regression gate
 
-- [ ] **P10.3.1 [A]** Run a small deterministic evaluation set on every pull request.
-- [ ] **P10.3.2 [A]** Run cost-controlled LLM evaluation before release only.
-- [ ] **P10.3.3 [A]** Store human-readable evaluation summary as CI artifact.
-- [ ] **P10.3.4 [A]** Block release on citation/refusal regression.
-- [ ] **P10.G GATE [A]** Tracing is safe/capped and regressions block release.
+- [x] **P10.3.1 [A]** Run a small deterministic evaluation set on every pull request.
+- [x] **P10.3.2 [A]** Run cost-controlled LLM evaluation before release only.
+- [x] **P10.3.3 [A]** Store human-readable evaluation summary as CI artifact.
+- [x] **P10.3.4 [A]** Block release on citation/refusal regression.
+- [x] **P10.G GATE [A]** Tracing is safe/capped and regressions block release.
 
 ---
 
@@ -439,29 +439,29 @@ Goal: Create reproducible foundations.
 
 ## Milestone 11.1 - API integration
 
-- [ ] **P11.1.1 [A]** Generate or validate frontend types from OpenAPI.
-- [ ] **P11.1.2 [A]** Create server-only API proxy configuration.
-- [ ] **P11.1.3 [A]** Implement bounded client conversation state.
-- [ ] **P11.1.4 [A]** Implement SSE parsing, cancellation and reconnection rules.
-- [ ] **P11.1.5 [A]** Do not persist history without affirmative consent.
+- [x] **P11.1.1 [A]** Generate or validate frontend types from OpenAPI.
+- [x] **P11.1.2 [A]** Create server-only API proxy configuration.
+- [x] **P11.1.3 [A]** Implement bounded client conversation state.
+- [x] **P11.1.4 [A]** Implement SSE parsing, cancellation and reconnection rules.
+- [x] **P11.1.5 [A]** Do not persist history without affirmative consent.
 
 ## Milestone 11.2 - Chat UX
 
-- [ ] **P11.2.1 [A]** Add concise Recruiter, Engineer and Founder mode selector.
-- [ ] **P11.2.2 [A]** Add text input, submit, stop and clear controls.
-- [ ] **P11.2.3 [A]** Add suggested questions without marketing jargon.
-- [ ] **P11.2.4 [A]** Show functional states: classifying, searching, generating and error.
-- [ ] **P11.2.5 [A]** Render citations as source cards.
-- [ ] **P11.2.6 [A]** Add feedback control and optional reason.
-- [ ] **P11.2.7 [A]** Add keyboard and screen-reader support.
+- [x] **P11.2.1 [A]** Add concise Recruiter, Engineer and Founder mode selector.
+- [x] **P11.2.2 [A]** Add text input, submit, stop and clear controls.
+- [x] **P11.2.3 [A]** Add suggested questions without marketing jargon.
+- [x] **P11.2.4 [A]** Show functional states: classifying, searching, generating and error.
+- [x] **P11.2.5 [A]** Render citations as source cards.
+- [x] **P11.2.6 [A]** Add feedback control and optional reason.
+- [x] **P11.2.7 [A]** Add keyboard and screen-reader support.
 
 ## Milestone 11.3 - Safe execution inspector
 
-- [ ] **P11.3.1 [A]** Show route, confidence and model version.
-- [ ] **P11.3.2 [A]** Show graph path, retrieval duration and retry count.
-- [ ] **P11.3.3 [A]** Show source titles and safe similarity scores.
-- [ ] **P11.3.4 [A]** Show high-level latency/token data.
-- [ ] **P11.3.5 [A]** Explicitly exclude system prompts, secrets, hidden reasoning and private data.
+- [x] **P11.3.1 [A]** Show route, confidence and model version.
+- [x] **P11.3.2 [A]** Show graph path, retrieval duration and retry count.
+- [x] **P11.3.3 [A]** Show source titles and safe similarity scores.
+- [x] **P11.3.4 [A]** Show high-level latency/token data.
+- [x] **P11.3.5 [A]** Explicitly exclude system prompts, secrets, hidden reasoning and private data.
 - [ ] **P11.3.6 [M]** Review inspector usefulness for recruiters and engineers.
 - [ ] **P11.G GATE [A+M]** Chat is readable, mobile-friendly, accessible and honest about failures.
 
