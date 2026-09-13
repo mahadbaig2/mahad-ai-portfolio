@@ -73,13 +73,21 @@ def evaluate_evidence_node(state: dict[str, Any]) -> dict[str, Any]:
     steps = list(state.get("execution_steps", []))
     steps.append(step_telemetry)
 
-    # Route update based on threshold evaluation
+    retrieval_retries = state.get("retrieval_retries", 0)
+
+    # Route update based on threshold evaluation (P9.2.5 & P9.3.1-3)
     if status == "sufficient":
         next_route = "grounded_generation"
     elif status == "uncertain":
-        next_route = "clarification"
+        next_route = "grade_evidence"
+    elif retrieval_retries < 1:
+        next_route = "rewrite_query"
     else:
-        next_route = "refusal"
+        intent = state.get("intent", "")
+        if intent in ("project_technical", "career_skills", "architecture_decisions"):
+            next_route = "clarification"
+        else:
+            next_route = "refusal"
 
     return {
         "route": next_route,

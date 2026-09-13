@@ -163,7 +163,7 @@ def test_evidence_quality_insufficient_or_empty():
 
 
 def test_evaluate_evidence_node_routing():
-    """P9.2.5: evaluate_evidence_node routes appropriately based on chunk quality."""
+    """P9.2.5 & P9.3.1-2: evaluate_evidence_node routes appropriately based on chunk quality and retries."""
     # Sufficient evidence -> grounded_generation
     state_sufficient = {
         "evidence_chunks": [{"similarity_score": 0.88}],
@@ -172,10 +172,23 @@ def test_evaluate_evidence_node_routing():
     res_sufficient = evaluate_evidence_node(state_sufficient)
     assert res_sufficient["route"] == "grounded_generation"
 
-    # Insufficient evidence -> refusal
-    state_empty = {"evidence_chunks": [], "execution_steps": []}
-    res_empty = evaluate_evidence_node(state_empty)
-    assert res_empty["route"] == "refusal"
+    # Insufficient evidence with retry available -> rewrite_query (P9.3.2)
+    state_empty_initial = {
+        "evidence_chunks": [],
+        "execution_steps": [],
+        "retrieval_retries": 0,
+    }
+    res_empty_initial = evaluate_evidence_node(state_empty_initial)
+    assert res_empty_initial["route"] == "rewrite_query"
+
+    # Insufficient evidence with retry exhausted -> refusal (P9.3.3)
+    state_empty_exhausted = {
+        "evidence_chunks": [],
+        "execution_steps": [],
+        "retrieval_retries": 1,
+    }
+    res_empty_exhausted = evaluate_evidence_node(state_empty_exhausted)
+    assert res_empty_exhausted["route"] == "refusal"
 
 
 # =============================================================================

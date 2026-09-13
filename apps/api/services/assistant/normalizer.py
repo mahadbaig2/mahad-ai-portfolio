@@ -77,10 +77,10 @@ def normalize_query(text: str) -> NormalizedQuery:
 
     # 4. Standardize Roman Urdu phonetics without erasing code-switched terms
     has_roman_urdu = False
-    for pattern, replacement in ROMAN_URDU_NORMALIZATION_MAP.items():
-        if re.search(pattern, normalized, re.IGNORECASE):
+    for pat, replacement in ROMAN_URDU_NORMALIZATION_MAP.items():
+        if re.search(pat, normalized, re.IGNORECASE):
             has_roman_urdu = True
-            normalized = re.sub(pattern, replacement, normalized, flags=re.IGNORECASE)
+            normalized = re.sub(pat, replacement, normalized, flags=re.IGNORECASE)
 
     # Secondary Roman Urdu indicator check
     urdu_markers = [

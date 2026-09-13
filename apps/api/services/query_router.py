@@ -11,10 +11,9 @@ Tasks:
 
 import json
 import logging
-import os
 import time
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 import numpy as np
 import onnxruntime as ort
@@ -37,18 +36,18 @@ _router_service_instance: Optional["QueryRouterService"] = None
 class QueryRouterService:
     """In-process ONNX query classification service running directly within FastAPI."""
 
-    def __init__(self, model_dir: Optional[Path] = None, confidence_threshold: Optional[float] = None):
+    def __init__(self, model_dir: Path | None = None, confidence_threshold: float | None = None):
         settings = get_settings()
         self.model_dir = model_dir or (ROOT_DIR / settings.MODEL_ROUTER_DIR)
         self.confidence_threshold = (
             confidence_threshold if confidence_threshold is not None else settings.MODEL_ROUTER_CONFIDENCE_THRESHOLD
         )
-        self.session: Optional[ort.InferenceSession] = None
-        self.tokenizer: Optional[AutoTokenizer] = None
-        self.config: Dict[str, Any] = {}
+        self.session: ort.InferenceSession | None = None
+        self.tokenizer: Any = None
+        self.config: dict[str, Any] = {}
         self._load_model()
 
-    def _load_model(self):
+    def _load_model(self) -> None:
         t0 = time.perf_counter()
         if not self.model_dir.exists():
             raise FileNotFoundError(f"Model release directory not found: {self.model_dir}")
@@ -65,7 +64,7 @@ class QueryRouterService:
             raise FileNotFoundError(f"Tokenizer directory not found: {tokenizer_dir}")
 
         # Load config
-        with open(config_file, "r", encoding="utf-8") as f:
+        with open(config_file, encoding="utf-8") as f:
             self.config = json.load(f)
 
         # Load ONNX Session (Single instance per process)
@@ -75,7 +74,7 @@ class QueryRouterService:
         self.session = ort.InferenceSession(str(onnx_file), sess_options, providers=["CPUExecutionProvider"])
 
         # Load Tokenizer
-        self.tokenizer = AutoTokenizer.from_pretrained(str(tokenizer_dir), local_files_only=True)
+        self.tokenizer = AutoTokenizer.from_pretrained(str(tokenizer_dir), local_files_only=True)  # type: ignore[no-untyped-call]
         t1 = time.perf_counter()
         self.load_latency_ms = (t1 - t0) * 1000.0
 
@@ -180,7 +179,7 @@ def get_router_service() -> QueryRouterService:
     return _router_service_instance
 
 
-def reset_router_service(new_model_dir: Optional[Path] = None) -> QueryRouterService:
+def reset_router_service(new_model_dir: Path | None = None) -> QueryRouterService:
     """Reinitialize or rollback router service to a specific artifact directory (P8.3.6)."""
     global _router_service_instance
     _router_service_instance = QueryRouterService(model_dir=new_model_dir)

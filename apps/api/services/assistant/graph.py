@@ -1,6 +1,7 @@
 """LangGraph workflow definition, conditional edges, and execution engine (P9.1.4, P9.1.5 & P9.2)."""
 
 import logging
+from typing import Any
 from uuid import UUID
 
 from langgraph.graph import END, StateGraph
@@ -11,14 +12,18 @@ from apps.api.schemas.assistant import (
     ExecutionStepPayload,
 )
 from apps.api.schemas.router import LanguageLabel, RouteLabel
+from apps.api.services.assistant.audit import record_safe_retrieval_event
 from apps.api.services.assistant.nodes import (
+    apply_audience_style_node,
     clarification_node,
     classify_query_node,
     direct_response_node,
     evaluate_evidence_node,
+    grade_evidence_node,
     grounded_generation_node,
     refusal_node,
     retrieve_evidence_node,
+    rewrite_query_node,
     validate_input_node,
 )
 from apps.api.services.assistant.state import AssistantState, create_initial_state
@@ -55,17 +60,33 @@ def route_after_classification(state: AssistantState) -> str:
 
 
 def route_after_evidence(state: AssistantState) -> str:
-    """P9.2.5: Conditional edge evaluating threshold evidence check."""
+    """P9.2.5 & P9.3.1: Conditional edge evaluating threshold evidence check."""
     route = state.get("route", "")
     if route == "grounded_generation":
         return "grounded_generation"
+    elif route == "grade_evidence":
+        return "grade_evidence"
+    elif route == "rewrite_query":
+        return "rewrite_query"
     elif route == "clarification":
         return "clarification"
     return "refusal"
 
 
-def create_assistant_graph():
-    """Build and compile the typed LangGraph assistant workflow with full Milestone 9.2 RAG pipeline."""
+def route_after_grading(state: AssistantState) -> str:
+    """P9.3.1 & P9.3.2: Conditional edge evaluating evidence grader decision."""
+    route = state.get("route", "")
+    if route == "grounded_generation":
+        return "grounded_generation"
+    elif route == "rewrite_query":
+        return "rewrite_query"
+    elif route == "clarification":
+        return "clarification"
+    return "refusal"
+
+
+def create_assistant_graph() -> Any:
+    """Build and compile the typed LangGraph assistant workflow with full Milestone 9.3 recovery & citation layers."""
     builder = StateGraph(AssistantState)
 
     # Register nodes
@@ -76,7 +97,10 @@ def create_assistant_graph():
     builder.add_node("clarification", clarification_node)
     builder.add_node("retrieve_evidence", retrieve_evidence_node)
     builder.add_node("evaluate_evidence", evaluate_evidence_node)
+    builder.add_node("grade_evidence", grade_evidence_node)
+    builder.add_node("rewrite_query", rewrite_query_node)
     builder.add_node("grounded_generation", grounded_generation_node)
+    builder.add_node("apply_audience_style", apply_audience_style_node)
 
     # Set entry point
     builder.set_entry_point("validate_input")
@@ -102,7 +126,7 @@ def create_assistant_graph():
         },
     )
 
-    # RAG pipeline edges (P9.2)
+    # RAG pipeline edges (P9.2 & P9.3)
     builder.add_edge("retrieve_evidence", "evaluate_evidence")
 
     builder.add_conditional_edges(
@@ -110,16 +134,35 @@ def create_assistant_graph():
         route_after_evidence,
         {
             "grounded_generation": "grounded_generation",
+            "grade_evidence": "grade_evidence",
+            "rewrite_query": "rewrite_query",
             "clarification": "clarification",
             "refusal": "refusal",
         },
     )
 
+    builder.add_conditional_edges(
+        "grade_evidence",
+        route_after_grading,
+        {
+            "grounded_generation": "grounded_generation",
+            "rewrite_query": "rewrite_query",
+            "clarification": "clarification",
+            "refusal": "refusal",
+        },
+    )
+
+    # Bounded retry loop (P9.3.2): rewrite_query loops back to retrieve_evidence
+    builder.add_edge("rewrite_query", "retrieve_evidence")
+
+    # Grounded synthesis transitions to audience style adaptation (P9.3.5 & P9.3.6)
+    builder.add_edge("grounded_generation", "apply_audience_style")
+
     # Terminal edges
     builder.add_edge("direct_response", END)
     builder.add_edge("refusal", END)
     builder.add_edge("clarification", END)
-    builder.add_edge("grounded_generation", END)
+    builder.add_edge("apply_audience_style", END)
 
     return builder.compile()
 
@@ -128,7 +171,7 @@ def create_assistant_graph():
 _compiled_graph = None
 
 
-def get_assistant_graph():
+def get_assistant_graph() -> Any:
     """Obtain or compile singleton LangGraph assistant workflow."""
     global _compiled_graph
     if _compiled_graph is None:
@@ -140,15 +183,17 @@ def run_assistant_turn(
     message: str,
     session_id: str,
     mode: str = "text",
-    history: list | None = None,
+    history: list[dict[str, Any]] | None = None,
+    persona: str = "general",
 ) -> AssistantChatResponse:
-    """Execute a single assistant turn through the compiled LangGraph workflow (P9.1.5 & P9.2)."""
+    """Execute a single assistant turn through the compiled LangGraph workflow (P9.1.5, P9.2 & P9.3)."""
     graph = get_assistant_graph()
     initial_state = create_initial_state(
         input_text=message,
         session_id=session_id,
         mode=mode,
         transcript=history,
+        persona=persona,
     )
 
     config = {"recursion_limit": HARD_RECURSION_LIMIT}
@@ -169,6 +214,14 @@ def run_assistant_turn(
             execution_steps=[],
             errors=[str(e)],
         )
+
+    # P9.3.7: Safe retrieval event persistence (non-fatal)
+    record_safe_retrieval_event(
+        query_text=final_state.get("sanitized_query") or message,
+        rewritten_query=final_state.get("rewritten_query"),
+        evidence_chunks=final_state.get("evidence_chunks", []),
+        cited_chunk_ids=final_state.get("citations", []),
+    )
 
     # Map state to typed Pydantic response contract
     steps = [

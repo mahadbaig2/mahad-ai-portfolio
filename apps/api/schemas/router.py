@@ -3,7 +3,7 @@ Pydantic schemas and contracts for in-process query router predictions.
 """
 
 from enum import Enum
-from typing import Optional
+
 from pydantic import BaseModel, Field
 
 

@@ -8,8 +8,11 @@ import time
 from typing import Any
 
 from apps.api.schemas.router import IntentLabel, RouteLabel
+from apps.api.services.assistant.audience_styler import apply_audience_style_node
 from apps.api.services.assistant.evidence_check import evaluate_evidence_node
+from apps.api.services.assistant.evidence_grader import grade_evidence_node
 from apps.api.services.assistant.generation_node import grounded_generation_node
+from apps.api.services.assistant.query_rewriter import rewrite_query_node
 from apps.api.services.assistant.retrieval_node import retrieve_evidence_node
 from apps.api.services.assistant.state import AssistantState
 from apps.api.services.query_router import get_router_service
@@ -197,11 +200,13 @@ def direct_response_node(state: AssistantState) -> dict[str, Any]:
 
 
 def refusal_node(state: AssistantState) -> dict[str, Any]:
-    """Respectful refusal node for safety violations, prompt injection, or out-of-domain inquiries."""
+    """Respectful refusal node for safety violations, prompt injection, or out-of-domain inquiries (P9.3.3)."""
     t0 = time.perf_counter()
     intent = state.get("intent", "")
     language = state.get("language", "en")
     is_safe = state.get("is_safe", True)
+    retries = state.get("retrieval_retries", 0)
+    query = state.get("sanitized_query") or state.get("input_text", "")
 
     if not is_safe or intent == IntentLabel.PROMPT_INJECTION.value:
         if language == "ur":
@@ -213,6 +218,18 @@ def refusal_node(state: AssistantState) -> dict[str, Any]:
             answer = (
                 "I cannot process this query as it violates safety guidelines or attempts system prompt manipulation. "
                 "I am designed to answer factual questions about Mahad's portfolio, architecture, and experience."
+            )
+    elif retries > 0 or state.get("grader_decision") == "irrelevant":
+        # P9.3.3: Refusal specifically after weak evidence was retrieved
+        if language == "ur":
+            answer = (
+                f"Mahad ke portfolio mein '{query}' ke mutalliq koi verified maloomat nahi mili. "
+                "Main sirf unke published projects (jaise CardioScan AI, INDKOM) aur engineering decisions ke baray mein bata sakta hoon."
+            )
+        else:
+            answer = (
+                f"I searched Mahad's verified portfolio sources, but could not find factual documentation regarding '{query}'. "
+                "To prevent hallucination, I only answer questions grounded in his documented projects, architectures, and experience."
             )
     else:
         if language == "ur":
@@ -231,7 +248,7 @@ def refusal_node(state: AssistantState) -> dict[str, Any]:
         "step_name": "refusal",
         "duration_ms": round(duration_ms, 2),
         "status": "completed",
-        "details": {"intent": intent, "is_safe": is_safe},
+        "details": {"intent": intent, "is_safe": is_safe, "retries": retries},
     }
     steps = list(state.get("execution_steps", []))
     steps.append(step_telemetry)
@@ -244,27 +261,44 @@ def refusal_node(state: AssistantState) -> dict[str, Any]:
 
 
 def clarification_node(state: AssistantState) -> dict[str, Any]:
-    """Clarification node when router confidence is low or input is ambiguous."""
+    """Clarification node when router confidence is low, query is ambiguous, or evidence was weak (P9.3.3)."""
     t0 = time.perf_counter()
     language = state.get("language", "en")
+    retries = state.get("retrieval_retries", 0)
+    query = state.get("sanitized_query") or state.get("input_text", "")
 
-    if language == "ur":
-        answer = (
-            "Aap ka sawal wazeh nahi hai. Kya aap Mahad ke kisi makhsoos project (maslan CardioScan AI ya In-process ML router) "
-            "ya unke career background ke baray mein mazeed wazahat kar sakte hain?"
-        )
+    if retries > 0 or state.get("grader_decision") == "irrelevant":
+        # P9.3.3: Clarification after weak evidence
+        if language == "ur":
+            answer = (
+                f"Aap ke sawal '{query}' ke liye makhsoos technical context nahi mil saka. "
+                "Kya aap wazahat kar sakte hain ke aap kis project (jaise CardioScan AI, INDKOM, ya ML Router) "
+                "ya Mahad ke kis skill set ke baray mein maloomat chahte hain?"
+            )
+        else:
+            answer = (
+                f"I searched for '{query}', but couldn't find a precise match in Mahad's portfolio documentation. "
+                "Could you please specify which project (e.g. CardioScan AI, INDKOM Marketing Automation, "
+                "or In-Process ML Router) or architectural topic you are inquiring about?"
+            )
     else:
-        answer = (
-            "Your query was a bit ambiguous. Could you please clarify if you are asking about a specific project "
-            "(such as CardioScan AI, the In-Process ML Router, or RAG pipeline) or Mahad's technical background?"
-        )
+        if language == "ur":
+            answer = (
+                "Aap ka sawal wazeh nahi hai. Kya aap Mahad ke kisi makhsoos project (maslan CardioScan AI ya In-process ML router) "
+                "ya unke career background ke baray mein mazeed wazahat kar sakte hain?"
+            )
+        else:
+            answer = (
+                "Your query was a bit ambiguous. Could you please clarify if you are asking about a specific project "
+                "(such as CardioScan AI, the In-Process ML Router, or RAG pipeline) or Mahad's technical background?"
+            )
 
     duration_ms = (time.perf_counter() - t0) * 1000.0
     step_telemetry = {
         "step_name": "clarification",
         "duration_ms": round(duration_ms, 2),
         "status": "completed",
-        "details": {"confidence": state.get("confidence", 0.0)},
+        "details": {"confidence": state.get("confidence", 0.0), "retries": retries},
     }
     steps = list(state.get("execution_steps", []))
     steps.append(step_telemetry)
@@ -307,6 +341,9 @@ __all__ = [
     "retrieval_stub_node",
     "retrieve_evidence_node",
     "evaluate_evidence_node",
+    "grade_evidence_node",
+    "rewrite_query_node",
     "grounded_generation_node",
+    "apply_audience_style_node",
 ]
 

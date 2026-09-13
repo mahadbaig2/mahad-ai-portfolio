@@ -107,7 +107,7 @@ class GroqLLMProvider(LLMProvider):
                 )
                 response.raise_for_status()
                 data = response.json()
-                return data["choices"][0]["message"]["content"]
+                return str(data["choices"][0]["message"]["content"])
         except httpx.HTTPStatusError as e:
             logger.error(
                 f"Groq API HTTP error: {e.response.status_code} - {e.response.text}"

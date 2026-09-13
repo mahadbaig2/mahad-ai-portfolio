@@ -47,6 +47,11 @@ class AssistantState(TypedDict):
     draft_answer: str
     final_answer: str
     citations: list[str]
+    persona: str
+    rewritten_query: str | None
+    grader_decision: str | None
+    grader_reason: str | None
+    citation_validation_status: dict[str, Any] | None
     suggested_actions: list[dict[str, str]]
     navigation_target: dict[str, str] | None
     errors: list[str]
@@ -58,6 +63,7 @@ def create_initial_state(
     session_id: str,
     mode: str = "text",
     transcript: list[dict[str, Any]] | None = None,
+    persona: str = "general",
 ) -> AssistantState:
     """Create a clean initial state for a new assistant turn."""
     return {
@@ -79,6 +85,11 @@ def create_initial_state(
         "draft_answer": "",
         "final_answer": "",
         "citations": [],
+        "persona": persona,
+        "rewritten_query": None,
+        "grader_decision": None,
+        "grader_reason": None,
+        "citation_validation_status": None,
         "suggested_actions": [],
         "navigation_target": None,
         "errors": [],

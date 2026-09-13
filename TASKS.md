@@ -386,13 +386,13 @@ Goal: Create reproducible foundations.
 
 ## Milestone 9.3 - Agentic recovery and citations
 
-- [ ] **P9.3.1 [A]** Implement constrained evidence grader only when threshold decision is uncertain.
-- [ ] **P9.3.2 [A]** Implement one bounded query rewrite and retry.
-- [ ] **P9.3.3 [A]** Implement clarify/refuse behavior after weak evidence.
-- [ ] **P9.3.4 [A]** Implement claim-to-source citation validation.
-- [ ] **P9.3.5 [A]** Apply audience style only after grounded draft creation.
-- [ ] **P9.3.6 [A]** Verify style step cannot introduce unsupported claims.
-- [ ] **P9.3.7 [A]** Store safe route/retrieval events with consent rules.
+- [x] **P9.3.1 [A]** Implement constrained evidence grader only when threshold decision is uncertain.
+- [x] **P9.3.2 [A]** Implement one bounded query rewrite and retry.
+- [x] **P9.3.3 [A]** Implement clarify/refuse behavior after weak evidence.
+- [x] **P9.3.4 [A]** Implement claim-to-source citation validation.
+- [x] **P9.3.5 [A]** Apply audience style only after grounded draft creation.
+- [x] **P9.3.6 [A]** Verify style step cannot introduce unsupported claims.
+- [x] **P9.3.7 [A]** Store safe route/retrieval events with consent rules.
 
 ## Milestone 9.4 - API streaming and resilience
 

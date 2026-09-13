@@ -3,6 +3,7 @@ FastAPI route for in-process query classification using the ONNX champion model.
 """
 
 from fastapi import APIRouter, Depends
+
 from apps.api.schemas.router import RouterPredictionRequest, RouterPredictionResponse
 from apps.api.services.query_router import QueryRouterService, get_router_service
 

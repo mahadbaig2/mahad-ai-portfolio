@@ -4,7 +4,8 @@ import asyncio
 import concurrent.futures
 import logging
 import time
-from typing import Any
+from collections.abc import Coroutine
+from typing import Any, TypeVar
 
 from apps.api.services.assistant.filter_planner import plan_retrieval_filters
 from apps.api.services.assistant.normalizer import normalize_query
@@ -12,6 +13,8 @@ from apps.api.services.assistant.state import AssistantState
 from apps.api.services.retrieval_service import RetrievalResult, RetrievalService
 
 logger = logging.getLogger("assistant.retrieval_node")
+
+T = TypeVar("T")
 
 # Injectable retrieval service override for dependency injection / testing
 _injected_retrieval_service: RetrievalService | None = None
@@ -29,7 +32,7 @@ def get_retrieval_service() -> RetrievalService | None:
     return _injected_retrieval_service
 
 
-def _run_async(coro):
+def _run_async(coro: Coroutine[Any, Any, T]) -> T:
     """Execute async coroutine safely from sync LangGraph node."""
     try:
         loop = asyncio.get_running_loop()
