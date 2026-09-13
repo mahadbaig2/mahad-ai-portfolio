@@ -7,6 +7,7 @@ import time
 from collections.abc import Coroutine
 from typing import Any, TypeVar
 
+from apps.api.core.resilience import qdrant_breaker
 from apps.api.services.assistant.filter_planner import plan_retrieval_filters
 from apps.api.services.assistant.normalizer import normalize_query
 from apps.api.services.assistant.state import AssistantState
@@ -82,6 +83,7 @@ def retrieve_evidence_node(state: AssistantState) -> dict[str, Any]:
 
     if retrieval_service is not None:
         try:
+            qdrant_breaker.check_available()
             res: RetrievalResult = _run_async(
                 retrieval_service.retrieve(
                     query=effective_query,
@@ -92,6 +94,7 @@ def retrieve_evidence_node(state: AssistantState) -> dict[str, Any]:
                     language=filters.language,
                 )
             )
+            qdrant_breaker.record_success()
             telemetry_details["points_returned"] = res.metrics.qdrant_points_returned
             telemetry_details["hydrated_count"] = res.metrics.postgres_chunks_hydrated
             telemetry_details["deduplicated_count"] = res.metrics.deduplicated_count
@@ -113,6 +116,7 @@ def retrieve_evidence_node(state: AssistantState) -> dict[str, Any]:
                     }
                 )
         except Exception as e:
+            qdrant_breaker.record_failure(e)
             logger.exception(f"Retrieval service execution failed: {e}")
             telemetry_details["error"] = str(e)
     else:

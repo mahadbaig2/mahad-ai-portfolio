@@ -256,6 +256,7 @@ def refusal_node(state: AssistantState) -> dict[str, Any]:
     return {
         "final_answer": answer,
         "citations": [],
+        "route": RouteLabel.REFUSAL.value,
         "execution_steps": steps,
     }
 
@@ -306,6 +307,7 @@ def clarification_node(state: AssistantState) -> dict[str, Any]:
     return {
         "final_answer": answer,
         "citations": [],
+        "route": RouteLabel.CLARIFICATION.value,
         "execution_steps": steps,
     }
 

@@ -12,6 +12,8 @@ from collections.abc import AsyncIterator
 import httpx
 
 from apps.api.core.config import get_settings
+from apps.api.core.errors import RateLimitError
+from apps.api.core.resilience import groq_breaker
 from apps.api.providers.base import LLMProvider
 
 logger = logging.getLogger("provider.groq")
@@ -88,6 +90,8 @@ class GroqLLMProvider(LLMProvider):
                 "GROQ_API_KEY is not configured and mock_fallback is False."
             )
 
+        groq_breaker.check_available()
+
         headers = {
             "Authorization": f"Bearer {self.api_key}",
             "Content-Type": "application/json",
@@ -107,11 +111,21 @@ class GroqLLMProvider(LLMProvider):
                 )
                 response.raise_for_status()
                 data = response.json()
-                return str(data["choices"][0]["message"]["content"])
+                content = str(data["choices"][0]["message"]["content"])
+                groq_breaker.record_success()
+                return content
         except httpx.HTTPStatusError as e:
+            groq_breaker.record_failure(e)
             logger.error(
                 f"Groq API HTTP error: {e.response.status_code} - {e.response.text}"
             )
+            if e.response.status_code == 429:
+                retry_header = e.response.headers.get("Retry-After", "60")
+                retry_sec = int(retry_header) if retry_header.isdigit() else 60
+                raise RateLimitError(
+                    message="Groq upstream rate limit or quota exceeded. Please retry later.",
+                    retry_after=retry_sec,
+                ) from e
             if self.mock_fallback:
                 logger.warning(
                     "Falling back to mock response following Groq HTTP error."
@@ -119,6 +133,7 @@ class GroqLLMProvider(LLMProvider):
                 return self._generate_mock_grounded_response(messages)
             raise
         except Exception as e:
+            groq_breaker.record_failure(e)
             logger.error(f"Groq API connection error: {e}")
             if self.mock_fallback:
                 logger.warning(

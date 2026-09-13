@@ -70,11 +70,28 @@ class ServiceUnavailableError(AppException):
         )
 
 
+class RateLimitError(AppException):
+    def __init__(
+        self,
+        message: str = "Rate limit or quota exceeded. Please retry later.",
+        retry_after: int = 60,
+        details: Any = None,
+    ) -> None:
+        super().__init__(
+            code="RATE_LIMIT_EXCEEDED",
+            message=message,
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            details=details,
+        )
+        self.retry_after = retry_after
+
+
 def create_error_response(
     code: str,
     message: str,
     status_code: int,
     details: Any = None,
+    headers: dict[str, str] | None = None,
 ) -> JSONResponse:
     """Construct a standardized JSONResponse with ErrorResponse envelope."""
     envelope = ErrorResponse(
@@ -88,6 +105,7 @@ def create_error_response(
     return JSONResponse(
         status_code=status_code,
         content=envelope.model_dump(exclude_none=True),
+        headers=headers,
     )
 
 
@@ -99,11 +117,15 @@ async def app_exception_handler(_request: Request, exc: AppException) -> JSONRes
         exc.message,
         extra={"code": exc.code, "details": exc.details},
     )
+    headers = None
+    if isinstance(exc, RateLimitError) and exc.retry_after:
+        headers = {"Retry-After": str(exc.retry_after)}
     return create_error_response(
         code=exc.code,
         message=exc.message,
         status_code=exc.status_code,
         details=exc.details,
+        headers=headers,
     )
 
 

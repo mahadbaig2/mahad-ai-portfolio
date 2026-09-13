@@ -396,12 +396,12 @@ Goal: Create reproducible foundations.
 
 ## Milestone 9.4 - API streaming and resilience
 
-- [ ] **P9.4.1 [A]** Add bounded session and message endpoints.
-- [ ] **P9.4.2 [A]** Add SSE stream with safe progress events and answer tokens.
-- [ ] **P9.4.3 [A]** Add timeouts, limited retries and circuit breakers.
-- [ ] **P9.4.4 [A]** Add controlled quota/capacity response codes.
-- [ ] **P9.4.5 [A]** Test Qdrant, Neon, Groq and LangSmith outages independently.
-- [ ] **P9.G GATE [A]** Supported questions cite evidence; unsupported questions refuse/clarify; graph termination is guaranteed.
+- [x] **P9.4.1 [A]** Add bounded session and message endpoints.
+- [x] **P9.4.2 [A]** Add SSE stream with safe progress events and answer tokens.
+- [x] **P9.4.3 [A]** Add timeouts, limited retries and circuit breakers.
+- [x] **P9.4.4 [A]** Add controlled quota/capacity response codes.
+- [x] **P9.4.5 [A]** Test Qdrant, Neon, Groq and LangSmith outages independently.
+- [x] **P9.G GATE [A]** Supported questions cite evidence; unsupported questions refuse/clarify; graph termination is guaranteed.
 
 ---
 

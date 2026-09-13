@@ -8,9 +8,11 @@ from pydantic import BaseModel, Field
 
 
 class RouteLabel(str, Enum):
-    """Execution route decided by query router."""
+    """Execution route decided by query router or graph pipeline."""
     RAG_RETRIEVAL = "rag_retrieval"
     DIRECT_CHAT = "direct_chat"
+    DETERMINISTIC = "deterministic"
+    CLARIFICATION = "clarification"
     REFUSAL = "refusal"
 
 
