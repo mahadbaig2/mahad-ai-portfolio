@@ -5,10 +5,14 @@ import { getArticles, getArticle } from "@/lib/sanity/loadData";
 import { PortableText } from "@/components/PortableText";
 import { urlForImage } from "@/lib/sanity/image";
 
+import { ARTICLES } from "@/lib/data";
+
 export async function generateStaticParams() {
   const articles = await getArticles();
-  return articles.map((a) => ({
-    slug: a.slug,
+  const slugs = new Set(articles.map((a) => a.slug));
+  ARTICLES.forEach((a) => slugs.add(a.slug));
+  return Array.from(slugs).map((slug) => ({
+    slug,
   }));
 }
 

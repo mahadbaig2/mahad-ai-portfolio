@@ -22,7 +22,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: "pnpm exec next start -p 3001",
+    command: "pnpm exec serve out -l 3001",
     url: "http://localhost:3001",
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000,

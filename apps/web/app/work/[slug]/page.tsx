@@ -5,10 +5,14 @@ import { getProjects, getProject, getCaseStudy } from "@/lib/sanity/loadData";
 import { PortableText } from "@/components/PortableText";
 import { urlForImage } from "@/lib/sanity/image";
 
+import { PROJECTS } from "@/lib/data";
+
 export async function generateStaticParams() {
   const projects = await getProjects();
-  return projects.map((p) => ({
-    slug: p.slug,
+  const slugs = new Set(projects.map((p) => p.slug));
+  PROJECTS.forEach((p) => slugs.add(p.slug));
+  return Array.from(slugs).map((slug) => ({
+    slug,
   }));
 }
 
