@@ -28,6 +28,22 @@ DOCUMENT_PROJECTION = """{
   techStack,
   metrics,
   publishedAt,
+  contextText,
+  company,
+  role,
+  employmentType,
+  startDate,
+  endDate,
+  isCurrent,
+  location,
+  highlights,
+  technologies,
+  institution,
+  degree,
+  fieldOfStudy,
+  graduationYear,
+  category,
+  proficiency,
   body[]{
     ...,
     _type == "image" => {
@@ -151,7 +167,8 @@ class SanityExtractor:
             "faq",
             "architectureDecision",
             "personalStory",
-            "styleExample"
+            "styleExample",
+            "additionalContext"
           ]
         ]{DOCUMENT_PROJECTION}"""
         return self.execute_groq(query)
@@ -170,7 +187,8 @@ class SanityExtractor:
             "faq",
             "architectureDecision",
             "personalStory",
-            "styleExample"
+            "styleExample",
+            "additionalContext"
           ]
         ]{DOCUMENT_PROJECTION}"""
         return await self.execute_groq_async(query)

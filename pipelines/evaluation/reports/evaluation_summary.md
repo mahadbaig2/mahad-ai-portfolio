@@ -1,6 +1,6 @@
 # LLMOps & LangSmith Evaluation Suite Report
 
-**Evaluation Timestamp:** `2026-09-13T23:08:06.294218+00:00`  
+**Evaluation Timestamp:** `2026-09-15T23:07:57.943790+00:00`  
 **Gate Status:** **✅ PASSED**  
 **LLM Model:** `llama-3.3-70b-versatile` | **Embeddings:** `intfloat/multilingual-e5-small`  
 **Prompt Version:** `v1.2.0-grounded-assistant` | **Router Version:** `onnx-tfidf-router-v1.0.0`  

@@ -8,7 +8,7 @@ Your role is to answer questions about Mahad's background, technical projects, a
 
 CRITICAL INVARIANTS & GROUNDING RULES:
 1. STRICT TRUTH ONLY: Answer using ONLY the verified evidence sources provided below. NEVER invent facts, projects, technologies, dates, or metrics.
-2. CITATION ENFORCEMENT: Every factual claim or statement MUST be immediately cited with its exact source ID bracket, e.g. [{primary_chunk_id}].
+2. CITATION ENFORCEMENT: Every factual claim or statement MUST be immediately cited with its source number bracket, e.g. [1] or [{primary_chunk_id}]. Never output partial, truncated, or unclosed brackets.
 3. UNANSWERABLE HANDLING: If the provided evidence does not contain sufficient facts to answer the question, state what is known from the sources and clearly declare what is missing. Do not extrapolate or guess.
 4. CODE-SWITCHING & LANGUAGE: If the user asks in Roman Urdu (e.g. "Mahad ka tajurba kya hai?"), answer in natural, respectful Roman Urdu while keeping technical terms intact. If the user asks in English, answer in English.
 5. CONCISE & OBJECTIVE: Maintain an understated, professional engineering tone. Avoid excessive hype, buzzwords, or first-person impersonation unless quoting verified statements.
@@ -32,8 +32,8 @@ def format_evidence_block(evidence_chunks: list[dict[str, Any]]) -> str:
         score = chunk.get("similarity_score", 0.0)
 
         block = (
-            f"--- SOURCE #{idx} ---\n"
-            f"Source ID: {chunk_id}\n"
+            f"--- SOURCE [{idx}] ---\n"
+            f"Source Number: [{idx}] (Source ID: {chunk_id})\n"
             f"Document: {title} > {heading}\n"
             f"URL: {url}\n"
             f"Relevance Score: {score:.4f}\n"
@@ -90,13 +90,22 @@ def extract_and_validate_citations(
         str(c.get("chunk_id")).lower() for c in evidence_chunks if c.get("chunk_id")
     }
 
-    # Match UUIDs inside brackets, e.g. [12345678-1234-1234-1234-123456789abc]
+    validated_citations = []
+
+    # 1. Match numeric citation indices e.g. [1], [2]
+    num_matches = re.findall(r"\[([1-9]\d*)\]", response_text)
+    for num_str in num_matches:
+        idx = int(num_str) - 1
+        if 0 <= idx < len(evidence_chunks):
+            cid = str(evidence_chunks[idx].get("chunk_id", "")).lower()
+            if cid and cid in valid_ids and cid not in validated_citations:
+                validated_citations.append(cid)
+
+    # 2. Match UUIDs inside standard or fullwidth brackets, e.g. [12345678-1234-1234-1234-123456789abc]
     found_citations = re.findall(
-        r"\[([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})\]",
+        r"[\[【]([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})[\]】]",
         response_text,
     )
-
-    validated_citations = []
     for cit in found_citations:
         norm_cit = cit.lower()
         if norm_cit in valid_ids and norm_cit not in validated_citations:

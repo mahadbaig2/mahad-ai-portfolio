@@ -20,3 +20,9 @@ joblib>=1.4.0
 onnx==1.22.0
 onnxruntime==1.30.0
 onnxscript==0.7.2
+
+# External source ingestor — PDF, HTML, RSS (P-ext)
+pypdf>=4.0.0,<5.0.0
+beautifulsoup4>=4.12.0,<5.0.0
+lxml>=5.0.0,<6.0.0
+feedparser>=6.0.0,<7.0.0

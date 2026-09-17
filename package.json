@@ -10,6 +10,9 @@
   },
   "scripts": {
     "dev": "pnpm --parallel --filter \"./apps/*\" dev",
+    "dev:api": "python -m uvicorn apps.api.main:app --port 8000 --reload",
+    "dev:web": "pnpm --filter @mahad/web dev",
+    "dev:studio": "pnpm --filter @mahad/studio dev",
     "build": "pnpm --filter \"./packages/*\" build && pnpm --filter \"./apps/*\" build",
     "lint": "pnpm --recursive run lint",
     "typecheck": "pnpm --recursive run typecheck",

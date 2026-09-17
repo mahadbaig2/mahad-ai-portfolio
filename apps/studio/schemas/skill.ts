@@ -24,6 +24,7 @@ export const skill = defineType({
       group: 'main',
       options: {
         list: [
+          { title: 'Product Design & UX Engineering (Figma, Design Systems, Research, Prototyping)', value: 'product_design' },
           { title: 'AI & Machine Learning (RAG, LangGraph, ONNX, Embeddings)', value: 'ai_ml' },
           { title: 'Backend & Systems Engineering (FastAPI, Python, PostgreSQL)', value: 'backend' },
           { title: 'Frontend & Product Engineering (Next.js, TypeScript, React, Tailwind)', value: 'frontend' },

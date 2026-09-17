@@ -180,7 +180,12 @@ _NAV_BLOG_PATTERN = re.compile(
 )
 
 _NAV_ABOUT_PATTERN = re.compile(
-    r"\b(about(\s+mahad)?|who\s+is\s+mahad|background|career(\s+history)?|taaruf)\b",
+    r"\b((go\s+to|open|view|show|link\s+to|visit)\s+(the\s+)?about(\s+mahad)?\s*(page|section)?|about(\s+mahad)?\s+page|who\s+is\s+mahad|background\s+and\s+experience|career\s+history|taaruf)\b",
+    re.IGNORECASE,
+)
+
+_TOPICAL_RAG_KEYWORDS = re.compile(
+    r"\b(education|degree|degrees|universit(y|ies)|college|school|bootcamp|academic|course|courses|certificat(ion|ions)|bachelor|master|giki|kiet|atomcamp|datacamp|awwwards|taleem|parhai)\b",
     re.IGNORECASE,
 )
 
@@ -189,6 +194,10 @@ def resolve_navigation_lookup(
     query: str, language: str = "en"
 ) -> DeterministicResolution | None:
     """Detect if query is an explicit request to navigate or locate a portfolio section."""
+    # Guard: Specific educational or topical inquiries must proceed to semantic RAG
+    if _TOPICAL_RAG_KEYWORDS.search(query):
+        return None
+
     # Check if query is seeking page navigation or listing
     has_nav_work = bool(_NAV_WORK_PATTERN.search(query))
     has_nav_blog = bool(_NAV_BLOG_PATTERN.search(query))

@@ -55,6 +55,17 @@ export const deskStructure: StructureResolver = (S: StructureBuilder) =>
               S.documentTypeListItem('faq').title('FAQs'),
               S.documentTypeListItem('styleExample').title('Voice & Style Exemplars'),
               S.documentTypeListItem('personalStory').title('Personal Stories & Narrative'),
+              // Singleton: Additional Context (CONTEXT.md style narrative)
+              S.listItem()
+                .title('Additional Context')
+                .id('additionalContextListItem')
+                .child(
+                  S.editor()
+                    .id('additionalContext')
+                    .schemaType('additionalContext')
+                    .documentId('additionalContext')
+                    .title('Additional Context')
+                ),
             ])
         ),
 
@@ -75,6 +86,7 @@ export const deskStructure: StructureResolver = (S: StructureBuilder) =>
             'faq',
             'styleExample',
             'personalStory',
+            'additionalContext',
           ].includes(listItem.getId() || '')
       ),
     ]);

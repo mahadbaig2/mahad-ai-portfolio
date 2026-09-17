@@ -127,10 +127,8 @@ def classify_query_node(state: AssistantState) -> dict[str, Any]:
         "latency_ms": prediction.latency_ms,
     }
 
-    # Route override: if route confidence is marginal, suggest clarification
+    # Route assignment (prediction.route already provides safe fallback to rag_retrieval when confidence is low)
     route = prediction.route.value
-    if prediction.is_fallback:
-        route = "clarification"
 
     # P9.2.1: Check if deterministic navigation or contact override applies
     from apps.api.services.assistant.deterministic import resolve_deterministic_turn

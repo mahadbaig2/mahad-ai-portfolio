@@ -1,0 +1,75 @@
+name: Refresh External RAG Sources
+
+# Runs daily to keep GitHub, Medium, and CV content fresh in the RAG index.
+# Also manually triggerable from the Actions tab.
+
+on:
+  schedule:
+    # 2:00 AM UTC daily (7:00 AM PKT)
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      rebuild_sanity:
+        description: "Also rebuild Sanity content (in addition to external sources)"
+        required: false
+        type: boolean
+        default: false
+
+concurrency:
+  group: external-source-refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    name: Fetch & Index External Sources
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r apps/api/requirements.txt
+          pip install -r pipelines/requirements.txt
+
+      - name: Rebuild Sanity content (optional)
+        if: ${{ github.event.inputs.rebuild_sanity == 'true' }}
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          QDRANT_URL: ${{ secrets.QDRANT_URL }}
+          QDRANT_API_KEY: ${{ secrets.QDRANT_API_KEY }}
+          SANITY_PROJECT_ID: ${{ secrets.SANITY_PROJECT_ID }}
+          SANITY_DATASET: ${{ secrets.SANITY_DATASET || 'production' }}
+          SANITY_API_READ_TOKEN: ${{ secrets.SANITY_API_READ_TOKEN }}
+          ENVIRONMENT: production
+        run: |
+          echo "Rebuilding Sanity index..."
+          python -m pipelines.rebuild_index --confirm-rebuild
+
+      - name: Fetch and index external sources
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          QDRANT_URL: ${{ secrets.QDRANT_URL }}
+          QDRANT_API_KEY: ${{ secrets.QDRANT_API_KEY }}
+          SANITY_PROJECT_ID: ${{ secrets.SANITY_PROJECT_ID }}
+          SANITY_DATASET: ${{ secrets.SANITY_DATASET || 'production' }}
+          SANITY_API_READ_TOKEN: ${{ secrets.SANITY_API_READ_TOKEN }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          ENVIRONMENT: production
+        run: |
+          echo "Fetching external sources: GitHub, Medium RSS, CV PDF..."
+          python -m pipelines.rebuild_index --confirm-rebuild --include-external
+
+      - name: Report completion
+        if: always()
+        run: |
+          echo "External source refresh completed at $(date -u)"

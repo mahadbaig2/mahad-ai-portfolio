@@ -8,14 +8,24 @@ export type RouteLabel = "rag_retrieval" | "direct_chat" | "refusal";
 export type LanguageLabel = "en" | "ur";
 export type PersonaType = "general" | "recruiter" | "engineer" | "founder";
 
+export interface CitationDetail {
+  index: number;
+  chunk_id: string;
+  title: string;
+  url: string;
+  heading?: string | null;
+}
+
 export interface ChatMessage {
   id: string;
   role: ChatMessageRole;
   content: string;
   timestamp?: string;
   citations?: string[];
+  citation_details?: CitationDetail[];
   route?: RouteLabel;
   isStreaming?: boolean;
+  isError?: boolean;
   executionSteps?: ExecutionStep[];
 }
 
@@ -48,6 +58,7 @@ export interface AssistantChatResponse {
   session_id: string;
   answer: string;
   citations: string[];
+  citation_details?: CitationDetail[];
   route: RouteLabel;
   language: LanguageLabel;
   is_safe: boolean;

@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "timestamp": "2026-09-13T23:08:06.294218+00:00",
+    "timestamp": "2026-09-15T23:07:57.943790+00:00",
     "prompt_version": "v1.2.0-grounded-assistant",
     "router_model_version": "onnx-tfidf-router-v1.0.0",
     "llm_model": "llama-3.3-70b-versatile",

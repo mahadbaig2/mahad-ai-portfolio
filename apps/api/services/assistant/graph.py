@@ -10,6 +10,7 @@ from apps.api.core.observability import log_safe_trace_step
 from apps.api.schemas.assistant import (
     AssistantChatResponse,
     AssistantMode,
+    CitationDetailPayload,
     ExecutionStepPayload,
 )
 from apps.api.schemas.router import LanguageLabel, RouteLabel
@@ -257,10 +258,52 @@ def run_assistant_turn(
     except ValueError:
         lang_label = LanguageLabel.EN
 
+    # P9.2.6 & P9.3.4: Build rich citation metadata mapping chunk IDs to documents & URLs
+    evidence_by_id = {
+        str(c.get("chunk_id", "")).lower(): c
+        for c in final_state.get("evidence_chunks", [])
+        if c.get("chunk_id")
+    }
+    raw_citations = final_state.get("citations", [])
+    citation_details: list[CitationDetailPayload] = []
+
+    for idx, cit_id in enumerate(raw_citations, start=1):
+        norm_id = str(cit_id).lower()
+        chunk = evidence_by_id.get(norm_id, {})
+        title = chunk.get("document_title") or chunk.get("title") or "Verified Portfolio Source"
+        heading = chunk.get("heading_path") or None
+        doc_type = str(chunk.get("document_type") or "").lower()
+        slug = str(chunk.get("project_slug") or chunk.get("slug") or "")
+
+        raw_url = str(chunk.get("canonical_url") or "")
+        if raw_url and not raw_url.startswith("http"):
+            url = raw_url
+        elif doc_type in ("project", "casestudy"):
+            url = f"/work/{slug}" if slug else "/work"
+        elif doc_type == "article":
+            url = f"/blog/{slug}" if slug else "/blog"
+        elif doc_type in ("experience", "education", "skill", "personalstory"):
+            url = "/about"
+        elif "talk" in slug or "portfolio" in slug:
+            url = "/work/talk-to-mahad"
+        else:
+            url = "/about"
+
+        citation_details.append(
+            CitationDetailPayload(
+                index=idx,
+                chunk_id=str(cit_id),
+                title=title,
+                url=url,
+                heading=heading,
+            )
+        )
+
     return AssistantChatResponse(
         session_id=UUID(session_id),
         answer=final_state.get("final_answer", ""),
         citations=final_state.get("citations", []),
+        citation_details=citation_details,
         route=route_label,
         language=lang_label,
         is_safe=final_state.get("is_safe", True),

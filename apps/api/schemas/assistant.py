@@ -24,7 +24,7 @@ class ChatMessageRole(str, Enum):
 class ChatMessagePayload(BaseModel):
     """A single turn in the conversation transcript."""
     role: ChatMessageRole
-    content: str = Field(..., min_length=1, max_length=4000)
+    content: str = Field(..., min_length=1, max_length=20000)
     timestamp: str | None = None
 
 
@@ -56,11 +56,21 @@ class AssistantChatRequest(BaseModel):
     consent_given: bool = Field(default=False, description="User consent to store telemetry and message logs")
 
 
+class CitationDetailPayload(BaseModel):
+    """Structured citation detail mapping chunk UUID to document title and URL."""
+    index: int
+    chunk_id: str
+    title: str
+    url: str
+    heading: str | None = None
+
+
 class AssistantChatResponse(BaseModel):
     """Completed grounded response returned by the assistant graph."""
     session_id: UUID
     answer: str
     citations: list[str] = Field(default_factory=list, description="Referenced chunk IDs")
+    citation_details: list[CitationDetailPayload] = Field(default_factory=list, description="Structured citation metadata")
     route: RouteLabel
     language: LanguageLabel
     is_safe: bool = True

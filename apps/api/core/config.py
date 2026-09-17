@@ -108,6 +108,16 @@ class Settings(BaseSettings):
     GROQ_CHAT_MODEL: str = "llama-3.3-70b-versatile"
     GROQ_WHISPER_MODEL: str = "whisper-large-v3"
 
+    # Voice transcription input constraints (P12.1.3)
+    WHISPER_MAX_AUDIO_BYTES: int = Field(
+        default=10 * 1024 * 1024,  # 10 MB hard cap
+        description="Maximum raw audio upload size accepted before forwarding to Whisper",
+    )
+    WHISPER_ACCEPTED_MIME_TYPES: list[str] = Field(
+        default=["audio/webm", "audio/ogg", "audio/mp4", "audio/wav", "audio/mpeg"],
+        description="Accepted audio MIME types for voice transcription",
+    )
+
     # --------------------------------------------------------------------------
     # LangSmith Observability (P10.1.1 & P10.1.4)
     # --------------------------------------------------------------------------

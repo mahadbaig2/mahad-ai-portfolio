@@ -24,6 +24,12 @@ export function ExecutionInspector({
     0
   );
 
+  const classifyStep = executionSteps.find((s) => s.step_name === "classify_query");
+  const modelName =
+    classifyStep?.details?.model_name ||
+    (classifyStep?.details?.model_version ? "MiniLM-L6-v2 ONNX" : "MiniLM-L6-v2 ONNX");
+  const modelVersion = classifyStep?.details?.model_version || "v1.0.0";
+
   return (
     <div className="mt-2.5 rounded-lg border border-border bg-card/60 text-xs overflow-hidden transition-all">
       <button
@@ -62,7 +68,7 @@ export function ExecutionInspector({
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px]">
             <div className="rounded border border-border bg-background p-2">
               <span className="text-muted-foreground block text-[10px]">Router Model</span>
-              <span className="font-mono font-medium text-foreground">ONNX TF-IDF (v1.0)</span>
+              <span className="font-mono font-medium text-foreground">{modelName} ({modelVersion})</span>
             </div>
             <div className="rounded border border-border bg-background p-2">
               <span className="text-muted-foreground block text-[10px]">Vector DB</span>

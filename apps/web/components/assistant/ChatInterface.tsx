@@ -1,16 +1,19 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import {
   ChatMessage,
   ExecutionStep,
   PersonaType,
   RouteLabel,
 } from "@/lib/assistant/types";
-import { streamAssistantMessage } from "@/lib/assistant/client";
+import { streamAssistantMessage, checkAssistantHealth } from "@/lib/assistant/client";
 import { ModeSelector } from "./ModeSelector";
 import { ExecutionInspector } from "./ExecutionInspector";
 import { CitationsCard } from "./CitationsCard";
+import { VoiceButton } from "./VoiceButton";
 import {
   Send,
   Square,
@@ -23,6 +26,7 @@ import {
   Bot,
   User,
   Check,
+  RefreshCw,
 } from "lucide-react";
 
 const SUGGESTED_PROMPTS: Record<PersonaType, string[]> = {
@@ -48,6 +52,64 @@ const SUGGESTED_PROMPTS: Record<PersonaType, string[]> = {
   ],
 };
 
+const CHAT_STORAGE_KEY = "mahad_chat_history_v1";
+
+function formatMessageContentWithCitations(
+  content: string,
+  citations?: string[],
+  citationDetails?: any[]
+): string {
+  if (!content) return content;
+  let formatted = content;
+
+  // 1. Normalize fullwidth Chinese/Japanese citation brackets into standard brackets
+  formatted = formatted.replace(/【([0-9a-fA-F-]{36})】/g, "[$1]");
+
+  // 2. Map chunk UUIDs to clean indexed links
+  if (citationDetails && citationDetails.length > 0) {
+    for (const item of citationDetails) {
+      if (!item.chunk_id) continue;
+      const escaped = item.chunk_id.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const pattern = new RegExp(`[\\\[【]${escaped}[\\\]】]?`, "gi");
+      const titleAttr = item.title ? ` "${item.title.replace(/"/g, "'")}"` : "";
+      formatted = formatted.replace(
+        pattern,
+        `[[${item.index}]](${item.url || "/about"}${titleAttr})`
+      );
+
+      // Also map bare numeric brackets e.g. [1] to [[1]](url) if not already linked
+      const numPattern = new RegExp(`(?<!\\[)\\[${item.index}\\](?!\\]|\\()`, "g");
+      formatted = formatted.replace(
+        numPattern,
+        `[[${item.index}]](${item.url || "/about"}${titleAttr})`
+      );
+    }
+  } else if (citations && citations.length > 0) {
+    citations.forEach((cid, idx) => {
+      const escaped = cid.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const pattern = new RegExp(`[\\\[【]${escaped}[\\\]】]?`, "gi");
+      const isCaseStudy =
+        cid.includes("case") || cid.includes("talk") || cid.includes("portfolio");
+      const targetUrl = isCaseStudy ? "/work/talk-to-mahad" : "/about";
+      formatted = formatted.replace(pattern, `[[${idx + 1}]](${targetUrl})`);
+
+      const numPattern = new RegExp(`(?<!\\[)\\[${idx + 1}\\](?!\\]|\\()`, "g");
+      formatted = formatted.replace(numPattern, `[[${idx + 1}]](${targetUrl})`);
+    });
+  }
+
+  // 3. Purge any remaining raw UUID brackets, partial UUIDs, or truncated brackets (e.g. 【99158c88-445f... or [99158c88...)
+  formatted = formatted.replace(
+    /[\[【][0-9a-fA-F]{8}(-[0-9a-fA-F]{0,4})*[\]】]?/g,
+    ""
+  );
+
+  // 4. Clean up any accidental double spaces
+  formatted = formatted.replace(/  +/g, " ");
+
+  return formatted;
+}
+
 export function ChatInterface() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputValue, setInputValue] = useState("");
@@ -59,9 +121,49 @@ export function ChatInterface() {
   const [feedbackReason, setFeedbackReason] = useState<Record<string, string>>({});
   const [activeFeedbackId, setActiveFeedbackId] = useState<string | null>(null);
 
+  const [lastUserQuery, setLastUserQuery] = useState<string | null>(null);
+
   const abortControllerRef = useRef<AbortController | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Proactively ping health endpoint on mount to wake up sleeping free-tier backend (Hugging Face Spaces)
+  useEffect(() => {
+    checkAssistantHealth().catch(() => {});
+  }, []);
+
+  // Restore persisted chat from sessionStorage across page navigation
+  useEffect(() => {
+    try {
+      const saved = sessionStorage.getItem(CHAT_STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setMessages(parsed.map((m: ChatMessage) => ({ ...m, isStreaming: false })));
+        }
+      }
+    } catch (e) {
+      console.warn("Failed to load chat history from sessionStorage", e);
+    }
+  }, []);
+
+  // Persist messages whenever chat updates (and not actively streaming)
+  useEffect(() => {
+    try {
+      if (messages.length > 0 && !isStreaming) {
+        sessionStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(messages));
+      }
+    } catch (e) {
+      // ignore
+    }
+  }, [messages, isStreaming]);
+
+  /** P12.2.4 — transcript from VoiceButton lands here for user review before submit. */
+  const handleTranscript = (text: string) => {
+    setInputValue(text);
+    // Focus the textarea so the user can edit before sending
+    setTimeout(() => textareaRef.current?.focus(), 0);
+  };
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -80,14 +182,21 @@ export function ChatInterface() {
     handleStop();
     setMessages([]);
     setCurrentStep(null);
+    setLastUserQuery(null);
+    try {
+      sessionStorage.removeItem(CHAT_STORAGE_KEY);
+    } catch (e) {
+      // ignore
+    }
   };
 
-  const handleSubmit = async (e?: React.FormEvent) => {
+  const handleSubmit = async (e?: React.FormEvent, overrideQuery?: string) => {
     if (e) e.preventDefault();
-    const query = inputValue.trim();
+    const query = (overrideQuery ?? inputValue).trim();
     if (!query || isStreaming) return;
 
-    setInputValue("");
+    setLastUserQuery(query);
+    if (!overrideQuery) setInputValue("");
     const userMessageId = `user_${Date.now()}`;
     const assistantMessageId = `assistant_${Date.now()}`;
 
@@ -121,7 +230,13 @@ export function ChatInterface() {
         message: query,
         persona,
         consent_given: consentGiven,
-        history: messages.slice(-10).map((m) => ({ role: m.role, content: m.content })),
+        history: messages
+          .filter((m) => !m.isError && (m.role === "user" || m.role === "assistant") && m.content)
+          .slice(-10)
+          .map((m) => ({
+            role: m.role,
+            content: m.content.slice(0, 3900),
+          })),
       },
       {
         onProgress: (step) => {
@@ -163,6 +278,7 @@ export function ChatInterface() {
                     ...msg,
                     content: response.answer,
                     citations: response.citations,
+                    citation_details: response.citation_details,
                     route: response.route,
                     isStreaming: false,
                     executionSteps: response.execution_steps || accumulatedSteps,
@@ -179,8 +295,9 @@ export function ChatInterface() {
               msg.id === assistantMessageId
                 ? {
                     ...msg,
-                    content: `Service temporarily unavailable (${err.message || "Network error"}). Please retry in a moment.`,
+                    content: `⚠️ **Service temporarily unreachable** (${err.message || "Connection failed"}).\n\nIf the AI service is waking up from free-tier sleep, it takes ~20 seconds to boot. Please retry shortly.`,
                     isStreaming: false,
+                    isError: true,
                   }
                 : msg
             )
@@ -268,12 +385,138 @@ export function ChatInterface() {
                     : "border border-border bg-card text-foreground"
                 }`}
               >
-                <div className="whitespace-pre-wrap">{msg.content || (msg.isStreaming && "...")}</div>
+                {msg.role === "user" ? (
+                  <div className="whitespace-pre-wrap">{msg.content}</div>
+                ) : (
+                  <div className="prose prose-neutral dark:prose-invert max-w-none text-xs leading-relaxed">
+                    <ReactMarkdown
+                      remarkPlugins={[remarkGfm]}
+                      components={{
+                        h1: ({ children }) => (
+                          <h1 className="text-sm font-bold text-foreground mt-3 mb-1.5 first:mt-0">
+                            {children}
+                          </h1>
+                        ),
+                        h2: ({ children }) => (
+                          <h2 className="text-xs font-bold text-foreground mt-2.5 mb-1 first:mt-0">
+                            {children}
+                          </h2>
+                        ),
+                        h3: ({ children }) => (
+                          <h3 className="text-xs font-semibold text-foreground mt-2 mb-0.5 first:mt-0">
+                            {children}
+                          </h3>
+                        ),
+                        p: ({ children }) => (
+                          <p className="mb-2 last:mb-0 leading-relaxed text-foreground">
+                            {children}
+                          </p>
+                        ),
+                        ul: ({ children }) => (
+                          <ul className="list-disc pl-4 space-y-1 mb-2 last:mb-0 text-foreground">
+                            {children}
+                          </ul>
+                        ),
+                        ol: ({ children }) => (
+                          <ol className="list-decimal pl-4 space-y-1 mb-2 last:mb-0 text-foreground">
+                            {children}
+                          </ol>
+                        ),
+                        li: ({ children }) => (
+                          <li className="leading-relaxed">{children}</li>
+                        ),
+                        strong: ({ children }) => (
+                          <strong className="font-semibold text-foreground">
+                            {children}
+                          </strong>
+                        ),
+                        em: ({ children }) => (
+                          <em className="italic">{children}</em>
+                        ),
+                        a: ({ href, children }) => (
+                          <a
+                            href={href}
+                            target={href?.startsWith("http") ? "_blank" : undefined}
+                            rel={href?.startsWith("http") ? "noopener noreferrer" : undefined}
+                            className="font-medium underline underline-offset-2 text-foreground hover:opacity-80 transition-opacity"
+                          >
+                            {children}
+                          </a>
+                        ),
+                        code: ({ inline, children }: any) =>
+                          inline ? (
+                            <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[11px] text-foreground">
+                              {children}
+                            </code>
+                          ) : (
+                            <pre className="my-2 overflow-x-auto rounded border border-border bg-muted/50 p-2.5 font-mono text-[11px] text-foreground">
+                              <code>{children}</code>
+                            </pre>
+                          ),
+                        blockquote: ({ children }) => (
+                          <blockquote className="border-l-2 border-border pl-3 my-2 italic text-muted-foreground">
+                            {children}
+                          </blockquote>
+                        ),
+                        table: ({ children }) => (
+                          <div className="my-2.5 overflow-x-auto rounded border border-border">
+                            <table className="min-w-full divide-y divide-border text-left text-[11px]">
+                              {children}
+                            </table>
+                          </div>
+                        ),
+                        thead: ({ children }) => (
+                          <thead className="bg-muted/60">{children}</thead>
+                        ),
+                        tbody: ({ children }) => (
+                          <tbody className="divide-y divide-border/60 bg-card">{children}</tbody>
+                        ),
+                        tr: ({ children }) => (
+                          <tr className="hover:bg-muted/30 transition-colors">{children}</tr>
+                        ),
+                        th: ({ children }) => (
+                          <th className="px-2.5 py-1.5 font-semibold text-foreground whitespace-nowrap">
+                            {children}
+                          </th>
+                        ),
+                        td: ({ children }) => (
+                          <td className="px-2.5 py-1.5 text-foreground/90 align-top">
+                            {children}
+                          </td>
+                        ),
+                      }}
+                    >
+                      {formatMessageContentWithCitations(
+                        msg.content,
+                        msg.citations,
+                        msg.citation_details
+                      ) || (msg.isStreaming ? "..." : "")}
+                    </ReactMarkdown>
+                  </div>
+                )}
+
+                {/* Error Retry Control */}
+                {msg.role === "assistant" && msg.isError && lastUserQuery && (
+                  <button
+                    type="button"
+                    onClick={() => handleSubmit(undefined, lastUserQuery)}
+                    disabled={isStreaming}
+                    className="mt-2.5 inline-flex items-center gap-1.5 self-start rounded-md border border-border bg-background px-2.5 py-1 text-xs font-medium text-foreground hover:bg-muted transition-colors cursor-pointer"
+                  >
+                    <RefreshCw className="h-3 w-3" />
+                    <span>Retry Request</span>
+                  </button>
+                )}
 
                 {/* Citations Card */}
-                {msg.role === "assistant" && msg.citations && msg.citations.length > 0 && (
-                  <CitationsCard citations={msg.citations} />
-                )}
+                {msg.role === "assistant" &&
+                  ((msg.citations && msg.citations.length > 0) ||
+                    (msg.citation_details && msg.citation_details.length > 0)) && (
+                    <CitationsCard
+                      citations={msg.citations}
+                      citationDetails={msg.citation_details}
+                    />
+                  )}
 
                 {/* Execution Inspector */}
                 {msg.role === "assistant" && (
@@ -396,6 +639,12 @@ export function ChatInterface() {
             </label>
 
             <div className="flex items-center gap-2">
+              {/* Voice input — always available as alternative to typing (P12.1.1) */}
+              <VoiceButton
+                onTranscript={handleTranscript}
+                disabled={isStreaming}
+              />
+
               {messages.length > 0 && (
                 <button
                   type="button"

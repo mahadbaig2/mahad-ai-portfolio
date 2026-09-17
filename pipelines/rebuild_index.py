@@ -130,6 +130,11 @@ async def main() -> None:
         action="store_true",
         help="Run against mock provider and in-memory DB",
     )
+    parser.add_argument(
+        "--include-external",
+        action="store_true",
+        help="Also ingest external sources: GitHub, Medium RSS, Sanity CV PDF",
+    )
 
     args = parser.parse_args()
 
@@ -178,6 +183,55 @@ async def main() -> None:
             delete_only=args.delete_collection_only,
         )
         print(f"\nRebuild Outcome: {result}\n")
+
+    # --- Optional: ingest external sources (GitHub, Medium, CV PDF) ---
+    if getattr(args, "include_external", False) and not args.delete_collection_only:
+        print("\n" + "=" * 80)
+        print(" " * 20 + "EXTERNAL SOURCE INGESTION")
+        print("=" * 80)
+        from pipelines.ingestion.external_ingestor import ExternalIngestor
+        from pipelines.ingestion.synchronizer import IncrementalSynchronizer
+
+        ingestor = ExternalIngestor()
+        external_docs = ingestor.fetch_all()
+        print(f"External sources fetched: {len(external_docs)} documents")
+
+        if external_docs:
+            async with session_factory() as session:
+                synchronizer = IncrementalSynchronizer(
+                    session=session,
+                    vector_provider=vector_provider,
+                    embedder=embedder,
+                )
+                ext_created = 0
+                ext_failed = 0
+                for doc in external_docs:
+                    try:
+                        doc_dict = {
+                            "_id": doc.sanity_id,
+                            "_type": doc.document_type,
+                            "title": doc.title,
+                            "ragEnabled": doc.rag_enabled,
+                            "language": doc.language,
+                            "targetAudiences": doc.target_audiences,
+                            # Pass pre-built raw text directly so normalizer uses it
+                            "body": doc.raw_text,
+                            "_external_normalized": True,  # flag for synchronizer
+                            "_content_hash": doc.content_hash,
+                            "_canonical_url": doc.canonical_url,
+                            "_metadata": doc.metadata,
+                        }
+                        result_ext = await synchronizer.handle_event("publish", doc_dict)
+                        if result_ext.status in ("completed", "success"):
+                            ext_created += result_ext.chunks_created
+                        else:
+                            ext_failed += 1
+                            logger.warning("External doc failed: %s — %s", doc.sanity_id, result_ext.error_message)
+                    except Exception as exc:
+                        ext_failed += 1
+                        logger.error("Error ingesting external doc %s: %s", doc.sanity_id, exc)
+
+                print(f"External ingestion complete: {ext_created} chunks created, {ext_failed} failures")
 
     await engine.dispose()
     if not args.mock and hasattr(vector_provider, "close"):

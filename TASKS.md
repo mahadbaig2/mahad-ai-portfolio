@@ -462,8 +462,8 @@ Goal: Create reproducible foundations.
 - [x] **P11.3.3 [A]** Show source titles and safe similarity scores.
 - [x] **P11.3.4 [A]** Show high-level latency/token data.
 - [x] **P11.3.5 [A]** Explicitly exclude system prompts, secrets, hidden reasoning and private data.
-- [ ] **P11.3.6 [M]** Review inspector usefulness for recruiters and engineers.
-- [ ] **P11.G GATE [A+M]** Chat is readable, mobile-friendly, accessible and honest about failures.
+- [x] **P11.3.6 [M]** Review inspector usefulness for recruiters and engineers.
+- [x] **P11.G GATE [A+M]** Chat is readable, mobile-friendly, accessible and honest about failures.
 
 ---
 
@@ -471,21 +471,21 @@ Goal: Create reproducible foundations.
 
 ## Milestone 12.1 - Browser capture
 
-- [ ] **P12.1.1 [A]** Implement push-to-talk after explicit user action.
-- [ ] **P12.1.2 [A]** Handle microphone permission granted, denied and unavailable.
-- [ ] **P12.1.3 [A]** Enforce short duration, accepted MIME types and maximum bytes.
-- [ ] **P12.1.4 [A]** Add recording, stop, cancel and delete controls.
-- [ ] **P12.1.5 [A]** Do not upload until the user submits the captured question.
+- [x] **P12.1.1 [A]** Implement push-to-talk after explicit user action.
+- [x] **P12.1.2 [A]** Handle microphone permission granted, denied and unavailable.
+- [x] **P12.1.3 [A]** Enforce short duration, accepted MIME types and maximum bytes.
+- [x] **P12.1.4 [A]** Add recording, stop, cancel and delete controls.
+- [x] **P12.1.5 [A]** Do not upload until the user submits the captured question.
 
 ## Milestone 12.2 - Transcription
 
-- [ ] **P12.2.1 [A]** Add protected multipart transcription endpoint.
-- [ ] **P12.2.2 [A]** Stream to Groq Whisper without persistent raw-audio storage.
-- [ ] **P12.2.3 [A]** Return transcript and detected language metadata.
-- [ ] **P12.2.4 [A]** Allow transcript editing before it enters the graph.
-- [ ] **P12.2.5 [A]** Delete temporary audio in success and failure paths.
+- [x] **P12.2.1 [A]** Add protected multipart transcription endpoint.
+- [x] **P12.2.2 [A]** Stream to Groq Whisper without persistent raw-audio storage.
+- [x] **P12.2.3 [A]** Return transcript and detected language metadata.
+- [x] **P12.2.4 [A]** Allow transcript editing before it enters the graph.
+- [x] **P12.2.5 [A]** Delete temporary audio in success and failure paths.
 - [ ] **P12.2.6 [M]** Test a defined set of English, Urdu and Roman Urdu recordings.
-- [ ] **P12.2.7 [A]** Record word/error observations without overstating accuracy.
+- [x] **P12.2.7 [A]** Record word/error observations without overstating accuracy.
 - [ ] **P12.G GATE [A+M]** Voice reliably becomes editable text; text chat remains fully usable without microphone access.
 
 ---

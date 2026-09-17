@@ -47,6 +47,50 @@ def _run_async(coro: Coroutine[Any, Any, T]) -> T:
         return asyncio.run(coro)
 
 
+_shared_embedder = None
+
+
+def _get_shared_embedder():
+    global _shared_embedder
+    if _shared_embedder is None:
+        from pipelines.ingestion.embedder import MultilingualE5Embedder
+        _shared_embedder = MultilingualE5Embedder()
+    return _shared_embedder
+
+
+async def _execute_runtime_retrieval(
+    query: str,
+    top_k: int = 10,
+    score_threshold: float = 0.40,
+    target_audience: str | None = None,
+    project_slug: str | None = None,
+    language: str | None = None,
+) -> RetrievalResult:
+    from apps.api.db.session import get_session_factory
+    from apps.api.providers.qdrant import QdrantVectorProvider
+
+    session_maker = get_session_factory()
+    async with session_maker() as session:
+        vector_provider = QdrantVectorProvider()
+        try:
+            service = RetrievalService(
+                session=session,
+                vector_provider=vector_provider,
+                embedder=_get_shared_embedder(),
+            )
+            return await service.retrieve(
+                query=query,
+                top_k=top_k,
+                score_threshold=score_threshold,
+                target_audience=target_audience,
+                project_slug=project_slug,
+                language=language,
+            )
+        finally:
+            if hasattr(vector_provider, "close"):
+                await vector_provider.close()
+
+
 def retrieve_evidence_node(state: AssistantState) -> dict[str, Any]:
     """P9.2.4: Execute two-phase retrieval (Qdrant search + PostgreSQL hydration) with timing metrics."""
     t0 = time.perf_counter()
@@ -81,9 +125,9 @@ def retrieve_evidence_node(state: AssistantState) -> dict[str, Any]:
 
     retrieval_service = get_retrieval_service()
 
-    if retrieval_service is not None:
-        try:
-            qdrant_breaker.check_available()
+    try:
+        qdrant_breaker.check_available()
+        if retrieval_service is not None:
             res: RetrievalResult = _run_async(
                 retrieval_service.retrieve(
                     query=effective_query,
@@ -94,33 +138,42 @@ def retrieve_evidence_node(state: AssistantState) -> dict[str, Any]:
                     language=filters.language,
                 )
             )
-            qdrant_breaker.record_success()
-            telemetry_details["points_returned"] = res.metrics.qdrant_points_returned
-            telemetry_details["hydrated_count"] = res.metrics.postgres_chunks_hydrated
-            telemetry_details["deduplicated_count"] = res.metrics.deduplicated_count
-            telemetry_details["selected_tokens"] = res.metrics.selected_tokens_count
-
-            for cit in res.citations:
-                evidence_chunks.append(
-                    {
-                        "chunk_id": str(cit.chunk_id),
-                        "document_id": str(cit.document_id),
-                        "document_title": cit.document_title,
-                        "heading_path": cit.heading_path,
-                        "canonical_url": cit.canonical_url,
-                        "similarity_score": cit.similarity_score,
-                        "document_type": cit.document_type,
-                        "project_slug": cit.project_slug,
-                        "content": cit.content,
-                        "token_count": cit.token_count,
-                    }
+        else:
+            res = _run_async(
+                _execute_runtime_retrieval(
+                    query=effective_query,
+                    top_k=10,
+                    score_threshold=0.40,
+                    target_audience=filters.target_audience,
+                    project_slug=filters.project_slug,
+                    language=filters.language,
                 )
-        except Exception as e:
-            qdrant_breaker.record_failure(e)
-            logger.exception(f"Retrieval service execution failed: {e}")
-            telemetry_details["error"] = str(e)
-    else:
-        telemetry_details["warning"] = "No RetrievalService instance configured"
+            )
+        qdrant_breaker.record_success()
+        telemetry_details["points_returned"] = res.metrics.qdrant_points_returned
+        telemetry_details["hydrated_count"] = res.metrics.postgres_chunks_hydrated
+        telemetry_details["deduplicated_count"] = res.metrics.deduplicated_count
+        telemetry_details["selected_tokens"] = res.metrics.selected_tokens_count
+
+        for cit in res.citations:
+            evidence_chunks.append(
+                {
+                    "chunk_id": str(cit.chunk_id),
+                    "document_id": str(cit.document_id),
+                    "document_title": cit.document_title,
+                    "heading_path": cit.heading_path,
+                    "canonical_url": cit.canonical_url,
+                    "similarity_score": cit.similarity_score,
+                    "document_type": cit.document_type,
+                    "project_slug": cit.project_slug,
+                    "content": cit.content,
+                    "token_count": cit.token_count,
+                }
+            )
+    except Exception as e:
+        qdrant_breaker.record_failure(e)
+        logger.exception(f"Retrieval service execution failed: {e}")
+        telemetry_details["error"] = str(e)
 
     duration_ms = (time.perf_counter() - t0) * 1000.0
     step_telemetry = {

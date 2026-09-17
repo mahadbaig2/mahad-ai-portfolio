@@ -106,6 +106,8 @@ def derive_canonical_url(doc_type: str, slug: str | None) -> str:
         return f"/architecture/{slug_part}" if slug_part else "/architecture"
     if doc_type == "styleExample":
         return "/engineering"
+    if doc_type == "additionalContext":
+        return "/about#context"
 
     return f"/{slug_part}" if slug_part else "/"
 
@@ -114,7 +116,16 @@ def normalize_sanity_document(raw_doc: dict[str, Any]) -> NormalizedDocument:
     """Convert a raw Sanity document dictionary into a validated NormalizedDocument."""
     sanity_id = str(raw_doc.get("_id", ""))
     doc_type = str(raw_doc.get("_type", ""))
-    raw_title = str(raw_doc.get("title") or raw_doc.get("name") or raw_doc.get("question") or "")
+    if doc_type == "experience":
+        role = raw_doc.get("role", "")
+        company = raw_doc.get("company", "")
+        raw_title = f"{role} at {company}".strip(" at ") or raw_doc.get("title", "")
+    elif doc_type == "education":
+        degree = raw_doc.get("degree", "")
+        institution = raw_doc.get("institution", "")
+        raw_title = f"{degree} - {institution}".strip(" - ") or raw_doc.get("title", "")
+    else:
+        raw_title = str(raw_doc.get("title") or raw_doc.get("name") or raw_doc.get("question") or "")
     title = normalize_whitespace(normalize_unicode(raw_title))
 
     # Extract slug
@@ -175,6 +186,9 @@ def normalize_sanity_document(raw_doc: dict[str, Any]) -> NormalizedDocument:
 
     # 2. Rich Body / Content (Portable Text)
     body = raw_doc.get("body") or raw_doc.get("content") or raw_doc.get("answer")
+    # additionalContext uses contextText as its primary body field
+    if doc_type == "additionalContext" and not body:
+        body = raw_doc.get("contextText", "")
     if isinstance(body, list):
         parsed_sections = parse_portable_text(body, document_title=title)
         for sec in parsed_sections:
@@ -224,6 +238,119 @@ def normalize_sanity_document(raw_doc: dict[str, Any]) -> NormalizedDocument:
                     heading_level=2,
                     heading_path=[title, "Technologies Used"],
                     content=", ".join(str(t) for t in tech_stack),
+                    section_type=SectionType.PROSE,
+                )
+            )
+
+    elif doc_type == "experience":
+        exp_lines = []
+        company = raw_doc.get("company") or ""
+        role = raw_doc.get("role") or ""
+        start = raw_doc.get("startDate") or ""
+        end = "Present" if raw_doc.get("isCurrent") else (raw_doc.get("endDate") or "")
+        loc = raw_doc.get("location") or ""
+        emp_type = raw_doc.get("employmentType") or ""
+        if company or role:
+            exp_lines.append(f"Role: {role} at {company}".strip())
+        if start or end:
+            exp_lines.append(f"Duration: {start} to {end}")
+        if loc:
+            exp_lines.append(f"Location: {loc}")
+        if emp_type:
+            exp_lines.append(f"Employment Type: {emp_type}")
+        summary_val = raw_doc.get("summary") or ""
+        if summary_val and not any(s.content == summary_val for s in sections):
+            exp_lines.append(f"Summary: {summary_val}")
+        if exp_lines:
+            sections.append(
+                DocumentSection(
+                    heading="Role & Organization",
+                    heading_level=2,
+                    heading_path=[title, "Role & Organization"],
+                    content="\n".join(exp_lines),
+                    section_type=SectionType.PROSE,
+                )
+            )
+
+        highlights = raw_doc.get("highlights") or []
+        if isinstance(highlights, list) and highlights:
+            sections.append(
+                DocumentSection(
+                    heading="Key Achievements & Engineering Impact",
+                    heading_level=2,
+                    heading_path=[title, "Key Achievements & Engineering Impact"],
+                    content="\n".join(f"- {h}" for h in highlights),
+                    section_type=SectionType.LIST,
+                )
+            )
+
+        technologies = raw_doc.get("technologies") or []
+        if isinstance(technologies, list) and technologies:
+            sections.append(
+                DocumentSection(
+                    heading="Technologies Used",
+                    heading_level=2,
+                    heading_path=[title, "Technologies Used"],
+                    content=", ".join(str(t) for t in technologies),
+                    section_type=SectionType.PROSE,
+                )
+            )
+
+    elif doc_type == "education":
+        edu_lines = []
+        institution = raw_doc.get("institution") or ""
+        degree = raw_doc.get("degree") or ""
+        field_of_study = raw_doc.get("fieldOfStudy") or ""
+        grad_year = raw_doc.get("graduationYear") or ""
+        if institution:
+            edu_lines.append(f"Institution: {institution}")
+        if degree:
+            edu_lines.append(f"Degree: {degree}")
+        if field_of_study:
+            edu_lines.append(f"Field of Study: {field_of_study}")
+        if grad_year:
+            edu_lines.append(f"Graduation Year: {grad_year}")
+        if edu_lines:
+            sections.append(
+                DocumentSection(
+                    heading="Education Details",
+                    heading_level=2,
+                    heading_path=[title, "Education Details"],
+                    content="\n".join(edu_lines),
+                    section_type=SectionType.PROSE,
+                )
+            )
+
+        highlights = raw_doc.get("highlights") or []
+        if isinstance(highlights, list) and highlights:
+            sections.append(
+                DocumentSection(
+                    heading="Key Coursework & Honors",
+                    heading_level=2,
+                    heading_path=[title, "Key Coursework & Honors"],
+                    content="\n".join(f"- {h}" for h in highlights),
+                    section_type=SectionType.LIST,
+                )
+            )
+
+    elif doc_type == "skill":
+        skill_lines = []
+        cat = raw_doc.get("category") or ""
+        prof = raw_doc.get("proficiency") or ""
+        desc = raw_doc.get("description") or ""
+        if cat:
+            skill_lines.append(f"Category: {cat}")
+        if prof:
+            skill_lines.append(f"Proficiency Level: {prof}")
+        if desc:
+            skill_lines.append(f"Context & Production Usage: {desc}")
+        if skill_lines:
+            sections.append(
+                DocumentSection(
+                    heading="Skill Overview",
+                    heading_level=2,
+                    heading_path=[title, "Skill Overview"],
+                    content="\n".join(skill_lines),
                     section_type=SectionType.PROSE,
                 )
             )

@@ -35,7 +35,7 @@ export async function streamAssistantMessage(
   signal?: AbortSignal
 ): Promise<void> {
   const baseUrl = getApiBaseUrl();
-  const url = `${baseUrl}/assistant/chat/stream`;
+  const url = `${baseUrl}/api/v1/assistant/chat/stream`;
 
   try {
     const response = await fetch(url, {
@@ -119,79 +119,23 @@ export async function streamAssistantMessage(
       return;
     }
 
-    // Degraded offline fallback if backend API is not running locally
-    console.warn("API stream error, using client-side fallback:", error);
-    simulateOfflineResponse(payload, callbacks);
+    console.error("Assistant API connection error:", error);
+    callbacks.onError?.({
+      code: "API_UNAVAILABLE",
+      message: "The assistant backend is currently waking up or unreachable. Please try again in a few seconds.",
+    });
   }
 }
 
 /**
- * Deterministic client-side fallback for static previews or when API service is offline.
+ * Lightweight probe to check if the assistant service is awake and responding.
+ * Wakes up sleeping free-tier containers on page load.
  */
-function simulateOfflineResponse(
-  payload: AssistantChatRequest,
-  callbacks: StreamCallbacks
-): void {
-  const isUrdu = /kya|kaise|hai|hain|kon|kaun/i.test(payload.message);
-  callbacks.onProgress?.({
-    step_name: "classify_query",
-    duration_ms: 3.8,
-    status: "completed",
-    details: { route: "rag_retrieval", language: isUrdu ? "ur" : "en", confidence: 0.94 },
-  });
-
-  setTimeout(() => {
-    callbacks.onProgress?.({
-      step_name: "retrieve_context",
-      duration_ms: 28.4,
-      status: "completed",
-      details: { chunks_count: 2, sources: ["Talk to Mahad Case Study", "Core Engineering Skills"] },
-    });
-
-    const words = (
-      isUrdu
-        ? "Mahad Baig aik AI Product Engineer hain jo grounded RAG systems aur in-process ML routing par specialize karte hain [case_study_01]. Unho ne sub-5ms latency aur strict zero-dollar ($0.00/mo) operating cost constraints ke sath ye demonstrable portfolio banaya hai [skills_02]."
-        : "Mahad Baig is an AI Product Engineer specializing in grounded RAG architectures, in-process ML query routing (<5ms CPU latency), and verifiable citations [case_study_01]. He designs demonstrable AI systems adhering strictly to permanent free-tier cloud quotas [skills_02]."
-    ).split(" ");
-
-    let idx = 0;
-    const interval = setInterval(() => {
-      if (idx < words.length) {
-        callbacks.onToken?.((idx === 0 ? "" : " ") + words[idx]);
-        idx++;
-      } else {
-        clearInterval(interval);
-        callbacks.onDone?.({
-          session_id: payload.session_id || "demo-session-id",
-          answer: words.join(" "),
-          citations: ["case_study_01", "skills_02"],
-          route: "rag_retrieval",
-          language: isUrdu ? "ur" : "en",
-          is_safe: true,
-          mode: payload.mode || "text",
-          execution_steps: [
-            {
-              step_name: "classify_query",
-              duration_ms: 3.8,
-              status: "completed",
-              details: { route: "rag_retrieval", model: "onnx-tfidf-router-v1.0.0" },
-            },
-            {
-              step_name: "retrieve_context",
-              duration_ms: 28.4,
-              status: "completed",
-              details: { chunks_retrieved: 2, sources: ["Talk to Mahad Case Study", "Core Skills"] },
-            },
-            {
-              step_name: "generate_grounded_response",
-              duration_ms: 145.2,
-              status: "completed",
-              details: { model: "llama-3.3-70b-versatile" },
-            },
-          ],
-          errors: [],
-        });
-      }
-    }, 40);
-  }, 100);
+export async function checkAssistantHealth(signal?: AbortSignal): Promise<boolean> {
+  try {
+    const res = await fetch(`${getApiBaseUrl()}/health/live`, { signal });
+    return res.ok;
+  } catch {
+    return false;
+  }
 }

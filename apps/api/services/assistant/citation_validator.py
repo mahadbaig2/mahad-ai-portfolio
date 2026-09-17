@@ -12,7 +12,7 @@ from typing import Any
 logger = logging.getLogger("assistant.citation_validator")
 
 UUID_CITATION_REGEX = re.compile(
-    r"\[([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})\]"
+    r"[\[【]([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})[\]】]"
 )
 
 
@@ -49,8 +49,18 @@ def validate_claim_citations(
     }
     allowed_ids = set(valid_chunk_map.keys())
 
-    all_matches = list(UUID_CITATION_REGEX.finditer(response_text))
+    # 1. Match numeric citations e.g. [1], [2]
     valid_citations: list[str] = []
+    num_matches = re.findall(r"\[([1-9]\d*)\]", response_text)
+    for num_str in num_matches:
+        idx = int(num_str) - 1
+        if 0 <= idx < len(evidence_chunks):
+            cid = str(evidence_chunks[idx].get("chunk_id", "")).lower()
+            if cid and cid in allowed_ids and cid not in valid_citations:
+                valid_citations.append(cid)
+
+    # 2. Match UUID citations inside standard or fullwidth brackets
+    all_matches = list(UUID_CITATION_REGEX.finditer(response_text))
     stripped_citations: list[str] = []
 
     # Identify valid vs invalid matches
@@ -71,10 +81,16 @@ def validate_claim_citations(
         )
         for invalid_id in stripped_citations:
             # Remove [invalid_id] occurrences case-insensitively
-            pattern = re.compile(rf"\[{re.escape(invalid_id)}\]", re.IGNORECASE)
+            pattern = re.compile(rf"[\[【]{re.escape(invalid_id)}[\]】]", re.IGNORECASE)
             cleaned_text = pattern.sub("", cleaned_text)
         # Clean up any leftover double spaces
         cleaned_text = re.sub(r"  +", " ", cleaned_text)
+
+    # Normalize fullwidth Chinese/Japanese citation brackets on valid citations
+    cleaned_text = re.sub(r"【([0-9a-fA-F-]{36})】", r"[\1]", cleaned_text)
+
+    # Purge broken unclosed hex fragments (e.g. 【99158c88-445f... or [99158c88...)
+    cleaned_text = re.sub(r"[\[【][0-9a-fA-F]{8}(-[0-9a-fA-F]{0,4})*(?=[^0-9a-fA-F-]|$)(?![^\[【]*[\]】])", "", cleaned_text)
 
     status = "valid"
     if stripped_citations:
