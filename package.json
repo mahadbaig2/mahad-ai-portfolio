@@ -21,7 +21,6 @@
     "test:e2e": "pnpm --filter @mahad/web test:e2e"
   },
   "devDependencies": {
-    "typescript": "^5.8.2",
-    "wrangler": "^4.151.1"
+    "typescript": "^5.8.2"
   }
 }
