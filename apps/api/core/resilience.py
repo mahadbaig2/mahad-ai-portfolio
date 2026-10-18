@@ -154,3 +154,54 @@ class SlidingWindowRateLimiter:
 
 # Default API rate limiter: 30 requests per minute
 chat_rate_limiter = SlidingWindowRateLimiter(max_requests=30, window_seconds=60)
+
+# Voice specific rate limiter (P13P.4.6): 5 token requests per 10 minutes per IP/session
+voice_token_rate_limiter = SlidingWindowRateLimiter(max_requests=5, window_seconds=600)
+
+# ElevenLabs Circuit Breaker (P13P.10.13)
+elevenlabs_breaker = CircuitBreaker("elevenlabs", failure_threshold=3, recovery_timeout_sec=30.0)
+
+
+class VoiceConcurrencyManager:
+    """In-memory concurrency reservation manager for active voice conversations (P13P.4.7, P13P.4.8)."""
+
+    def __init__(self) -> None:
+        self._reservations: dict[str, float] = {}
+
+    def _purge_expired(self) -> None:
+        now = time.monotonic()
+        expired = [sid for sid, exp in self._reservations.items() if exp <= now]
+        for sid in expired:
+            self._reservations.pop(sid, None)
+
+    def reserve(self, session_id: str, max_seconds: int = 120, limit: int = 1) -> bool:
+        """Reserve concurrency slot for session duration. Returns True if granted, False if limit reached."""
+        self._purge_expired()
+        # If this session already has a reservation, refresh it
+        if session_id in self._reservations:
+            self._reservations[session_id] = time.monotonic() + max_seconds
+            return True
+
+        if len(self._reservations) >= limit:
+            return False
+
+        self._reservations[session_id] = time.monotonic() + max_seconds
+        return True
+
+    def release(self, session_id: str) -> None:
+        """Release session reservation on conversation completion or failure (P13P.4.9)."""
+        self._reservations.pop(session_id, None)
+
+    @property
+    def active_count(self) -> int:
+        """Return currently active unexpired reservations."""
+        self._purge_expired()
+        return len(self._reservations)
+
+    def reset(self) -> None:
+        """Clear all active reservations."""
+        self._reservations.clear()
+
+
+voice_concurrency_manager = VoiceConcurrencyManager()
+

@@ -12,6 +12,7 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
+    "@elevenlabs/react": "^1.16.0",
     "@portabletext/react": "^8.0.1",
     "@sanity/image-url": "^2.1.1",
     "clsx": "^2.1.1",

@@ -4,6 +4,8 @@ import "./globals.css";
 import { AnnouncementBar } from "@/components/AnnouncementBar";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { AssistantWidgetProvider } from "@/components/assistant/AssistantWidgetContext";
+import { AssistantWidget } from "@/components/assistant/AssistantWidget";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -39,12 +41,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={plusJakartaSans.variable}>
-      <body className="min-h-screen bg-white font-sans text-foreground antialiased selection:bg-foreground selection:text-white">
-        <AnnouncementBar />
-        <Header />
-        <main className="min-h-[calc(100vh-160px)]">{children}</main>
-        <Footer />
+      <body
+        suppressHydrationWarning
+        className="min-h-screen bg-white font-sans text-foreground antialiased selection:bg-foreground selection:text-white"
+      >
+        <AssistantWidgetProvider>
+          <AnnouncementBar />
+          <Header />
+          <main className="min-h-[calc(100vh-160px)]">{children}</main>
+          <Footer />
+          <AssistantWidget />
+        </AssistantWidgetProvider>
       </body>
     </html>
   );
 }
+

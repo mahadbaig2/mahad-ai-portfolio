@@ -1,8 +1,12 @@
 # ADR-008: Server-Sent Events (SSE) for Assistant Streaming
 
-- **Status**: Proposed (Accepted for V1)
+- **Status**: Partially Superseded by ADR-0010 (Preserved as Historical Record)
 - **Date**: 2026-09-04
 - **Author**: Antigravity & Mahad
+- **Superseded By**: [ADR-0010](0010-elevenlabs-conversational-companion.md) (Voice transport only)
+
+> [!NOTE]
+> **Historical Record**: Partially superseded by [ADR-0010](0010-elevenlabs-conversational-companion.md). SSE remains the active transport for full text chat and the compact text chat widget. The strict exclusion of real-time conversational transport has been superseded to permit ElevenLabs-managed real-time transport for conversational voice. Preserved without modification to original engineering reasoning.
 
 ## Context
 Interactive assistant interactions require real-time streaming of tokens, intermediate pipeline progress events (e.g. `classifying`, `searching`, `grading`, `generating`), and final citation metadata. Protocol choices include bidirectional WebSockets, real-time WebRTC, or HTTP Server-Sent Events (SSE).

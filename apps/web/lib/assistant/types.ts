@@ -68,3 +68,32 @@ export interface AssistantChatResponse {
   execution_steps: ExecutionStep[];
   errors: string[];
 }
+
+export interface VoiceConfigResponse {
+  voice_enabled: boolean;
+  max_session_seconds: number;
+  inactivity_timeout_seconds: number;
+  server_location: string;
+  active_voice_id?: string | null;
+}
+
+export interface VoiceTokenResponse {
+  token: string;
+  signed_url?: string | null;
+  agent_id: string;
+  max_duration_seconds: number;
+  inactivity_timeout_seconds: number;
+  expires_at: number;
+}
+
+export interface VoiceTurnCitationResponse {
+  turn_id: string;
+  session_id?: string | null;
+  conversation_id?: string | null;
+  route: string;
+  citations: string[];
+  citation_details: CitationDetail[];
+  timestamp: number;
+}
+
+

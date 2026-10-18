@@ -1,5 +1,20 @@
 # TASKS.md
 
+## Current execution override: conversational companion pivot
+
+The original Phase 12 transcription and Phase 13 OpenVoice plans remain in this file as historical evidence. They document the architecture initially selected under the original zero-cost and no-realtime-transport constraints.
+
+Those incomplete legacy voice tasks are paused and are not the current execution path.
+
+The active voice and floating-assistant implementation is now:
+
+- `PHASE 13P - Conversational Companion Pivot`
+- `docs/adr/0010-elevenlabs-conversational-companion.md`
+
+Phase 13P supersedes incomplete legacy Phase 12 and Phase 13 voice work for execution-order purposes. Existing completed transcription work must remain intact until the ElevenLabs proof of concept and rollback gate pass.
+
+Do not delete the existing transcription implementation during the initial pivot. Remove or archive it only at the specific cleanup milestone after the new conversational channel is verified.
+
 ## How to use this file
 
 This is the execution source of truth for the Mahad AI Portfolio. Antigravity must follow tasks in order and must not skip acceptance gates.
@@ -467,7 +482,10 @@ Goal: Create reproducible foundations.
 
 ---
 
-# PHASE 12 - Voice input
+# PHASE 12 - Voice input (Legacy - Incomplete tasks paused)
+
+> [!NOTE]
+> **Historical / Paused**: Completed transcription work remains active as fallback/historical capability. Incomplete tasks (P12.2.6, P12.G) are paused. Active voice development is governed by **PHASE 13P** (ADR-0010).
 
 ## Milestone 12.1 - Browser capture
 
@@ -490,7 +508,10 @@ Goal: Create reproducible foundations.
 
 ---
 
-# PHASE 13 - Mahad voice output
+# PHASE 13 - Mahad voice output (Legacy OpenVoice - Paused)
+
+> [!NOTE]
+> **Historical / Paused**: The standalone OpenVoice microservice approach is paused and superseded by **PHASE 13P** (ADR-0010: ElevenLabs Conversational Companion). Preserved as historical evidence of initial architecture constraints.
 
 ## Milestone 13.1 - Consent and dataset preparation
 
@@ -616,3 +637,315 @@ Do not execute these from this file. Track them in `docs/backlog.md`:
 - Read-only external portfolio connectors
 - Advanced drift detection and automated retraining
 
+
+---
+
+# PHASE 13P - Conversational Companion Pivot
+
+## Pivot objective
+
+Replace the planned push-to-talk transcription and self-hosted OpenVoice output path with a persistent, combined Chat and Voice widget.
+
+The widget provides:
+
+- Compact text chat backed by the existing assistant
+- Real-time ElevenLabs conversational voice
+- Shared FastAPI, ONNX, LangGraph, Neon and Qdrant intelligence
+- A strict two-minute voice-session limit
+- Honest free-tier and monthly-quota disclosures
+- A configurable voice ID that can later be replaced without code changes
+- A link to the complete `/chat` experience for citations, inspection and extended conversations
+
+The original voice ADRs and tasks remain preserved as historical evidence.
+
+## Milestone 13P.0 - Pivot governance
+
+- [x] **P13P.0.1 [A]** Add ADR-0010 documenting the conversational-companion pivot and its rationale.
+- [x] **P13P.0.2 [A]** Add the active architecture-pivot authority section to `AGENTS.md`.
+- [x] **P13P.0.3 [A]** Add the current execution override and Phase 13P to `TASKS.md`.
+- [x] **P13P.0.4 [A]** Preserve ADR-007 and ADR-008 without deleting their original reasoning.
+- [x] **P13P.0.5 [A]** Mark ADR-007 and ADR-008 as superseded by ADR-0010 using status metadata or a short supersession notice only.
+- [x] **P13P.0.6 [A]** Record that incomplete legacy Phase 12 and original Phase 13 tasks are paused.
+- [x] **P13P.0.7 [A]** Update the product-scope summary only where required to prevent the old voice approach from being represented as active.
+- [x] **P13P.0.G GATE [A]** Current documentation clearly distinguishes historical decisions from the active architecture without erasing the project’s evolution.
+
+## Milestone 13P.1 - ElevenLabs account and agent verification
+
+- [x] **P13P.1.1 [M]** Create or select an ElevenLabs conversational agent on the free plan.
+- [x] **P13P.1.2 [M]** Confirm that no paid plan or automatic paid overage is enabled.
+- [x] **P13P.1.3 [M]** Select an existing ElevenLabs voice for the initial release.
+- [x] **P13P.1.4 [M]** Record the Agent ID privately in deployment configuration.
+- [x] **P13P.1.5 [M]** Record the selected Voice ID privately in deployment configuration.
+- [x] **P13P.1.6 [M]** Verify whether conversation-level voice overrides are available on the current plan.
+- [x] **P13P.1.7 [M]** Configure English as the primary language.
+- [x] **P13P.1.8 [M]** Verify Urdu and Roman Urdu recognition and pronunciation experimentally.
+- [x] **P13P.1.9 [M]** Configure interruption, turn-taking and inactivity behaviour.
+- [x] **P13P.1.10 [M]** Configure the agent so it does not schedule meetings, transfer calls, collect leads or request contact information.
+- [x] **P13P.1.11 [M]** Review ElevenLabs conversation and audio-retention settings.
+- [x] **P13P.1.12 [M]** Record the actual free-plan allowance visible in the account dashboard without estimating unsupported minutes.
+- [x] **P13P.1.G GATE [M]** The free account can create a real-time conversation using a stock voice, and its quota and retention constraints are documented accurately.
+
+## Milestone 13P.2 - Configuration and provider boundary
+
+- [x] **P13P.2.1 [A]** Add `ELEVENLABS_API_KEY` as a server-only setting.
+- [x] **P13P.2.2 [A]** Add `ELEVENLABS_AGENT_ID`.
+- [x] **P13P.2.3 [A]** Add `ELEVENLABS_VOICE_ID`.
+- [x] **P13P.2.4 [A]** Add optional `ELEVENLABS_VOICE_ID_FALLBACK`.
+- [x] **P13P.2.5 [A]** Add `ELEVENLABS_SERVER_LOCATION`.
+- [x] **P13P.2.6 [A]** Add `ELEVENLABS_VOICE_ENABLED`.
+- [x] **P13P.2.7 [A]** Add `VOICE_SESSION_MAX_SECONDS` with a default of `120`.
+- [x] **P13P.2.8 [A]** Add `VOICE_INACTIVITY_TIMEOUT_SECONDS` with a conservative default.
+- [x] **P13P.2.9 [A]** Add daily and monthly voice-budget settings.
+- [x] **P13P.2.10 [A]** Add a global concurrency setting with an initial default of `1`.
+- [x] **P13P.2.11 [A]** Validate all voice configuration at the server boundary.
+- [x] **P13P.2.12 [A]** Ensure missing or invalid configuration disables voice without affecting either text-chat surface.
+- [x] **P13P.2.13 [A]** Ensure no ElevenLabs secret enters client bundles, logs, traces or API responses.
+- [x] **P13P.2.14 [A]** Keep agent and voice selection replaceable without changing UI, graph, RAG or database code.
+- [x] **P13P.2.G GATE [A]** A voice or agent ID can be replaced through configuration alone, and the application safely degrades when configuration is unavailable.
+
+## Milestone 13P.3 - OpenAI-compatible assistant adapter
+
+- [x] **P13P.3.1 [A]** Define the minimum OpenAI-compatible request and streaming-response contracts required by ElevenLabs.
+- [x] **P13P.3.2 [A]** Add a dedicated FastAPI endpoint for ElevenLabs custom-LLM requests.
+- [x] **P13P.3.3 [A]** Authenticate requests from ElevenLabs using a server-managed secret.
+- [x] **P13P.3.4 [A]** Validate message roles, lengths, history bounds and supported content types.
+- [x] **P13P.3.5 [A]** Map the latest user message into the existing assistant request contract with `mode="voice"`.
+- [x] **P13P.3.6 [A]** Map bounded conversation history into the existing graph state.
+- [x] **P13P.3.7 [A]** Reuse the existing ONNX router, safety checks, LangGraph orchestration and retrieval services.
+- [x] **P13P.3.8 [A]** Do not create a second voice-only assistant graph.
+- [x] **P13P.3.9 [A]** Preserve refusal behaviour for out-of-domain, private and adversarial requests.
+- [x] **P13P.3.10 [A]** Add a voice-output formatter after grounded answer generation.
+- [x] **P13P.3.11 [A]** Remove raw URLs, Markdown syntax and interface-specific citation markup from spoken output.
+- [x] **P13P.3.12 [A]** Preserve factual meaning and natural source attribution in spoken responses.
+- [x] **P13P.3.13 [A]** Stream the response using the OpenAI-compatible format expected by ElevenLabs.
+- [x] **P13P.3.14 [A]** Add structured correlation IDs without exposing hidden prompts or reasoning.
+- [x] **P13P.3.15 [A]** Add unit tests for request mapping, streaming, refusals, history bounds and malformed requests.
+- [x] **P13P.3.16 [A]** Add an integration test proving that a portfolio question reaches the existing RAG pipeline.
+- [x] **P13P.3.G GATE [A]** ElevenLabs can ask one factual portfolio question and speak a grounded answer produced by the existing LangGraph assistant.
+
+## Milestone 13P.4 - Secure conversation-session creation
+
+- [x] **P13P.4.1 [A]** Add a server-only endpoint that creates or retrieves a short-lived ElevenLabs conversation token or signed URL.
+- [x] **P13P.4.2 [A]** Never return the ElevenLabs API key to the browser.
+- [x] **P13P.4.3 [A]** Require an explicit start-voice action before creating a token.
+- [x] **P13P.4.4 [A]** Do not create a token when the widget automatically opens.
+- [x] **P13P.4.5 [A]** Validate allowed origins.
+- [x] **P13P.4.6 [A]** Apply IP, session and global rate limits.
+- [x] **P13P.4.7 [A]** Check configuration, concurrency and usage budgets before issuing a token.
+- [x] **P13P.4.8 [A]** Reserve the maximum allowed session duration before issuing a token.
+- [x] **P13P.4.9 [A]** Expire unused reservations when a conversation fails to start.
+- [x] **P13P.4.10 [A]** Return stable error codes for disabled, unavailable, rate-limited, concurrent and quota-exhausted states.
+- [x] **P13P.4.11 [A]** Add tests proving that automatic widget opening cannot create a voice session.
+- [x] **P13P.4.G GATE [A]** Browser clients can start authorized sessions without receiving secrets, and passive widget behaviour consumes no voice quota.
+
+## Milestone 13P.5 - Shared text-chat foundation
+
+- [x] **P13P.5.1 [A]** Audit the full `/chat` implementation for reusable API and state logic.
+- [x] **P13P.5.2 [A]** Extract shared assistant request and response types.
+- [x] **P13P.5.3 [A]** Extract shared SSE parsing.
+- [x] **P13P.5.4 [A]** Extract shared cancellation and error handling.
+- [x] **P13P.5.5 [A]** Extract shared bounded-history logic.
+- [x] **P13P.5.6 [A]** Extract reusable citation rendering at compact and full-detail levels.
+- [x] **P13P.5.7 [A]** Preserve the full chat page’s execution inspector and feedback features.
+- [x] **P13P.5.8 [A]** Ensure the compact widget does not fork assistant prompts or business logic.
+- [x] **P13P.5.9 [A]** Add regression tests for the existing full chat page.
+- [x] **P13P.5.G GATE [A]** Full chat and compact chat use one shared client foundation while retaining their appropriate presentation depth.
+
+## Milestone 13P.6 - Global companion shell
+
+- [x] **P13P.6.1 [A]** Add `@elevenlabs/react` using the repository package manager.
+- [x] **P13P.6.2 [A]** Add a global `AssistantWidgetProvider`.
+- [x] **P13P.6.3 [A]** Mount the provider and widget in the root layout.
+- [x] **P13P.6.4 [A]** Add a fixed bottom-right launcher.
+- [x] **P13P.6.5 [A]** Add a responsive panel for desktop.
+- [x] **P13P.6.6 [A]** Add an accessible mobile bottom-sheet presentation.
+- [x] **P13P.6.7 [A]** Add Chat and Voice tabs.
+- [x] **P13P.6.8 [A]** Preserve widget state across client-side navigation.
+- [x] **P13P.6.9 [A]** Add an “Open full chat” action.
+- [x] **P13P.6.10 [A]** Ensure the widget does not obscure essential page controls.
+- [x] **P13P.6.11 [A]** Support keyboard navigation, visible focus and Escape-to-close.
+- [x] **P13P.6.12 [A]** Do not trap focus when the widget opens automatically.
+- [x] **P13P.6.13 [A]** Respect reduced-motion settings.
+- [x] **P13P.6.14 [A]** Add component tests for tab switching, opening, closing and route persistence.
+- [ ] **P13P.6.G GATE [A+M]** The combined widget works across all pages and screen sizes without regressing the full chat page.
+
+## Milestone 13P.7 - Five-second automatic opening
+
+- [x] **P13P.7.1 [A]** Start one five-second timer after the global widget mounts for the first time.
+- [x] **P13P.7.2 [A]** Automatically expand the widget when the timer completes.
+- [x] **P13P.7.3 [A]** Open to the Chat tab by default.
+- [x] **P13P.7.4 [A]** Do not send a greeting request or create an assistant session merely because the widget opened.
+- [x] **P13P.7.5 [A]** Do not request microphone permission.
+- [x] **P13P.7.6 [A]** Do not create an ElevenLabs token or connection.
+- [x] **P13P.7.7 [A]** Do not play audio.
+- [x] **P13P.7.8 [A]** Do not move keyboard focus when opening automatically.
+- [x] **P13P.7.9 [A]** Cancel the timer if the visitor manually opens the widget before five seconds.
+- [x] **P13P.7.10 [A]** Cancel the timer and record dismissal if the visitor closes the widget before automatic opening.
+- [x] **P13P.7.11 [A]** Record the automatic-open event in `sessionStorage`.
+- [x] **P13P.7.12 [A]** Do not automatically reopen after dismissal during the same browser session.
+- [x] **P13P.7.13 [A]** Do not restart the timer during client-side navigation.
+- [x] **P13P.7.14 [A]** Add tests proving auto-open has no network call to ElevenLabs and no microphone side effect.
+- [ ] **P13P.7.G GATE [A+M]** The widget opens visually after five seconds exactly once per browser session without initiating chat or voice activity.
+
+## Milestone 13P.8 - Compact text chat
+
+- [x] **P13P.8.1 [A]** Add compact text-chat message history.
+- [x] **P13P.8.2 [A]** Add input, submit, stop and clear controls.
+- [x] **P13P.8.3 [A]** Reuse the existing assistant endpoint.
+- [x] **P13P.8.4 [A]** Reuse the existing audience/persona configuration where appropriate.
+- [x] **P13P.8.5 [A]** Render concise grounded answers.
+- [x] **P13P.8.6 [A]** Render compact source chips.
+- [x] **P13P.8.7 [A]** Link source chips to safe canonical portfolio paths.
+- [x] **P13P.8.8 [A]** Direct users to the full chat page for execution inspection.
+- [x] **P13P.8.9 [A]** Preserve text chat when voice is disabled, unavailable or quota exhausted.
+- [x] **P13P.8.10 [A]** Add empty, loading, cancellation, timeout and error states.
+- [ ] **P13P.8.G GATE [A+M]** Compact chat answers grounded questions consistently with the existing full chat page.
+
+## Milestone 13P.9 - Conversational voice interface
+
+- [x] **P13P.9.1 [A]** Add explicit voice-mode consent and usage disclosure.
+- [x] **P13P.9.2 [A]** Show the two-minute limit before the start button.
+- [x] **P13P.9.3 [A]** Label the voice as AI-generated.
+- [x] **P13P.9.4 [A]** Identify the agent as Mahad’s AI portfolio assistant.
+- [x] **P13P.9.5 [A]** Request microphone permission only after explicit start.
+- [x] **P13P.9.6 [A]** Start ElevenLabs only after authorization succeeds.
+- [x] **P13P.9.7 [A]** Add ready, connecting, listening, thinking, speaking, muted, ending, unavailable and quota-exhausted states.
+- [x] **P13P.9.8 [A]** Add live input and output visualization using SDK volume data.
+- [x] **P13P.9.9 [A]** Add mute, unmute, stop-speaking and end-session controls.
+- [x] **P13P.9.10 [A]** Display tentative and final transcript events appropriately.
+- [x] **P13P.9.11 [A]** Display remaining session time.
+- [x] **P13P.9.12 [A]** Warn visually and conversationally at 30 seconds remaining.
+- [x] **P13P.9.13 [A]** Warn at 10 seconds remaining.
+- [x] **P13P.9.14 [A]** End automatically at 120 seconds.
+- [x] **P13P.9.15 [A]** Provide “Continue in text” during and after the session.
+- [x] **P13P.9.16 [A]** Stop all microphone tracks and SDK resources on termination.
+- [x] **P13P.9.17 [A]** Handle tab hiding, page unload and network loss safely.
+- [x] **P13P.9.18 [A]** Never automatically reconnect after a quota rejection.
+- [ ] **P13P.9.G GATE [A+M]** A visitor can hold an interruptible, grounded conversation for up to two minutes and continue in text afterward.
+
+## Milestone 13P.10 - Usage accounting and quota protection
+
+- [x] **P13P.10.1 [A]** Add a Neon model and migration for voice-session usage.
+- [x] **P13P.10.2 [A]** Store provider conversation ID, internal session ID, timestamps, reserved seconds, estimated used seconds and termination reason.
+- [x] **P13P.10.3 [A]** Do not store raw audio.
+- [x] **P13P.10.4 [A]** Store transcripts only under the existing affirmative-consent policy.
+- [x] **P13P.10.5 [A]** Implement atomic usage reservation before token issuance.
+- [x] **P13P.10.6 [A]** Reconcile reservations after session termination.
+- [x] **P13P.10.7 [A]** Expire abandoned reservations.
+- [x] **P13P.10.8 [A]** Enforce the monthly application-side voice budget.
+- [x] **P13P.10.9 [A]** Enforce the daily application-side voice budget.
+- [x] **P13P.10.10 [A]** Enforce per-IP and per-session cooldowns.
+- [x] **P13P.10.11 [A]** Enforce the global concurrency limit.
+- [x] **P13P.10.12 [A]** Detect and classify ElevenLabs quota errors.
+- [x] **P13P.10.13 [A]** Add a temporary circuit breaker after confirmed provider quota exhaustion.
+- [x] **P13P.10.14 [A]** Keep the ElevenLabs dashboard as the authoritative provider-usage source.
+- [x] **P13P.10.15 [A]** Add a manual monthly reconciliation runbook.
+- [x] **P13P.10.G GATE [A]** Voice consumption is bounded server-side and cannot disable either text-chat experience.
+
+## Milestone 13P.11 - Honest degradation and disclaimers
+
+- [x] **P13P.11.1 [A]** Add the pre-session two-minute notice.
+- [x] **P13P.11.2 [A]** Add the session-ended notice.
+- [x] **P13P.11.3 [A]** Add the monthly-allowance-reached notice.
+- [x] **P13P.11.4 [A]** Add the temporarily-unavailable notice.
+- [x] **P13P.11.5 [A]** Add the microphone-denied notice.
+- [x] **P13P.11.6 [A]** Always provide “Continue in text” and “Open full chat” actions.
+- [x] **P13P.11.7 [A]** Do not use generic error wording for known quota limitations.
+- [x] **P13P.11.8 [A]** Do not promise when the provider allowance will reset unless the reset time is verified.
+- [x] **P13P.11.9 [A]** Add a voice-provider privacy disclosure before permission is requested.
+- [ ] **P13P.11.10 [M]** Verify all public storage and retention claims against actual provider settings.
+- [ ] **P13P.11.G GATE [A+M]** Every expected limitation is explained honestly without making the website or text assistant appear broken.
+
+## Milestone 13P.12 - Persona and conversational policy
+
+- [x] **P13P.12.1 [A]** Create one channel-independent core persona policy.
+- [x] **P13P.12.2 [A]** Add voice-specific delivery instructions without duplicating factual knowledge.
+- [x] **P13P.12.3 [A]** Require direct answers before elaboration.
+- [x] **P13P.12.4 [A]** Keep ordinary spoken turns concise.
+- [x] **P13P.12.5 [A]** Prevent repeated sales-oriented calls to action.
+- [x] **P13P.12.6 [A]** Prevent unsolicited meeting or call suggestions.
+- [x] **P13P.12.7 [A]** Prevent lead collection.
+- [x] **P13P.12.8 [A]** Allow contact guidance only when asked or clearly relevant.
+- [x] **P13P.12.9 [A]** Require honest distinction between completed, ongoing and planned work.
+- [x] **P13P.12.10 [A]** Require the assistant to acknowledge missing knowledge rather than improvise.
+- [x] **P13P.12.11 [A]** Match English or Roman Urdu where supported.
+- [x] **P13P.12.12 [A]** Prevent the synthetic voice from claiming to be Mahad live.
+- [ ] **P13P.12.G GATE [A+M]** The voice agent behaves like a knowledgeable portfolio counterpart, not a sales or appointment-booking bot.
+
+## Milestone 13P.13 - Citations and voice-turn metadata
+
+- [x] **P13P.13.1 [A]** Preserve citation validation inside the shared assistant graph.
+- [x] **P13P.13.2 [A]** Convert citations into natural spoken attribution where appropriate.
+- [x] **P13P.13.3 [A]** Do not read raw URLs or chunk identifiers aloud.
+- [x] **P13P.13.4 [A]** Associate voice turns with safe citation metadata using provider conversation ID or an internal correlation ID.
+- [x] **P13P.13.5 [A]** Add a safe endpoint for the widget to retrieve the latest voice-turn citation metadata.
+- [x] **P13P.13.6 [A]** Display compact source chips beneath voice transcript entries.
+- [x] **P13P.13.7 [A]** Ensure citations come only from the current retrieval execution.
+- [x] **P13P.13.G GATE [A]** Voice answers remain grounded and the widget can expose sources without speaking implementation metadata.
+
+## Milestone 13P.14 - Testing and evaluation
+
+- [ ] **P13P.14.1 [A]** Add component tests for automatic opening after five seconds.
+- [ ] **P13P.14.2 [A]** Verify that automatic opening causes no microphone, token or audio side effect.
+- [ ] **P13P.14.3 [A]** Test manual opening before the timer.
+- [ ] **P13P.14.4 [A]** Test dismissal persistence across route changes.
+- [ ] **P13P.14.5 [A]** Test text and voice tab switching.
+- [ ] **P13P.14.6 [A]** Test microphone granted, denied and unavailable states.
+- [ ] **P13P.14.7 [A]** Test server-enforced 120-second termination.
+- [ ] **P13P.14.8 [A]** Test inactivity termination.
+- [ ] **P13P.14.9 [A]** Test monthly-quota and provider-quota errors.
+- [ ] **P13P.14.10 [A]** Test continuation from voice to compact text chat.
+- [ ] **P13P.14.11 [A]** Test the full chat page for regressions.
+- [ ] **P13P.14.12 [A]** Test keyboard access, focus handling, screen-reader states and reduced motion.
+- [ ] **P13P.14.13 [A]** Create a fixed factual evaluation set shared by text and voice.
+- [ ] **P13P.14.14 [A]** Compare text and voice factual consistency.
+- [ ] **P13P.14.15 [A]** Evaluate recruiter, engineer, founder and general questions.
+- [ ] **P13P.14.16 [A]** Evaluate follow-up questions requiring bounded history.
+- [ ] **P13P.14.17 [A]** Evaluate out-of-domain refusals.
+- [ ] **P13P.14.18 [A]** Evaluate prompt-injection resistance.
+- [ ] **P13P.14.19 [A]** Evaluate private-information requests.
+- [ ] **P13P.14.20 [A]** Evaluate English and Roman Urdu.
+- [ ] **P13P.14.21 [M]** Evaluate pronunciation of Mahad, Busyfile, CardioScan, LangGraph, Qdrant, Islamabad and Karachi.
+- [ ] **P13P.14.22 [M]** Confirm the assistant never pushes an unsolicited call or meeting.
+- [ ] **P13P.14.G GATE [A+M]** Voice and text channels are grounded, consistent, accessible and honest under normal and degraded conditions.
+
+## Milestone 13P.15 - Controlled rollout
+
+- [ ] **P13P.15.1 [A]** Place public voice availability behind `ELEVENLABS_VOICE_ENABLED`.
+- [ ] **P13P.15.2 [A]** Preserve a kill switch that does not require a frontend rebuild where hosting permits.
+- [ ] **P13P.15.3 [A]** Deploy the custom-LLM adapter and token endpoint.
+- [ ] **P13P.15.4 [A]** Verify production origin and authentication rules.
+- [ ] **P13P.15.5 [A]** Run one controlled production conversation.
+- [ ] **P13P.15.6 [A]** Verify usage accounting against the ElevenLabs dashboard.
+- [ ] **P13P.15.7 [A]** Enable the widget globally while keeping voice initially disabled if necessary.
+- [ ] **P13P.15.8 [M]** Review real usage and enable public voice.
+- [ ] **P13P.15.9 [A]** Monitor quota, errors and latency during initial rollout.
+- [ ] **P13P.15.10 [A]** Document how to change the configured voice.
+- [ ] **P13P.15.G GATE [A+M]** The combined companion is public, bounded, replaceable and unable to compromise the static portfolio or text assistant.
+
+## Milestone 13P.16 - Legacy cleanup after acceptance
+
+- [ ] **P13P.16.1 [M]** Confirm the ElevenLabs path is accepted as the production voice experience.
+- [ ] **P13P.16.2 [A]** Remove the old microphone control from the text-chat composer.
+- [ ] **P13P.16.3 [A]** Remove unused frontend transcription imports and client helpers.
+- [ ] **P13P.16.4 [A]** Decide whether to retain or remove the FastAPI transcription endpoint.
+- [ ] **P13P.16.5 [A]** Remove the undeployed OpenVoice service scaffold from active deployment configuration.
+- [ ] **P13P.16.6 [A]** Preserve historical code through Git history and architectural documentation.
+- [ ] **P13P.16.7 [A]** Remove obsolete voice-specific environment variables.
+- [ ] **P13P.16.8 [A]** Update public architecture diagrams to show the current system and link to the superseded decision history.
+- [ ] **P13P.16.G GATE [A+M]** No dead production path remains, while the pivot remains fully visible through Git and ADR history.
+
+## PHASE 13P ACCEPTANCE GATE
+
+- [ ] **P13P.G.1 [A]** The widget automatically opens after five seconds without starting a conversation.
+- [ ] **P13P.G.2 [A]** The widget does not automatically request microphone permission.
+- [ ] **P13P.G.3 [A]** Compact and full chat use the same assistant backend.
+- [ ] **P13P.G.4 [A]** Voice uses the existing LangGraph and RAG intelligence layer.
+- [ ] **P13P.G.5 [A]** Voice is configurable through environment settings.
+- [ ] **P13P.G.6 [A]** Voice sessions cannot exceed 120 seconds.
+- [ ] **P13P.G.7 [A]** Monthly exhaustion produces an honest disclaimer and text fallback.
+- [ ] **P13P.G.8 [A]** No API key is exposed to the browser.
+- [ ] **P13P.G.9 [A]** No duplicate production knowledge base exists in ElevenLabs.
+- [ ] **P13P.G.10 [A]** Text chat remains available during every voice failure mode.
+- [ ] **P13P.G.11 [M]** Mahad approves the final widget UX, voice behaviour and public wording.
+- [ ] **P13P.G GATE [A+M]** The conversational companion is production-ready within the approved free-tier constraints.

@@ -1,8 +1,12 @@
 # ADR-007: Separate Failure Domain for Cloned Voice Service
 
-- **Status**: Proposed (Accepted for V1)
+- **Status**: Superseded by ADR-0010 (Preserved as Historical Record)
 - **Date**: 2026-09-04
 - **Author**: Antigravity & Mahad
+- **Superseded By**: [ADR-0010](0010-elevenlabs-conversational-companion.md)
+
+> [!NOTE]
+> **Historical Record**: Superseded by [ADR-0010](0010-elevenlabs-conversational-companion.md) for the active voice architecture. The self-hosted OpenVoice microservice approach has been paused in favor of the ElevenLabs conversational companion. Preserved without modification to original engineering reasoning.
 
 ## Context
 The portfolio features an experimental cloned voice of Mahad powered by OpenVoice V2. Neural voice cloning models have substantial dependency footprints (PyTorch, audio codecs, speaker embedding extractors) and significant memory / compute requirements. If bundled into the primary API container, a voice crash, out-of-memory error, or slow synthesis would take down the core chat and portfolio backend.

@@ -156,6 +156,89 @@ class Settings(BaseSettings):
         description="Minimum confidence threshold for predicted route acceptance without fallback",
     )
 
+    # --------------------------------------------------------------------------
+    # ElevenLabs Conversational Companion (Phase 13P)
+    # --------------------------------------------------------------------------
+    ELEVENLABS_API_KEY: str = Field(
+        default="",
+        description="Server-only ElevenLabs API key for conversation token generation and agent requests",
+        repr=False,
+    )
+    ELEVENLABS_CUSTOM_LLM_SECRET: str = Field(
+        default="",
+        description="Bearer token secret for authenticating ElevenLabs Custom LLM requests",
+        repr=False,
+    )
+    ELEVENLABS_AGENT_ID: str = Field(
+        default="",
+        description="Configured ElevenLabs Conversational AI Agent ID",
+    )
+    ELEVENLABS_VOICE_ID: str = Field(
+        default="",
+        description="Default or override ElevenLabs Voice ID",
+    )
+    ELEVENLABS_VOICE_ID_FALLBACK: str = Field(
+        default="",
+        description="Fallback Voice ID if primary voice is unavailable",
+    )
+    ELEVENLABS_SERVER_LOCATION: str = Field(
+        default="us",
+        description="ElevenLabs server location preference (e.g. 'us', 'eu')",
+    )
+    ELEVENLABS_VOICE_ENABLED: bool = Field(
+        default=True,
+        description="Global master switch to enable or disable the conversational voice experience",
+    )
+    VOICE_SESSION_MAX_SECONDS: int = Field(
+        default=120,
+        ge=10,
+        le=120,
+        description="Hard ceiling for voice conversation duration in seconds (capped at 120s)",
+    )
+    VOICE_INACTIVITY_TIMEOUT_SECONDS: int = Field(
+        default=15,
+        ge=5,
+        le=60,
+        description="Client and server inactivity silence threshold before disconnecting",
+    )
+    VOICE_MONTHLY_BUDGET_SECONDS: int = Field(
+        default=3600,
+        ge=60,
+        description="Monthly aggregated voice duration budget across all visitors in seconds",
+    )
+    VOICE_DAILY_BUDGET_SECONDS: int = Field(
+        default=600,
+        ge=60,
+        description="Daily aggregated voice duration budget across all visitors in seconds",
+    )
+    VOICE_GLOBAL_CONCURRENCY_LIMIT: int = Field(
+        default=1,
+        ge=1,
+        description="Maximum simultaneous active voice sessions permitted",
+    )
+
+    @field_validator("VOICE_SESSION_MAX_SECONDS", mode="before")
+    @classmethod
+    def clamp_max_voice_session(cls, v: int | str) -> int:
+        val = int(v)
+        if val > 120:
+            return 120
+        return max(val, 10)
+
+    @property
+    def is_voice_available(self) -> bool:
+        """Return True only if voice is explicitly enabled and required credentials/IDs are configured."""
+        if not self.ELEVENLABS_VOICE_ENABLED:
+            return False
+        if not self.ELEVENLABS_API_KEY.strip() or not self.ELEVENLABS_AGENT_ID.strip():
+            return False
+        return True
+
+    @property
+    def active_voice_id(self) -> str:
+        """Return the effective voice ID, falling back to fallback voice ID if empty."""
+        return self.ELEVENLABS_VOICE_ID.strip() or self.ELEVENLABS_VOICE_ID_FALLBACK.strip()
+
     @property
     def is_production(self) -> bool:
         return self.ENVIRONMENT == "production"
@@ -163,6 +246,7 @@ class Settings(BaseSettings):
     @property
     def is_test(self) -> bool:
         return self.ENVIRONMENT == "test"
+
 
 
 @lru_cache(maxsize=1)

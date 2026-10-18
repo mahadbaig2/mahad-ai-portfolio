@@ -24,6 +24,7 @@ from apps.api.routes.assistant import router as assistant_router
 from apps.api.routes.health import router as health_router
 from apps.api.routes.router import router as query_router_endpoint
 from apps.api.routes.transcription import router as transcription_router
+from apps.api.routes.voice import router as voice_router
 from apps.api.services.query_router import get_router_service
 
 
@@ -90,8 +91,10 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.include_router(query_router_endpoint, prefix="/api/v1")
     app.include_router(assistant_router, prefix="/api/v1")
     app.include_router(transcription_router, prefix="/api/v1")
+    app.include_router(voice_router, prefix="/api/v1")
 
     return app
+
 
 
 

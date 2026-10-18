@@ -29,11 +29,12 @@ The assistant answers questions about Mahad's experience, projects, articles and
 - **LLM & Speech-to-Text**: Groq LLM inference and Whisper speech transcription.
 - **Observability**: LangSmith tracing, evaluation, and usage protection safeguards.
 - **UI Interaction**: Text chat interface, grounded citations, and safe execution inspector.
-- **Voice Capabilities**: Push-to-talk voice input.
-- **Experimental Voice**: OpenVoice V2 based Mahad cloned voice output.
-- **Fallback Speech**: Browser text-to-speech fallback.
+- **Conversational Companion**: Persistent floating widget across all routes with compact text chat and real-time voice modes (ADR-0010).
+- **Managed Voice Channel**: ElevenLabs-managed real-time speech recognition, turn-taking, interruption handling, and speech synthesis via custom LLM adapter on FastAPI.
+- **Voice Safety & Boundedness**: Strict 120-second session limits, monthly quota disclaimers, text fallbacks, and configurable voice selection.
+- **Fallback Speech**: Browser text-to-speech fallback and Whisper transcription fallback.
 - **CI/CD**: GitHub Actions workflows.
-- **Containerization**: Dockerized AI and voice microservices.
+- **Containerization**: Dockerized primary AI service.
 - **Documentation**: Public system architecture and evaluation documentation.
 
 ### Version 1 Excluded Features
@@ -43,7 +44,10 @@ The assistant answers questions about Mahad's experience, projects, articles and
 - General autonomous actions / agentic side effects
 - Email or calendar writing/sending capabilities
 - Long-term personalized user memory across sessions
-- WebRTC real-time audio calls
+- Self-hosted OpenVoice microservice deployment (superseded/paused per ADR-0010)
+- Self-hosted real-time general WebSocket/WebRTC audio infrastructure (managed via ElevenLabs)
+- Automatic microphone activation or automatic voice-session creation
+- Automatic meeting booking or lead collection
 - Custom LLM model fine-tuning
 - Custom neural reranking
 - Kubernetes infrastructure

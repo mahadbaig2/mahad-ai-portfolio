@@ -390,6 +390,173 @@
           }
         }
       }
+    },
+    "/api/v1/voice/config": {
+      "get": {
+        "tags": [
+          "Voice"
+        ],
+        "summary": "Get Voice Config",
+        "description": "Safe, non-secret voice configuration status for client widget disclosure (P13P.2.11).",
+        "operationId": "get_voice_config_api_v1_voice_config_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VoiceConfigResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/voice/chat/completions": {
+      "post": {
+        "tags": [
+          "Voice"
+        ],
+        "summary": "Custom Llm Chat Completions",
+        "description": "Dedicated OpenAI-compatible endpoint for ElevenLabs Conversational AI Custom LLM (P13P.3.2).",
+        "operationId": "custom_llm_chat_completions_api_v1_voice_chat_completions_post",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OpenAIChatCompletionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenAIChatCompletionResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/voice/token": {
+      "post": {
+        "tags": [
+          "Voice"
+        ],
+        "summary": "Create Voice Session Token",
+        "description": "Create short-lived ElevenLabs conversation token server-side (P13P.4.1 - P13P.4.10).",
+        "operationId": "create_voice_session_token_api_v1_voice_token_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VoiceTokenRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VoiceTokenResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/voice/session/end": {
+      "post": {
+        "tags": [
+          "Voice"
+        ],
+        "summary": "End Voice Session",
+        "description": "Explicitly release reservation when a voice session ends or is abandoned (P13P.4.9).",
+        "operationId": "end_voice_session_api_v1_voice_session_end_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VoiceTokenRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response End Voice Session Api V1 Voice Session End Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -476,6 +643,14 @@
             "type": "array",
             "title": "Citations",
             "description": "Referenced chunk IDs"
+          },
+          "citation_details": {
+            "items": {
+              "$ref": "#/components/schemas/CitationDetailPayload"
+            },
+            "type": "array",
+            "title": "Citation Details",
+            "description": "Structured citation metadata"
           },
           "route": {
             "$ref": "#/components/schemas/RouteLabel"
@@ -574,7 +749,7 @@
           },
           "content": {
             "type": "string",
-            "maxLength": 4000,
+            "maxLength": 20000,
             "minLength": 1,
             "title": "Content"
           },
@@ -606,6 +781,46 @@
           "system"
         ],
         "title": "ChatMessageRole"
+      },
+      "CitationDetailPayload": {
+        "properties": {
+          "index": {
+            "type": "integer",
+            "title": "Index"
+          },
+          "chunk_id": {
+            "type": "string",
+            "title": "Chunk Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
+          "heading": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Heading"
+          }
+        },
+        "type": "object",
+        "required": [
+          "index",
+          "chunk_id",
+          "title",
+          "url"
+        ],
+        "title": "CitationDetailPayload",
+        "description": "Structured citation detail mapping chunk UUID to document title and URL."
       },
       "CreateSessionRequest": {
         "properties": {
@@ -855,6 +1070,198 @@
         "title": "LanguageLabel",
         "description": "Detected language: en (English) or ur (Roman Urdu)."
       },
+      "OpenAIChatCompletionRequest": {
+        "properties": {
+          "messages": {
+            "items": {
+              "$ref": "#/components/schemas/OpenAIChatMessage"
+            },
+            "type": "array",
+            "maxItems": 50,
+            "minItems": 1,
+            "title": "Messages",
+            "description": "List of conversation messages including prompt and history"
+          },
+          "model": {
+            "type": "string",
+            "title": "Model",
+            "description": "Model identifier requested by caller",
+            "default": "mahad-ai-assistant"
+          },
+          "stream": {
+            "type": "boolean",
+            "title": "Stream",
+            "description": "Whether to stream response tokens via Server-Sent Events",
+            "default": true
+          },
+          "temperature": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 2.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Temperature",
+            "description": "Sampling temperature"
+          },
+          "max_tokens": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 4096.0,
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Tokens",
+            "description": "Maximum tokens to generate"
+          }
+        },
+        "type": "object",
+        "required": [
+          "messages"
+        ],
+        "title": "OpenAIChatCompletionRequest",
+        "description": "Request payload sent by ElevenLabs Conversational AI or any OpenAI-compatible client."
+      },
+      "OpenAIChatCompletionResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "object": {
+            "type": "string",
+            "const": "chat.completion",
+            "title": "Object",
+            "default": "chat.completion"
+          },
+          "created": {
+            "type": "integer",
+            "title": "Created"
+          },
+          "model": {
+            "type": "string",
+            "title": "Model",
+            "default": "mahad-ai-assistant"
+          },
+          "choices": {
+            "items": {
+              "$ref": "#/components/schemas/OpenAIChoice"
+            },
+            "type": "array",
+            "title": "Choices"
+          },
+          "usage": {
+            "$ref": "#/components/schemas/OpenAIUsage"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "created",
+          "choices"
+        ],
+        "title": "OpenAIChatCompletionResponse",
+        "description": "Complete non-streaming OpenAI chat completion payload."
+      },
+      "OpenAIChatMessage": {
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "system",
+              "user",
+              "assistant"
+            ],
+            "title": "Role",
+            "description": "Role of the message sender"
+          },
+          "content": {
+            "type": "string",
+            "maxLength": 4000,
+            "minLength": 1,
+            "title": "Content",
+            "description": "Text content of the message"
+          }
+        },
+        "type": "object",
+        "required": [
+          "role",
+          "content"
+        ],
+        "title": "OpenAIChatMessage",
+        "description": "Message item conforming to the OpenAI Chat Completion message specification."
+      },
+      "OpenAIChoice": {
+        "properties": {
+          "index": {
+            "type": "integer",
+            "title": "Index",
+            "default": 0
+          },
+          "message": {
+            "$ref": "#/components/schemas/OpenAIChoiceMessage"
+          },
+          "finish_reason": {
+            "type": "string",
+            "title": "Finish Reason",
+            "default": "stop"
+          }
+        },
+        "type": "object",
+        "required": [
+          "message"
+        ],
+        "title": "OpenAIChoice",
+        "description": "Individual choice element in a non-streaming response."
+      },
+      "OpenAIChoiceMessage": {
+        "properties": {
+          "role": {
+            "type": "string",
+            "const": "assistant",
+            "title": "Role",
+            "default": "assistant"
+          },
+          "content": {
+            "type": "string",
+            "title": "Content",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "title": "OpenAIChoiceMessage",
+        "description": "Assistant message payload in a non-streaming completion choice."
+      },
+      "OpenAIUsage": {
+        "properties": {
+          "prompt_tokens": {
+            "type": "integer",
+            "title": "Prompt Tokens",
+            "default": 0
+          },
+          "completion_tokens": {
+            "type": "integer",
+            "title": "Completion Tokens",
+            "default": 0
+          },
+          "total_tokens": {
+            "type": "integer",
+            "title": "Total Tokens",
+            "default": 0
+          }
+        },
+        "type": "object",
+        "title": "OpenAIUsage",
+        "description": "Token usage metrics."
+      },
       "RouteLabel": {
         "type": "string",
         "enum": [
@@ -1100,6 +1507,123 @@
           "python_version"
         ],
         "title": "VersionResponse"
+      },
+      "VoiceConfigResponse": {
+        "properties": {
+          "voice_enabled": {
+            "type": "boolean",
+            "title": "Voice Enabled"
+          },
+          "max_session_seconds": {
+            "type": "integer",
+            "title": "Max Session Seconds",
+            "default": 120
+          },
+          "inactivity_timeout_seconds": {
+            "type": "integer",
+            "title": "Inactivity Timeout Seconds",
+            "default": 15
+          },
+          "server_location": {
+            "type": "string",
+            "title": "Server Location",
+            "default": "us"
+          },
+          "active_voice_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Active Voice Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "voice_enabled"
+        ],
+        "title": "VoiceConfigResponse",
+        "description": "Public, safe voice configuration status for client widget disclosure without secrets."
+      },
+      "VoiceTokenRequest": {
+        "properties": {
+          "session_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Session Id",
+            "description": "Optional client session identifier"
+          },
+          "action": {
+            "type": "string",
+            "const": "start_voice",
+            "title": "Action",
+            "description": "Explicit start action required to prevent accidental token issuance",
+            "default": "start_voice"
+          }
+        },
+        "type": "object",
+        "title": "VoiceTokenRequest",
+        "description": "Explicit client request to initiate a real-time voice session (P13P.4.3)."
+      },
+      "VoiceTokenResponse": {
+        "properties": {
+          "token": {
+            "type": "string",
+            "title": "Token",
+            "description": "Short-lived conversation token issued by ElevenLabs"
+          },
+          "signed_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Signed Url",
+            "description": "Signed WebSocket URL for direct connection"
+          },
+          "agent_id": {
+            "type": "string",
+            "title": "Agent Id",
+            "description": "Configured Conversational AI agent ID"
+          },
+          "max_duration_seconds": {
+            "type": "integer",
+            "title": "Max Duration Seconds",
+            "description": "Hard duration cap in seconds",
+            "default": 120
+          },
+          "inactivity_timeout_seconds": {
+            "type": "integer",
+            "title": "Inactivity Timeout Seconds",
+            "description": "Inactivity timeout in seconds",
+            "default": 15
+          },
+          "expires_at": {
+            "type": "integer",
+            "title": "Expires At",
+            "description": "Unix timestamp when reservation expires"
+          }
+        },
+        "type": "object",
+        "required": [
+          "token",
+          "agent_id",
+          "expires_at"
+        ],
+        "title": "VoiceTokenResponse",
+        "description": "Temporary conversation token issued to client for WebRTC / WebSocket connection (P13P.4.1)."
       }
     }
   }

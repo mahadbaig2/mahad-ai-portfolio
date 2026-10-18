@@ -13,6 +13,7 @@ from apps.api.db.models.document import (
     SourceDocument,
 )
 from apps.api.db.models.model_release import ModelRelease
+from apps.api.db.models.voice import VoiceSessionUsage
 
 __all__ = [
     "Base",
@@ -24,4 +25,5 @@ __all__ = [
     "RetrievalEvent",
     "ChatFeedback",
     "ModelRelease",
+    "VoiceSessionUsage",
 ]

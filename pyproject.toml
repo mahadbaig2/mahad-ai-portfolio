@@ -45,6 +45,7 @@ ignore_missing_imports = true
 [tool.pytest.ini_options]
 minversion = "8.0"
 addopts = "-ra -q --strict-markers"
+norecursedirs = [".venv", "node_modules", ".git", "dist", "build"]
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
 pythonpath = ["."]
@@ -54,3 +55,4 @@ testpaths = [
 ]
 python_files = ["test_*.py"]
 python_functions = ["test_*"]
+

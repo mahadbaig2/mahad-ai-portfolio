@@ -8,7 +8,11 @@ import {
   AssistantChatResponse,
   ExecutionStep,
   PersonaType,
+  VoiceConfigResponse,
+  VoiceTokenResponse,
+  VoiceTurnCitationResponse,
 } from "./types";
+
 
 const DEFAULT_API_URL = "http://localhost:8000";
 
@@ -139,3 +143,96 @@ export async function checkAssistantHealth(signal?: AbortSignal): Promise<boolea
     return false;
   }
 }
+
+/**
+ * Fetch public voice configuration (enabled state, max duration, active voice ID).
+ */
+export async function fetchVoiceConfig(signal?: AbortSignal): Promise<VoiceConfigResponse> {
+  const res = await fetch(`${getApiBaseUrl()}/api/v1/voice/config`, { signal });
+  if (!res.ok) {
+    throw new Error(`Failed to fetch voice config: ${res.status}`);
+  }
+  return res.json();
+}
+
+/**
+ * Request a short-lived ElevenLabs conversation token server-side (P13P.4.1).
+ * Never exposes the server API key to the client.
+ */
+export async function requestVoiceToken(
+  sessionId?: string,
+  signal?: AbortSignal
+): Promise<VoiceTokenResponse> {
+  const res = await fetch(`${getApiBaseUrl()}/api/v1/voice/token`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      session_id: sessionId,
+      action: "start_voice",
+    }),
+    signal,
+  });
+
+  if (!res.ok) {
+    let errData: any = {};
+    try {
+      errData = await res.json();
+    } catch {
+      // fallback
+    }
+    const code = errData?.detail?.code || `HTTP_${res.status}`;
+    const message = errData?.detail?.message || "Failed to obtain voice token";
+    const error: any = new Error(message);
+    error.code = code;
+    throw error;
+  }
+
+  return res.json();
+}
+
+/**
+ * Explicitly release voice concurrency reservation when conversation ends (P13P.4.9).
+ */
+export async function endVoiceSession(sessionId?: string): Promise<void> {
+  if (!sessionId) return;
+  try {
+    await fetch(`${getApiBaseUrl()}/api/v1/voice/session/end`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        session_id: sessionId,
+        action: "start_voice",
+      }),
+    });
+  } catch (err) {
+    console.warn("Failed to report voice session release:", err);
+  }
+}
+
+/**
+ * Fetch verified source citation metadata for the latest voice turn (Milestone 13P.13: P13P.13.5).
+ */
+export async function fetchLatestVoiceCitations(
+  sessionId?: string,
+  signal?: AbortSignal
+): Promise<VoiceTurnCitationResponse | null> {
+  try {
+    const url = new URL(`${getApiBaseUrl()}/api/v1/voice/citations/latest`);
+    if (sessionId) {
+      url.searchParams.set("session_id", sessionId);
+    }
+    const res = await fetch(url.toString(), { signal });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data || null;
+  } catch (err) {
+    console.warn("Failed to fetch voice turn citations:", err);
+    return null;
+  }
+}
+
+

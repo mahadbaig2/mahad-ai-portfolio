@@ -14,6 +14,27 @@ The assistant must answer questions about Mahad's experience, projects, articles
 4. Do not implement later milestones early because they appear convenient.
 5. When instructions conflict, stop and ask Mahad instead of guessing.
 
+## Active architecture pivot: conversational companion
+
+The repository preserves its original voice architecture and ADRs as historical evidence of the initial product constraints and engineering decisions. Those records must not be deleted or rewritten to imply the original approach never existed.
+
+The active voice and compact-chat implementation is now governed by:
+
+1. `docs/adr/0010-elevenlabs-conversational-companion.md`
+2. The `PHASE 13P - Conversational Companion Pivot` section in `TASKS.md`
+3. The requirements in this section
+
+ADR-0010 supersedes only the active voice-architecture decisions in:
+
+- ADR-007: Separate Failure Domain for Cloned Voice Service
+- ADR-008: SSE Instead of WebSockets/WebRTC for Version 1
+
+ADR-007 and ADR-008 remain preserved as historical decisions. SSE remains the transport for the existing text-chat interface. ElevenLabs-managed real-time transport is permitted only for the conversational voice experience.
+
+The incomplete legacy Phase 12 voice-input gate and original Phase 13 OpenVoice tasks are historical and paused. Antigravity must not complete them unless Mahad explicitly reverses this pivot.
+
+For execution order, Phase 13P is the first active incomplete phase after the currently completed assistant work. It takes precedence over incomplete legacy Phase 12 and Phase 13 voice tasks.
+
 ## Operating mode
 
 Antigravity must work milestone by milestone.
@@ -81,14 +102,16 @@ Version 1 includes:
 - FastAPI backend
 - Custom query-routing ML model served with ONNX Runtime
 - LangGraph conditional workflow
-- Groq LLM inference and Whisper transcription
+- Groq LLM inference
 - LangSmith tracing and evaluation with usage protection
-- Text chat, citations and safe execution inspector
-- Push-to-talk voice input
-- OpenVoice-based experimental Mahad voice output
-- Browser text-to-speech fallback
+- Full text-chat page with citations and safe execution inspector
+- Persistent conversational companion widget with compact text chat and real-time voice modes
+- ElevenLabs-managed speech recognition, turn-taking, interruption handling and speech synthesis
+- Shared FastAPI, ONNX, LangGraph, Neon and Qdrant intelligence layer across text and voice
+- Configurable ElevenLabs voice selection
+- Honest two-minute voice-session limits and monthly-quota degradation
 - GitHub Actions CI/CD
-- Dockerized AI and voice services
+- Dockerized primary AI service
 - Public architecture and evaluation documentation
 
 Version 1 excludes:
@@ -97,14 +120,18 @@ Version 1 excludes:
 - Payments
 - General autonomous actions
 - Email or calendar writes
-- Long-term personalized memory
-- WebRTC real-time calls
+- Long-term personalized user memory
+- Self-hosted real-time audio infrastructure
+- Self-hosted OpenVoice deployment
 - Custom LLM fine-tuning
 - Custom neural reranking
 - Kubernetes
 - Paid AWS production hosting
 - Mobile applications
 - Decorative multi-agent systems
+- Automatic microphone activation
+- Automatic voice-session creation
+- Automatic meeting booking or lead collection
 
 Any new feature must be placed in `docs/backlog.md`; do not add it to version 1.
 
@@ -117,8 +144,13 @@ Any new feature must be placed in `docs/backlog.md`; do not add it to version 1.
 - Tailwind CSS
 - Plus Jakarta Sans through `next/font`
 - Radix primitives only where accessible behavior is useful
-- Server-Sent Events for assistant response streaming
-- Browser `MediaRecorder` for bounded voice input
+- Server-Sent Events for the existing text-chat response stream
+- ElevenLabs React SDK for the conversational voice channel
+- A persistent `AssistantWidgetProvider` mounted in the root layout
+- A combined floating widget with compact Chat and Voice tabs
+- The full `/chat` page remains available and keeps its existing inspector, feedback and detailed citation experience
+- Shared chat-client utilities must serve both the compact widget and full chat page
+- Voice transport is managed by ElevenLabs; the project must not operate a new general-purpose WebSocket server
 
 ### Content
 
@@ -158,13 +190,74 @@ Any new feature must be placed in `docs/backlog.md`; do not add it to version 1.
 - The classifier is called in-process; do not create a model microservice.
 - Low-confidence predictions use a safe fallback route.
 
-### Voice
+### Conversational companion
 
-- Groq Whisper provides transcription.
-- OpenVoice V2 provides experimental voice cloning in a separate service.
-- Browser speech synthesis is mandatory fallback behavior.
-- Never send text to voice synthesis until the grounded response and citations are finalized.
-- Never store raw voice audio by default.
+- The website includes one persistent bottom-right assistant widget across all routes.
+- The widget contains two modes: compact text chat and conversational voice.
+- The widget automatically opens five seconds after the visitor first enters the website.
+- Automatic opening is visual only.
+- Automatic opening must never request microphone permission.
+- Automatic opening must never create an ElevenLabs session or signed token.
+- Automatic opening must never begin recording, listening, transcription or playback.
+- Automatic opening must never submit a chat message.
+- Automatic opening must not steal keyboard focus.
+- The five-second timer is cancelled if the visitor manually opens or closes the widget before it fires.
+- After dismissal, the widget must not automatically reopen during the same browser session.
+- Client-side route changes must not restart the five-second timer.
+- The widget remains collapsed or expanded across client-side navigation.
+- The full `/chat` page remains a separate, complete experience.
+- Compact chat and full chat must use the same FastAPI assistant, LangGraph graph, RAG pipeline and safety policies.
+- ElevenLabs manages real-time speech recognition, turn-taking, interruption handling and speech synthesis.
+- The existing FastAPI/ONNX/LangGraph assistant remains the authoritative intelligence layer.
+- ElevenLabs must connect to a dedicated OpenAI-compatible FastAPI adapter.
+- Do not create a duplicate production knowledge base inside ElevenLabs.
+- Sanity remains the authoring source of truth.
+- Neon remains the canonical operational source.
+- Qdrant remains the derived semantic index.
+- Voice answers must be grounded by the same evidence and refusal rules as text answers.
+- Spoken answers may be reformatted for conversational delivery but must not change factual meaning.
+- Voice selection must be configurable without code changes.
+- The ElevenLabs API key must remain server-only.
+- A voice conversation begins only after an explicit visitor action.
+- Microphone permission is requested only after the visitor explicitly starts voice mode.
+- Each voice session has a hard maximum duration of 120 seconds.
+- The interface must clearly disclose the two-minute limit before starting and display remaining time during the session.
+- The system must provide warnings before the session ends.
+- Voice sessions automatically terminate at the server-enforced limit.
+- When the monthly voice allowance is unavailable or exhausted, the widget must state this honestly and offer text chat.
+- Text chat must continue functioning when ElevenLabs is unavailable.
+- The assistant must identify itself as Mahad’s AI portfolio assistant.
+- It must disclose that the voice is AI-generated.
+- It must not imply the visitor is speaking directly with Mahad.
+- It must not push users to schedule a call.
+- It must not collect leads or contact details.
+- It may explain how to contact Mahad only when directly asked or contextually necessary.
+- Raw microphone audio must not be stored by this application.
+- Provider-retention claims must be verified before being presented to users.
+
+### Conversational companion configuration
+
+The implementation must be controlled through validated environment configuration:
+
+- `ELEVENLABS_API_KEY`
+- `ELEVENLABS_AGENT_ID`
+- `ELEVENLABS_VOICE_ID`
+- `ELEVENLABS_VOICE_ID_FALLBACK`
+- `ELEVENLABS_SERVER_LOCATION`
+- `ELEVENLABS_VOICE_ENABLED`
+- `VOICE_SESSION_MAX_SECONDS`
+- `VOICE_INACTIVITY_TIMEOUT_SECONDS`
+- `VOICE_MONTHLY_BUDGET_SECONDS`
+- `VOICE_DAILY_BUDGET_SECONDS`
+- `VOICE_GLOBAL_CONCURRENCY_LIMIT`
+
+Rules:
+
+- No ElevenLabs secret may use a `NEXT_PUBLIC_` prefix.
+- Voice IDs and agent IDs must not be hard-coded in React components.
+- Replacing the configured voice must not require component, API, prompt, graph or database changes.
+- Invalid or missing voice configuration must disable voice gracefully while preserving compact and full-page text chat.
+- Production defaults must fail closed for voice-session creation.
 
 ### Observability
 
