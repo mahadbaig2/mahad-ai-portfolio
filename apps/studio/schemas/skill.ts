@@ -64,6 +64,12 @@ export const skill = defineType({
       group: 'main',
       initialValue: false,
     }),
+    defineField({
+      name: 'sortOrder',
+      title: 'Sort Order',
+      type: 'number',
+      group: 'main',
+    }),
     ...ragMetadataFields,
   ],
   preview: {

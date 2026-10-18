@@ -13,19 +13,19 @@ vi.mock("next/navigation", () => ({
 describe("Header Component", () => {
   it("renders main branding and navigation links", () => {
     render(<Header />);
-    expect(screen.getByText("Mahad")).toBeDefined();
-    expect(screen.getByText("Work")).toBeDefined();
-    expect(screen.getByText("Blog")).toBeDefined();
-    expect(screen.getByText("About")).toBeDefined();
-    expect(screen.getByText("Contact")).toBeDefined();
-    expect(screen.getByText("Talk to Mahad")).toBeDefined();
+    expect(screen.getAllByText(/Mahad/i).length).toBeGreaterThan(0);
+    expect(screen.getByText(/Work/i)).toBeDefined();
+    expect(screen.getByText(/Writing/i)).toBeDefined();
+    expect(screen.getByText(/About/i)).toBeDefined();
+    expect(screen.getByText(/Contact/i)).toBeDefined();
+    expect(screen.getByText(/Talk to Mahad/i)).toBeDefined();
   });
 });
 
 describe("Footer Component", () => {
   it("renders social links and positioning metadata", () => {
     render(<Footer />);
-    expect(screen.getByText(/Mahad — AI Product Engineering/i)).toBeDefined();
+    expect(screen.getAllByText(/Mirza Mahad Baig/i).length).toBeGreaterThan(0);
     expect(screen.getByText("GitHub")).toBeDefined();
     expect(screen.getByText("LinkedIn")).toBeDefined();
     expect(screen.getByText("Medium")).toBeDefined();

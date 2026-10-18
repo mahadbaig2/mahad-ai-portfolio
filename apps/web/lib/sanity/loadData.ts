@@ -1,6 +1,7 @@
 import { sanityFetch, isSanityConfigured } from './client';
 import {
   projectsQuery,
+  featuredProjectsQuery,
   projectBySlugQuery,
   caseStudyByProjectSlugQuery,
   articlesQuery,
@@ -9,17 +10,41 @@ import {
   educationsQuery,
   skillsQuery,
   siteSettingsQuery,
+  travelJourneysQuery,
+  travelJourneyBySlugQuery,
   faqsQuery,
 } from './queries';
 import { PROJECTS, ARTICLES, type Project, type Article } from '@/lib/data';
 
 export interface CmsProject extends Project {
   heroImage?: any;
+  cardImage?: any;
   architectureDiagram?: any;
   overview?: string;
   subtitle?: string;
+  shortOutcome?: string;
+  category?: string;
+  secondaryCategories?: string[];
+  origin?: string;
+  maturityStatus?: string;
+  timeline?: string;
+  clientOrOrg?: string;
+  featuredRank?: number;
+  featured?: boolean;
   stack?: string[];
   keyDecisions?: string[];
+  targetUsers?: string;
+  responsibilities?: string[];
+  constraints?: string[];
+  productApproach?: string;
+  designProcess?: string;
+  engineeringApproach?: string;
+  tradeOffs?: string[];
+  failures?: string[];
+  completedCapabilities?: string[];
+  plannedCapabilities?: string[];
+  lessonsLearned?: string[];
+  suggestedQuestions?: string[];
 }
 
 export interface CmsCaseStudy {
@@ -44,6 +69,11 @@ export interface CmsArticle {
   content?: string[];
   body?: any;
   canonicalUrl?: string;
+  articleType?: string;
+  featured?: boolean;
+  featuredRank?: number;
+  keyTakeaway?: string;
+  sources?: { title: string; url: string }[];
   heroImage?: any;
 }
 
@@ -57,13 +87,20 @@ export interface CmsExperience {
   summary: string;
   highlights: string[];
   technologies?: string[];
+  sortOrder?: number;
+  featuredRole?: boolean;
+  shortOutcome?: string;
 }
 
 export interface CmsEducation {
   institution: string;
   degree: string;
   fieldOfStudy: string;
-  graduationYear: string;
+  graduationYear?: string;
+  recordType?: string;
+  status?: string;
+  completionLabel?: string;
+  credentialUrl?: string;
   highlights?: string[];
 }
 
@@ -73,129 +110,365 @@ export interface CmsSkill {
   proficiency: string;
   description?: string;
   featured?: boolean;
+  sortOrder?: number;
+}
+
+export interface CmsTravelJourney {
+  _id?: string;
+  title: string;
+  slug: string;
+  subtitle?: string;
+  summary?: string;
+  heroImage?: any;
+  featured?: boolean;
+  featuredRank?: number;
+  journeyStatus?: string;
+  origin?: string;
+  destination?: string;
+  region?: string;
+  country?: string;
+  startDate?: string;
+  endDate?: string;
+  yearLabel?: string;
+  transportMode?: string;
+  motorcycle?: string;
+  elevation?: string;
+  distance?: string;
+  routeSummary?: string;
+  story?: any;
+  challenges?: string[];
+  reflection?: string;
+  gallery?: {
+    asset: any;
+    alt?: string;
+    caption?: string;
+    location?: string;
+    orientation?: string;
+    featured?: boolean;
+  }[];
 }
 
 export interface CmsSiteSettings {
   authorName: string;
   targetRole: string;
+  heroEyebrow?: string;
+  heroHeadline?: string;
+  heroSupportingText?: string;
   headline: string;
   shortBio: string;
   location: string;
+  availabilityStatus?: string;
+  availabilityLabel?: string;
+  roleInterests?: string[];
   email: string;
   linkedinUrl: string;
   githubUrl: string;
   mediumUrl: string;
   resumePdfUrl?: string;
   avatar?: any;
+  touringPhoto?: any;
+  personalHighlight?: string;
+  homepageProofPoints?: { label: string; value: string; context: string }[];
+  careerNarrative?: string;
+  travelIntro?: string;
+  assistantIntro?: string;
 }
 
-// Default Fallback Site Settings
+// Verified Default Fallback Site Settings
 export const DEFAULT_SITE_SETTINGS: CmsSiteSettings = {
-  authorName: 'Mahad Baig',
+  authorName: 'Mirza Mahad Baig',
   targetRole: 'AI Product Engineer',
+  heroEyebrow: 'DOSSIER_REF: 001-AI // ISLAMABAD, PAKISTAN [33.6844° N, 73.0479° E]',
+  heroHeadline: 'I DESIGN PRODUCTS.\nI ENGINEER INTELLIGENCE.',
+  heroSupportingText:
+    'I’m Mirza Mahad Baig, an AI Product Engineer with nearly six years of product design and UI/UX experience, practical AI engineering expertise, and hands-on full-stack experience. I turn complex ideas into understandable, working AI products.',
   headline:
-    'AI Product Engineer specializing in grounded RAG systems, in-process ML query routing, and deterministic agent orchestration on budget-constrained architectures.',
+    'AI Product Engineer with ~6 years product design and UI/UX experience, practical AI engineering expertise, and hands-on full-stack experience.',
   shortBio:
-    "I design and build production-grade AI systems with inspectable architectures, strictly verifiable citations, bounded latency, and zero-dollar operating overhead.",
-  location: 'Remote / Karachi, Pakistan',
+    'I bridge the gap between product strategy, UI/UX systems design, and production AI engineering. With 500+ production SaaS screens designed and real-world RAG, LangGraph, and ML routing systems built, I turn ambiguous product requirements into grounded, demonstrable software.',
+  location: 'Islamabad, Pakistan',
+  availabilityStatus: 'OPEN TO AI PRODUCT ENGINEERING AND APPLIED AI OPPORTUNITIES',
+  availabilityLabel: 'SYS_STATUS: ACTIVE',
+  roleInterests: [
+    'AI Product Engineer',
+    'Founding Product Engineer',
+    'Staff / Lead Product Designer (AI Systems)',
+    'Applied AI Engineer',
+  ],
   email: 'mahadmirza681@gmail.com',
   linkedinUrl: 'https://linkedin.com/in/mahadbaig',
   githubUrl: 'https://github.com/mahadbaig2',
   mediumUrl: 'https://medium.com/@mirza.mahad',
   resumePdfUrl: undefined,
+  personalHighlight:
+    'Rode to Khunjerab Pass, one of the world’s highest paved international border crossings, on my motorcycle.',
+  homepageProofPoints: [
+    {
+      label: 'PRODUCT DESIGN',
+      value: '~6 Years',
+      context: 'Product design, UI/UX, systems thinking, user flows, and enterprise discovery.',
+    },
+    {
+      label: 'ENTERPRISE SCALE',
+      value: '500+ Screens',
+      context: 'Designed for Busyfile across B2B multi-tenant firm portals, operations, and compliance.',
+    },
+    {
+      label: 'AI SYSTEMS',
+      value: 'RAG & ML',
+      context: 'In-process ONNX routing, LangGraph state machines, Qdrant vectors, and strictly cited RAG.',
+    },
+    {
+      label: 'FULL-STACK',
+      value: 'Production Native',
+      context: 'Next.js 15, TypeScript, Python, FastAPI, PostgreSQL, and strict Dockerized architecture.',
+    },
+  ],
 };
 
-// Default Fallback Experience
+// Verified Default Fallback Experience (Strictly matches Mahad-Career-Education-Skills-Sanity-Content.md)
 export const DEFAULT_EXPERIENCES: CmsExperience[] = [
   {
-    company: 'Independent AI Product Engineering',
-    role: 'AI Product Engineer & Systems Architect',
-    startDate: '2024-01',
-    isCurrent: true,
-    location: 'Remote',
-    summary:
-      'Designing and deploying demonstrable AI architectures, in-process ONNX query routing, and verifiable retrieval pipelines on capped cloud infrastructure.',
-    highlights: [
-      'Engineered an in-process ML intent router achieving sub-5ms classification latency on CPU without LLM overhead.',
-      'Designed dual-persistence RAG architecture with Neon PostgreSQL and Qdrant vector index.',
-      'Configured automated CI regression gates evaluating Hit@K and citation precision.',
-    ],
-    technologies: ['Next.js 15', 'FastAPI', 'LangGraph', 'Qdrant', 'Neon', 'ONNX Runtime', 'Python'],
-  },
-  {
-    company: 'Enterprise Software & Systems',
-    role: 'Software Engineer',
-    startDate: '2022-06',
-    endDate: '2023-12',
+    company: 'Techomatrix',
+    role: 'AI Engineer',
+    startDate: '2026-03',
+    endDate: '2026-07',
     isCurrent: false,
     location: 'Karachi, Pakistan',
     summary:
-      'Built scalable web applications, RESTful APIs, and relational database architectures with high test coverage and strict type safety.',
+      'Built AI-powered application features and automation workflows by connecting LLMs, APIs, databases, and third-party platforms. Worked across prompt design, Python services, FastAPI endpoints, and n8n workflows.',
     highlights: [
-      'Developed high-throughput API services handling millions of monthly requests.',
-      'Engineered accessible frontend interfaces compliant with WCAG 2.1 AA standards.',
-      'Reduced API response times by 35% through query optimization and caching layers.',
+      'Built end-to-end n8n automations integrating LLMs, REST APIs, and SaaS platforms.',
+      'Developed and maintained AI features using Python, FastAPI, and hosted LLM APIs.',
+      'Designed prompt workflows for extraction, summarization, content generation, and decision support.',
+      'Connected AI services with operational databases and external applications.',
     ],
-    technologies: ['TypeScript', 'React', 'Node.js', 'PostgreSQL', 'Docker', 'Tailwind CSS'],
+    technologies: ['Python', 'FastAPI', 'n8n', 'REST APIs', 'Groq', 'PostgreSQL', 'Prompt Engineering'],
+    sortOrder: 1,
+    featuredRole: true,
+    shortOutcome: 'Engineered production AI endpoints and n8n LLM workflows',
+  },
+  {
+    company: 'Independent / Freelance',
+    role: 'Visual and Product Designer',
+    startDate: '2019-09',
+    isCurrent: true,
+    location: 'Global / Remote',
+    summary:
+      'Works directly with founders and startup teams across fintech, healthcare, Web3, and SaaS. Leads projects from product discovery and requirements definition through UI/UX design, prototyping, and developer handoff.',
+    highlights: [
+      'Delivered digital product and visual design work for international clients across multiple industries.',
+      'Helped founders translate early ideas into structured requirements and MVP scope.',
+      'Designed responsive interfaces, user flows, and design systems for web and mobile products.',
+    ],
+    technologies: ['Figma', 'Product Strategy', 'UI/UX Design', 'Design Systems', 'User Flows'],
+    sortOrder: 2,
+    featuredRole: true,
+    shortOutcome: 'Delivered dozens of product interfaces and design systems for global founders',
+  },
+  {
+    company: 'Datawire (Mayatax)',
+    role: 'Senior Product Designer',
+    startDate: '2024-09',
+    endDate: '2026-03',
+    isCurrent: false,
+    location: 'Houston, USA / Remote',
+    summary:
+      'Led product strategy and UI/UX for enterprise fintech platforms serving US accounting and taxation firms. Designed scalable compliance, bookkeeping, and entity-service workflows.',
+    highlights: [
+      'Led Busyfile product design from initial B2C formation flows to a white-label B2B SaaS platform.',
+      'Designed more than 500 screens across client, firm-admin, internal-operations, and super-admin experiences.',
+      'Supported more than 20 business, taxation, bookkeeping, and compliance services.',
+      'Built reusable design-system patterns and detailed specifications for engineering handoff.',
+    ],
+    technologies: ['Figma', 'Enterprise SaaS', 'Design Systems', 'User Research', 'Product Strategy'],
+    sortOrder: 3,
+    featuredRole: true,
+    shortOutcome: 'Designed 500+ production SaaS screens for Busyfile multi-tenant tax platform',
+  },
+  {
+    company: 'Slidey LLC',
+    role: 'Design Executive',
+    startDate: '2024-03',
+    endDate: '2024-09',
+    isCurrent: false,
+    location: 'Karachi, Pakistan',
+    summary:
+      'Created interface and visual-design work for web, mobile, and executive communication projects, balancing usability with clear visual storytelling.',
+    highlights: [
+      'Designed user interfaces for web and mobile experiences.',
+      'Produced B2B presentations and executive communication materials.',
+      'Maintained consistent brand and visual quality across client deliverables.',
+    ],
+    technologies: ['Figma', 'UI Design', 'Visual Design', 'Presentation Design'],
+    sortOrder: 4,
+    featuredRole: false,
+    shortOutcome: 'Executed interface design and executive B2B visual assets',
+  },
+  {
+    company: 'KreativeFolks',
+    role: 'Creative Design Specialist',
+    startDate: '2023-07',
+    endDate: '2024-03',
+    isCurrent: false,
+    location: 'Karachi, Pakistan',
+    summary:
+      'Worked on SaaS product interfaces, brand systems, and marketing experiences for fintech and healthcare clients. Planned and designed the AurusBooks fintech SaaS MVP.',
+    highlights: [
+      'Planned and designed the AurusBooks fintech SaaS MVP from a detailed product brief.',
+      'Simplified complex financial workflows for small and medium-sized businesses.',
+      'Delivered product, brand, and marketing design across fintech and healthcare accounts.',
+    ],
+    technologies: ['Figma', 'UI/UX Design', 'SaaS Design', 'User Flows', 'Wireframing'],
+    sortOrder: 5,
+    featuredRole: false,
+    shortOutcome: 'Designed AurusBooks fintech SaaS MVP from concept to handoff',
+  },
+  {
+    company: 'Scalease',
+    role: 'Brand Designer',
+    startDate: '2022-07',
+    endDate: '2022-09',
+    isCurrent: false,
+    location: 'Karachi, Pakistan',
+    summary:
+      'Developed brand identities, social content, and web-design assets for small businesses and early-stage companies.',
+    highlights: [
+      'Created practical identity systems for small-business clients.',
+      'Extended brand direction across social-media and website touchpoints.',
+    ],
+    technologies: ['Figma', 'Brand Identity', 'Web Design'],
+    sortOrder: 6,
+    featuredRole: false,
+    shortOutcome: 'Established brand identities and digital visual assets',
   },
 ];
 
-// Default Fallback Skills
+// Verified Default Fallback Skills
 export const DEFAULT_SKILLS: CmsSkill[] = [
+  {
+    name: 'Product Design & UI/UX',
+    category: 'product_design',
+    proficiency: 'expert',
+    description: 'Enterprise design systems, complex SaaS topology, user research, wireframing, and Figma execution.',
+    featured: true,
+    sortOrder: 1,
+  },
   {
     name: 'RAG & Vector Retrieval',
     category: 'ai_ml',
     proficiency: 'expert',
-    description: 'Heading-aware semantic chunking, cosine retrieval, and blue/green collection versioning.',
+    description: 'Heading-aware semantic chunking, cosine retrieval in Qdrant, and dual-layer PostgreSQL verification.',
     featured: true,
+    sortOrder: 2,
   },
   {
     name: 'In-Process ML Routing',
     category: 'ai_ml',
     proficiency: 'expert',
-    description: 'Training compact classifiers and serving via ONNX Runtime (<5ms latency).',
+    description: 'Custom MiniLM/logistic classifiers exported to ONNX Runtime (<5ms latency on CPU).',
     featured: true,
+    sortOrder: 3,
   },
   {
     name: 'Agent State Orchestration',
     category: 'ai_ml',
     proficiency: 'expert',
-    description: 'LangGraph conditional execution graphs with bounded retry and recursion controls.',
+    description: 'LangGraph state machines, conditional edges, bounded retrieval retry, and deterministic safety overrides.',
     featured: true,
+    sortOrder: 4,
   },
   {
-    name: 'Full-Stack Architecture',
+    name: 'Full-Stack Engineering',
     category: 'frontend',
     proficiency: 'expert',
-    description: 'Next.js App Router, strict TypeScript, React Server Components, and Tailwind CSS.',
+    description: 'Next.js 15 App Router, React 19, TypeScript strict mode, and Tailwind CSS neo-brutalist systems.',
     featured: true,
+    sortOrder: 5,
   },
   {
     name: 'Backend & Systems',
     category: 'backend',
     proficiency: 'expert',
-    description: 'FastAPI, SQLAlchemy 2.x async, Neon PostgreSQL, and structured JSON telemetry.',
+    description: 'FastAPI, Python 3.11, Pydantic, SQLAlchemy 2.x async, Neon PostgreSQL, and SSE streaming.',
     featured: true,
+    sortOrder: 6,
   },
   {
-    name: 'LLMOps & Evaluation',
+    name: 'Evaluation & LLMOps',
     category: 'llmops',
     proficiency: 'expert',
-    description: 'Automated retrieval metrics (Hit@K, MRR) with LangSmith and MLflow lifecycle tracking.',
+    description: 'LangSmith tracing, Hit@K retrieval evaluation, and MLflow experiment tracking.',
     featured: true,
+    sortOrder: 7,
   },
 ];
 
-// Default Fallback Education
+// Verified Default Fallback Education (Strictly matches Mahad-Career-Education-Skills-Sanity-Content.md)
 export const DEFAULT_EDUCATION: CmsEducation[] = [
   {
-    institution: 'University Computer Science Program',
-    degree: 'Bachelor of Science',
+    institution: 'Karachi Institute of Economics and Technology (KIET)',
+    degree: 'Bachelor of Science in Computer Science',
     fieldOfStudy: 'Computer Science',
-    graduationYear: '2024',
+    graduationYear: '2026',
+    recordType: 'degree',
+    status: 'ongoing',
+    completionLabel: 'Expected 2026',
     highlights: [
-      'Focus on Distributed Systems, Applied Machine Learning, and Software Architecture.',
-      'Graduated with distinction; capstone project on semantic search optimization.',
+      'Focus on software engineering, data structures, algorithms, and artificial intelligence.',
+    ],
+  },
+  {
+    institution: 'DeepLearning.AI',
+    degree: 'Natural Language Processing Specialization',
+    fieldOfStudy: 'Artificial Intelligence & NLP',
+    recordType: 'certification',
+    status: 'completed',
+    completionLabel: 'Completed Certification',
+    highlights: [
+      'Vector space models, classification, sentiment analysis, attention mechanisms, and Transformers.',
+    ],
+  },
+  {
+    institution: 'DeepLearning.AI',
+    degree: 'Deep Learning Specialization',
+    fieldOfStudy: 'Deep Learning & Neural Networks',
+    recordType: 'certification',
+    status: 'completed',
+    completionLabel: 'Completed Certification',
+    highlights: [
+      'Neural network architectures, hyperparameter tuning, convolutional networks, and sequence models.',
+    ],
+  },
+];
+
+// Verified Travel Journeys Fallback (Strictly verified facts regarding Khunjerab Pass expedition)
+export const DEFAULT_TRAVEL_JOURNEYS: CmsTravelJourney[] = [
+  {
+    title: 'The Road to Khunjerab',
+    slug: 'the-road-to-khunjerab',
+    subtitle: 'N-35 Karakoram Highway to the Pakistan-China Border',
+    summary:
+      'Mahad rode to Khunjerab Pass, one of the world’s highest paved international border crossings, on his motorcycle. An expedition through the high-altitude Karakoram mountains.',
+    featured: true,
+    featuredRank: 1,
+    journeyStatus: 'completed',
+    origin: 'Islamabad',
+    destination: 'Khunjerab Pass',
+    region: 'Karakoram Mountain Range',
+    country: 'Pakistan',
+    yearLabel: 'Documentary Field Journal',
+    transportMode: 'Motorcycle Touring',
+    elevation: '4,693 M',
+    routeSummary:
+      'Traversing the Karakoram Highway (N-35) through northern valleys to the highest paved border crossing in the world.',
+    reflection:
+      'Long-distance motorcycle touring teaches humility, endurance, and systems awareness. When riding through remote high-altitude terrain with zero connectivity, your preparations, hardware health, and situational judgment are all that exist.',
+    challenges: [
+      'Thin air and extreme altitude above 4,600 meters',
+      'Cold engine starts and rapid temperature drops',
+      'Zero cellular network coverage across mountain passes',
+      'Unforgiving road conditions and unpredictable mountain weather',
     ],
   },
 ];
@@ -205,7 +478,7 @@ export const DEFAULT_EDUCATION: CmsEducation[] = [
  */
 export async function getProjects(): Promise<CmsProject[]> {
   if (!isSanityConfigured()) {
-    return PROJECTS;
+    return PROJECTS as CmsProject[];
   }
 
   const cmsProjects = await sanityFetch<any[]>({
@@ -215,15 +488,24 @@ export async function getProjects(): Promise<CmsProject[]> {
   });
 
   if (!cmsProjects || cmsProjects.length === 0) {
-    return PROJECTS;
+    return PROJECTS as CmsProject[];
   }
 
   return cmsProjects.map((p) => ({
     slug: p.slug,
     title: p.title,
     tagline: p.subtitle || p.tagline || '',
+    subtitle: p.subtitle,
+    shortOutcome: p.shortOutcome,
+    category: p.category,
+    secondaryCategories: p.secondaryCategories,
+    origin: p.origin,
+    maturityStatus: p.maturityStatus,
+    timeline: p.timeline,
     role: p.role,
     year: p.year,
+    featured: p.featured,
+    featuredRank: p.featuredRank,
     technologies: p.stack || p.technologies || [],
     summary: p.overview || p.summary || '',
     problem: p.problem || '',
@@ -233,8 +515,33 @@ export async function getProjects(): Promise<CmsProject[]> {
     liveUrl: p.liveUrl,
     githubUrl: p.githubUrl,
     heroImage: p.heroImage,
+    cardImage: p.cardImage,
     architectureDiagram: p.architectureDiagram,
+    targetUsers: p.targetUsers,
+    responsibilities: p.responsibilities,
+    constraints: p.constraints,
+    productApproach: p.productApproach,
+    designProcess: p.designProcess,
+    engineeringApproach: p.engineeringApproach,
+    tradeOffs: p.tradeOffs,
+    failures: p.failures,
+    completedCapabilities: p.completedCapabilities,
+    plannedCapabilities: p.plannedCapabilities,
+    lessonsLearned: p.lessonsLearned,
+    suggestedQuestions: p.suggestedQuestions,
   }));
+}
+
+/**
+ * Fetch featured projects for homepage display.
+ */
+export async function getFeaturedProjects(): Promise<CmsProject[]> {
+  const all = await getProjects();
+  const featured = all.filter((p) => p.featured);
+  if (featured.length > 0) {
+    return featured.sort((a, b) => (a.featuredRank || 99) - (b.featuredRank || 99));
+  }
+  return all.slice(0, 4);
 }
 
 /**
@@ -242,7 +549,7 @@ export async function getProjects(): Promise<CmsProject[]> {
  */
 export async function getProject(slug: string): Promise<CmsProject | undefined> {
   if (!isSanityConfigured()) {
-    return PROJECTS.find((p) => p.slug === slug);
+    return (PROJECTS as CmsProject[]).find((p) => p.slug === slug);
   }
 
   const p = await sanityFetch<any>({
@@ -253,15 +560,24 @@ export async function getProject(slug: string): Promise<CmsProject | undefined> 
   });
 
   if (!p) {
-    return PROJECTS.find((proj) => proj.slug === slug);
+    return (PROJECTS as CmsProject[]).find((proj) => proj.slug === slug);
   }
 
   return {
     slug: p.slug,
     title: p.title,
     tagline: p.subtitle || p.tagline || '',
+    subtitle: p.subtitle,
+    shortOutcome: p.shortOutcome,
+    category: p.category,
+    secondaryCategories: p.secondaryCategories,
+    origin: p.origin,
+    maturityStatus: p.maturityStatus,
+    timeline: p.timeline,
     role: p.role,
     year: p.year,
+    featured: p.featured,
+    featuredRank: p.featuredRank,
     technologies: p.stack || p.technologies || [],
     summary: p.overview || p.summary || '',
     problem: p.problem || '',
@@ -271,7 +587,20 @@ export async function getProject(slug: string): Promise<CmsProject | undefined> 
     liveUrl: p.liveUrl,
     githubUrl: p.githubUrl,
     heroImage: p.heroImage,
+    cardImage: p.cardImage,
     architectureDiagram: p.architectureDiagram,
+    targetUsers: p.targetUsers,
+    responsibilities: p.responsibilities,
+    constraints: p.constraints,
+    productApproach: p.productApproach,
+    designProcess: p.designProcess,
+    engineeringApproach: p.engineeringApproach,
+    tradeOffs: p.tradeOffs,
+    failures: p.failures,
+    completedCapabilities: p.completedCapabilities,
+    plannedCapabilities: p.plannedCapabilities,
+    lessonsLearned: p.lessonsLearned,
+    suggestedQuestions: p.suggestedQuestions,
   };
 }
 
@@ -302,7 +631,6 @@ export async function getCaseStudy(projectSlug: string): Promise<CmsCaseStudy | 
     }
   }
 
-  // Fallback to static project content
   const proj = PROJECTS.find((p) => p.slug === projectSlug);
   if (!proj) return undefined;
 
@@ -362,6 +690,10 @@ export async function getArticles(): Promise<CmsArticle[]> {
     summary: a.excerpt || '',
     topics: a.tags || [],
     canonicalUrl: a.canonicalUrl,
+    articleType: a.articleType,
+    featured: a.featured,
+    featuredRank: a.featuredRank,
+    keyTakeaway: a.keyTakeaway,
     heroImage: a.heroImage,
   }));
 }
@@ -415,6 +747,11 @@ export async function getArticle(slug: string): Promise<CmsArticle | undefined> 
     summary: a.excerpt || '',
     topics: a.tags || [],
     canonicalUrl: a.canonicalUrl,
+    articleType: a.articleType,
+    featured: a.featured,
+    featuredRank: a.featuredRank,
+    keyTakeaway: a.keyTakeaway,
+    sources: a.sources,
     heroImage: a.heroImage,
     body: a.body,
   };
@@ -441,15 +778,27 @@ export async function getSiteSettings(): Promise<CmsSiteSettings> {
   return {
     authorName: settings.authorName,
     targetRole: settings.targetRole || DEFAULT_SITE_SETTINGS.targetRole,
+    heroEyebrow: settings.heroEyebrow || DEFAULT_SITE_SETTINGS.heroEyebrow,
+    heroHeadline: settings.heroHeadline || DEFAULT_SITE_SETTINGS.heroHeadline,
+    heroSupportingText: settings.heroSupportingText || DEFAULT_SITE_SETTINGS.heroSupportingText,
     headline: settings.headline || DEFAULT_SITE_SETTINGS.headline,
     shortBio: settings.shortBio || DEFAULT_SITE_SETTINGS.shortBio,
     location: settings.location || DEFAULT_SITE_SETTINGS.location,
+    availabilityStatus: settings.availabilityStatus || DEFAULT_SITE_SETTINGS.availabilityStatus,
+    availabilityLabel: settings.availabilityLabel || DEFAULT_SITE_SETTINGS.availabilityLabel,
+    roleInterests: settings.roleInterests || DEFAULT_SITE_SETTINGS.roleInterests,
     email: settings.email || DEFAULT_SITE_SETTINGS.email,
     linkedinUrl: settings.linkedinUrl || DEFAULT_SITE_SETTINGS.linkedinUrl,
     githubUrl: settings.githubUrl || DEFAULT_SITE_SETTINGS.githubUrl,
     mediumUrl: settings.mediumUrl || DEFAULT_SITE_SETTINGS.mediumUrl,
     resumePdfUrl: settings.resumePdfUrl,
     avatar: settings.avatar,
+    touringPhoto: settings.touringPhoto,
+    personalHighlight: settings.personalHighlight || DEFAULT_SITE_SETTINGS.personalHighlight,
+    homepageProofPoints: settings.homepageProofPoints || DEFAULT_SITE_SETTINGS.homepageProofPoints,
+    careerNarrative: settings.careerNarrative,
+    travelIntro: settings.travelIntro,
+    assistantIntro: settings.assistantIntro,
   };
 }
 
@@ -514,4 +863,47 @@ export async function getEducation(): Promise<CmsEducation[]> {
   }
 
   return edus;
+}
+
+/**
+ * Fetch travel journeys with fallback.
+ */
+export async function getTravelJourneys(): Promise<CmsTravelJourney[]> {
+  if (!isSanityConfigured()) {
+    return DEFAULT_TRAVEL_JOURNEYS;
+  }
+
+  const journeys = await sanityFetch<any[]>({
+    query: travelJourneysQuery,
+    tags: ['travelJourney'],
+    revalidate: 60,
+  });
+
+  if (!journeys || journeys.length === 0) {
+    return DEFAULT_TRAVEL_JOURNEYS;
+  }
+
+  return journeys;
+}
+
+/**
+ * Fetch a single travel journey by slug.
+ */
+export async function getTravelJourney(slug: string): Promise<CmsTravelJourney | undefined> {
+  if (!isSanityConfigured()) {
+    return DEFAULT_TRAVEL_JOURNEYS.find((j) => j.slug === slug);
+  }
+
+  const journey = await sanityFetch<any>({
+    query: travelJourneyBySlugQuery,
+    params: { slug },
+    tags: [`travelJourney:${slug}`],
+    revalidate: 60,
+  });
+
+  if (!journey) {
+    return DEFAULT_TRAVEL_JOURNEYS.find((j) => j.slug === slug);
+  }
+
+  return journey;
 }

@@ -11,6 +11,7 @@ import { personalStory } from './personalStory';
 import { styleExample } from './styleExample';
 import { siteSettings } from './siteSettings';
 import { additionalContext } from './additionalContext';
+import { travelJourney } from './travelJourney';
 
 export const schemaTypes = [
   // Common & Objects
@@ -29,4 +30,6 @@ export const schemaTypes = [
   styleExample,
   siteSettings,
   additionalContext,
+  travelJourney,
 ];
+

@@ -26,6 +26,26 @@ export const experience = defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: 'sortOrder',
+      title: 'Sort Order (Ascending: 1, 2, 3...)',
+      type: 'number',
+      group: 'main',
+    }),
+    defineField({
+      name: 'featuredRole',
+      title: 'Featured Role',
+      type: 'boolean',
+      group: 'main',
+      initialValue: true,
+    }),
+    defineField({
+      name: 'shortOutcome',
+      title: 'Short Outcome / Key Achievement Highlight',
+      type: 'string',
+      group: 'main',
+      description: 'Concise summary of direct contribution (e.g. "Designed 500+ production SaaS screens for Busyfile")',
+    }),
+    defineField({
       name: 'employmentType',
       title: 'Employment Type',
       type: 'string',

@@ -97,13 +97,13 @@ describe("AssistantWidget Component Shell (Milestone 13P.6)", () => {
   });
 });
 
-describe("5-Second Automatic Opening (Milestone 13P.7)", () => {
+describe("5-Second Automatic Invitation (Section 17)", () => {
   beforeEach(() => {
     vi.useRealTimers();
     sessionStorage.clear();
   });
 
-  it("automatically opens widget after 5 seconds to chat tab with zero mic or network side-effects", () => {
+  it("shows compact invitation card after 5 seconds with zero mic or network side-effects", () => {
     vi.useFakeTimers();
 
     const getUserMediaSpy = vi.fn();
@@ -122,35 +122,38 @@ describe("5-Second Automatic Opening (Milestone 13P.7)", () => {
     );
 
     // Closed initially
+    expect(screen.queryByRole("complementary", { name: /Assistant Inquiry Invitation/i })).toBeNull();
     expect(screen.queryByRole("region", { name: /Talk to Mahad conversational companion/i })).toBeNull();
 
-    // Advance 4999ms - still closed
+    // Advance 4999ms - still not shown
     act(() => {
       vi.advanceTimersByTime(4999);
     });
-    expect(screen.queryByRole("region", { name: /Talk to Mahad conversational companion/i })).toBeNull();
+    expect(screen.queryByRole("complementary", { name: /Assistant Inquiry Invitation/i })).toBeNull();
 
-    // Advance past 5000ms
+    // Advance past 5000ms - invitation toast appears
     act(() => {
       vi.advanceTimersByTime(1);
     });
-    expect(screen.getByRole("region", { name: /Talk to Mahad conversational companion/i })).toBeDefined();
+    expect(screen.getByRole("complementary", { name: /Assistant Inquiry Invitation/i })).toBeDefined();
+    expect(screen.getByText(/Looking for something specific\?/i)).toBeDefined();
 
-    // Default to chat tab
-    const chatTab = screen.getByRole("tab", { name: /Chat/i });
-    expect(chatTab.getAttribute("aria-selected")).toBe("true");
+    // Full panel does not auto-open and obstruct content
+    expect(screen.queryByRole("region", { name: /Talk to Mahad conversational companion/i })).toBeNull();
 
     // Zero mic or token requests
     expect(getUserMediaSpy).not.toHaveBeenCalled();
     expect(fetchSpy).not.toHaveBeenCalled();
 
-    // Recorded in sessionStorage
-    expect(sessionStorage.getItem("mahad_widget_auto_opened")).toBe("true");
+    // Explicit interaction opens panel
+    const askBtn = screen.getByRole("button", { name: /Ask a Question/i });
+    fireEvent.click(askBtn);
+    expect(screen.getByRole("region", { name: /Talk to Mahad conversational companion/i })).toBeDefined();
 
     vi.useRealTimers();
   });
 
-  it("does not auto-open if previously dismissed in the same session", () => {
+  it("does not auto-invite if previously dismissed in the same session", () => {
     vi.useFakeTimers();
     sessionStorage.setItem("mahad_widget_dismissed", "true");
 
@@ -163,30 +166,12 @@ describe("5-Second Automatic Opening (Milestone 13P.7)", () => {
     act(() => {
       vi.advanceTimersByTime(10000);
     });
-    expect(screen.queryByRole("region", { name: /Talk to Mahad conversational companion/i })).toBeNull();
+    expect(screen.queryByRole("complementary", { name: /Assistant Inquiry Invitation/i })).toBeNull();
 
     vi.useRealTimers();
   });
 
-  it("does not auto-open if previously auto-opened in the same session", () => {
-    vi.useFakeTimers();
-    sessionStorage.setItem("mahad_widget_auto_opened", "true");
-
-    render(
-      <AssistantWidgetProvider>
-        <AssistantWidget />
-      </AssistantWidgetProvider>
-    );
-
-    act(() => {
-      vi.advanceTimersByTime(10000);
-    });
-    expect(screen.queryByRole("region", { name: /Talk to Mahad conversational companion/i })).toBeNull();
-
-    vi.useRealTimers();
-  });
-
-  it("cancels auto-open if manually opened before 5 seconds", () => {
+  it("cancels auto-invite if manually opened before 5 seconds", () => {
     vi.useFakeTimers();
 
     render(
@@ -213,8 +198,8 @@ describe("5-Second Automatic Opening (Milestone 13P.7)", () => {
     act(() => {
       vi.advanceTimersByTime(5000);
     });
-    // Should stay closed because dismissal flag was recorded and timer was cancelled
-    expect(screen.queryByRole("region", { name: /Talk to Mahad conversational companion/i })).toBeNull();
+    // Should stay closed because dismissal flag was recorded
+    expect(screen.queryByRole("complementary", { name: /Assistant Inquiry Invitation/i })).toBeNull();
 
     vi.useRealTimers();
   });

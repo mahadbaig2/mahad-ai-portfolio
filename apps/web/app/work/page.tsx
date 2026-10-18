@@ -1,144 +1,68 @@
-import Link from "next/link";
-import { ArrowRight, ExternalLink, Github } from "lucide-react";
+import React from "react";
+import { Metadata } from "next";
 import { getProjects } from "@/lib/sanity/loadData";
-import { urlForImage } from "@/lib/sanity/image";
+import { WorkLibrary } from "@/components/work/WorkLibrary";
 
-export const metadata = {
-  title: "Work & Case Studies | Mahad",
+export const metadata: Metadata = {
+  title: "Selected Work & Technical Archive | Mirza Mahad Baig",
   description:
-    "Selected engineering projects, production AI architectures, and technical case studies.",
+    "AI products, enterprise SaaS systems, full-stack architectures, and product-design case studies designed and engineered by Mirza Mahad Baig.",
 };
 
 export default async function WorkPage() {
   const projects = await getProjects();
+
   return (
-    <div className="mx-auto max-w-content px-4 py-16 sm:px-6 sm:py-24">
-      <header className="max-w-prose">
-        <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl text-foreground">
-          Selected Work
-        </h1>
-        <p className="mt-3 text-base text-muted-foreground leading-relaxed">
-          Production AI systems, architectural foundations, and verifiable
-          engineering deliverables designed under real-world constraints.
-        </p>
-      </header>
-
-      {projects.length === 0 ? (
-        <div className="mt-12 rounded border border-border p-12 text-center text-sm text-muted-foreground">
-          No projects published yet. Published case studies from Sanity CMS will appear here.
+    <main className="w-full max-w-[1440px] mx-auto px-6 sm:px-8 py-10 sm:py-16">
+      {/* Top Metadata Strip */}
+      <div className="flex flex-wrap items-center justify-between border-b-2 border-primary pb-3 mb-8 gap-3 font-mono text-xs">
+        <div className="flex items-center gap-2">
+          <span className="bg-primary text-on-primary px-2 py-0.5 font-bold">
+            SELECTED WORK // 2019–NOW
+          </span>
+          <span className="text-on-surface-variant border border-outline-variant px-2 py-0.5 hidden sm:inline-block">
+            [DOC: MMB-WRK-2025 // 12-COL MONOGRAPH]
+          </span>
         </div>
-      ) : (
-        <div className="mt-12 flex flex-col divide-y divide-border border-y border-border">
-          {projects.map((project) => {
-            const heroImageUrl = project.heroImage
-              ? urlForImage(project.heroImage)?.url()
-              : null;
+        <div className="text-on-surface-variant flex items-center gap-3">
+          <span>SYS.SPEC: VERIFIED ARCHIVAL RECORDS</span>
+          <span className="text-outline">·</span>
+          <span className="inline-flex items-center gap-1.5 text-secondary font-bold">
+            <span className="w-2 h-2 rounded-full bg-secondary inline-block animate-pulse" />
+            SYSTEM VERIFIED
+          </span>
+        </div>
+      </div>
 
-            return (
-              <article key={project.slug} className="py-10">
-                <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
-                  <div className="max-w-2xl">
-                    <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                      <span className="font-medium text-foreground">
-                        {project.year}
-                      </span>
-                      <span>•</span>
-                      <span>{project.role}</span>
-                    </div>
-
-                    <h2 className="mt-2 text-xl font-semibold tracking-tight text-foreground hover:underline">
-                      <Link href={`/work/${project.slug}`}>{project.title}</Link>
-                    </h2>
-
-                    <p className="mt-1 text-sm font-medium text-foreground">
-                      {project.tagline}
-                    </p>
-
-                    <p className="mt-3 text-sm sm:text-base text-muted-foreground leading-relaxed">
-                      {project.summary}
-                    </p>
-
-                    {heroImageUrl && (
-                      <Link
-                        href={`/work/${project.slug}`}
-                        className="mt-5 block overflow-hidden rounded border border-border max-w-xl group"
-                      >
-                        <img
-                          src={heroImageUrl}
-                          alt={project.heroImage?.alt || project.title}
-                          className="w-full h-auto max-h-56 object-cover transition-opacity group-hover:opacity-90"
-                        />
-                      </Link>
-                    )}
-
-                    {/* Key Metrics */}
-                    <div className="mt-6 flex flex-wrap gap-4">
-                      {project.metrics.map((metric) => (
-                        <div
-                          key={metric.label}
-                          className="rounded border border-border px-3 py-1.5"
-                        >
-                          <div className="text-[11px] text-muted-foreground">
-                            {metric.label}
-                          </div>
-                          <div className="text-sm font-semibold text-foreground">
-                            {metric.value}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* Tech Stack */}
-                    <div className="mt-6 flex flex-wrap gap-1.5">
-                      {project.technologies.map((tech) => (
-                        <span
-                          key={tech}
-                          className="rounded border border-border px-2 py-0.5 text-[11px] text-muted-foreground"
-                        >
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-              {/* Actions */}
-              <div className="mt-4 flex shrink-0 items-center gap-4 lg:mt-0 lg:flex-col lg:items-end">
-                <Link
-                  href={`/work/${project.slug}`}
-                  className="inline-flex items-center gap-1 text-xs font-medium text-foreground hover:underline"
-                >
-                  <span>Read Full Case Study</span>
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </Link>
-
-                {project.liveUrl && (
-                  <Link
-                    href={project.liveUrl}
-                    className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground"
-                  >
-                    <span>Launch Experience</span>
-                    <ExternalLink className="h-3.5 w-3.5" />
-                  </Link>
-                )}
-
-                {project.githubUrl && (
-                  <Link
-                    href={project.githubUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground"
-                  >
-                    <Github className="h-3.5 w-3.5" />
-                    <span>View Repository</span>
-                  </Link>
-                )}
-              </div>
+      {/* Editorial Hero Title & Proposition */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 pb-10 border-b-2 border-outline-variant mb-6">
+        <div className="lg:col-span-8">
+          <h1 className="font-headline text-3xl sm:text-5xl lg:text-6xl font-black text-primary uppercase tracking-tight leading-tight mb-4">
+            Work That Moves From Interface to Intelligence.
+          </h1>
+          <p className="font-sans text-base sm:text-lg text-on-surface-variant max-w-2xl leading-relaxed">
+            A verified collection of AI products, full-stack applications, enterprise SaaS platforms, machine-learning projects, automation workflows, and product-design case studies.
+          </p>
+        </div>
+        <div className="lg:col-span-4 flex flex-col justify-between">
+          <div className="p-4 bg-surface-container-low border-2 border-primary stamp-shadow-sm">
+            <div className="flex items-center justify-between border-b border-outline-variant pb-1.5 mb-2 font-mono text-[11px]">
+              <span className="font-bold text-primary">AUDIT MANDATE</span>
+              <span className="text-outline">VERIFIED 1.0</span>
             </div>
-          </article>
-          );
-        })}
+            <p className="font-sans text-xs text-on-surface leading-normal">
+              Each project identifies my role, what was actually completed, and the current maturity of the work. No theoretical mockups represented as live software.
+            </p>
+          </div>
+          <div className="mt-4 flex items-center justify-between font-mono text-[11px] text-on-surface-variant border-t border-dashed border-outline-variant pt-2">
+            <span>PORTFOLIO_LATENCY: OPTIMIZED</span>
+            <span>COORDINATES: 33.6844° N, 73.0479° E</span>
+          </div>
         </div>
-      )}
-    </div>
+      </div>
+
+      {/* Interactive Work Library */}
+      <WorkLibrary initialProjects={projects} />
+    </main>
   );
 }

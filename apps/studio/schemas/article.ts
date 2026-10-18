@@ -53,6 +53,57 @@ export const article = defineType({
       description: 'Link to original publication if cross-posted from Medium or Substack.',
     }),
     defineField({
+      name: 'articleType',
+      title: 'Article Type / Category',
+      type: 'string',
+      group: 'main',
+      options: {
+        list: [
+          { title: 'System Breakdown', value: 'system_breakdown' },
+          { title: 'Essay', value: 'essay' },
+          { title: 'Product Note', value: 'product_note' },
+          { title: 'Architecture Decision', value: 'architecture_decision' },
+          { title: 'Field Note', value: 'field_note' },
+        ],
+      },
+      initialValue: 'system_breakdown',
+    }),
+    defineField({
+      name: 'featured',
+      title: 'Featured Article',
+      type: 'boolean',
+      group: 'main',
+      initialValue: false,
+    }),
+    defineField({
+      name: 'featuredRank',
+      title: 'Featured Rank',
+      type: 'number',
+      group: 'main',
+    }),
+    defineField({
+      name: 'keyTakeaway',
+      title: 'Key Takeaway / Core Principle',
+      type: 'text',
+      group: 'main',
+      rows: 2,
+    }),
+    defineField({
+      name: 'sources',
+      title: 'Verified Sources & Citations',
+      type: 'array',
+      group: 'main',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            { name: 'title', title: 'Source Title', type: 'string' },
+            { name: 'url', title: 'Source URL', type: 'url' },
+          ],
+        },
+      ],
+    }),
+    defineField({
       name: 'tags',
       title: 'Topic Tags',
       type: 'array',

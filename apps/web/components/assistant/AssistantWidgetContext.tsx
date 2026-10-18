@@ -6,69 +6,87 @@ type WidgetTab = "chat" | "voice";
 
 interface AssistantWidgetContextType {
   isOpen: boolean;
+  invitationVisible: boolean;
   activeTab: WidgetTab;
   hasManuallyInteracted: boolean;
   openWidget: (tab?: WidgetTab) => void;
   closeWidget: () => void;
   toggleWidget: () => void;
+  dismissInvitation: () => void;
   setActiveTab: (tab: WidgetTab) => void;
 }
 
 const AssistantWidgetContext = createContext<AssistantWidgetContextType | undefined>(undefined);
 
 const DISMISSAL_STORAGE_KEY = "mahad_widget_dismissed";
-const AUTO_OPEN_STORAGE_KEY = "mahad_widget_auto_opened";
+const AUTO_INVITE_STORAGE_KEY = "mahad_widget_auto_invited";
 
 export function AssistantWidgetProvider({ children }: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [invitationVisible, setInvitationVisible] = useState(false);
   const [activeTab, setActiveTab] = useState<WidgetTab>("chat");
   const [hasManuallyInteracted, setHasManuallyInteracted] = useState(false);
 
-  // 5-second automatic visual-only opening (P13P.7.1 - P13P.7.13)
+  // 5-second automatic visual-only invitation (Section 17)
   useEffect(() => {
     if (typeof window === "undefined") return;
 
     const isDismissed = sessionStorage.getItem(DISMISSAL_STORAGE_KEY);
-    const hasAutoOpened = sessionStorage.getItem(AUTO_OPEN_STORAGE_KEY);
+    const hasAutoInvited = sessionStorage.getItem(AUTO_INVITE_STORAGE_KEY);
 
-    if (isDismissed || hasAutoOpened || hasManuallyInteracted) {
+    if (isDismissed || hasAutoInvited || hasManuallyInteracted || isOpen) {
       return;
     }
 
     const timer = setTimeout(() => {
       const dismissed = sessionStorage.getItem(DISMISSAL_STORAGE_KEY);
-      const autoOpened = sessionStorage.getItem(AUTO_OPEN_STORAGE_KEY);
-      if (!dismissed && !autoOpened) {
-        sessionStorage.setItem(AUTO_OPEN_STORAGE_KEY, "true");
-        setActiveTab("chat");
-        setIsOpen(true);
+      const autoInvited = sessionStorage.getItem(AUTO_INVITE_STORAGE_KEY);
+      if (!dismissed && !autoInvited && !isOpen) {
+        sessionStorage.setItem(AUTO_INVITE_STORAGE_KEY, "true");
+        setInvitationVisible(true);
       }
     }, 5000);
 
     return () => clearTimeout(timer);
-  }, [hasManuallyInteracted]);
+  }, [hasManuallyInteracted, isOpen]);
 
-  // Close on Escape key press (P13P.6.11)
+  // Close on Escape key press
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape" && isOpen) {
-        setIsOpen(false);
-        setHasManuallyInteracted(true);
-        if (typeof window !== "undefined") {
-          sessionStorage.setItem(DISMISSAL_STORAGE_KEY, "true");
+      if (e.key === "Escape") {
+        if (isOpen) {
+          setIsOpen(false);
+          setHasManuallyInteracted(true);
+          if (typeof window !== "undefined") {
+            sessionStorage.setItem(DISMISSAL_STORAGE_KEY, "true");
+          }
+        }
+        if (invitationVisible) {
+          setInvitationVisible(false);
+          if (typeof window !== "undefined") {
+            sessionStorage.setItem(DISMISSAL_STORAGE_KEY, "true");
+          }
         }
       }
     }
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen]);
+  }, [isOpen, invitationVisible]);
+
+  const dismissInvitation = useCallback(() => {
+    setInvitationVisible(false);
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem(DISMISSAL_STORAGE_KEY, "true");
+    }
+  }, []);
 
   const openWidget = useCallback((tab?: WidgetTab) => {
+    setInvitationVisible(false);
     setIsOpen(true);
     if (tab) setActiveTab(tab);
     setHasManuallyInteracted(true);
     if (typeof window !== "undefined") {
-      sessionStorage.setItem(AUTO_OPEN_STORAGE_KEY, "true");
+      sessionStorage.setItem(AUTO_INVITE_STORAGE_KEY, "true");
     }
   }, []);
 
@@ -81,6 +99,7 @@ export function AssistantWidgetProvider({ children }: { children: React.ReactNod
   }, []);
 
   const toggleWidget = useCallback(() => {
+    setInvitationVisible(false);
     setIsOpen((prev) => {
       const next = !prev;
       setHasManuallyInteracted(true);
@@ -88,7 +107,7 @@ export function AssistantWidgetProvider({ children }: { children: React.ReactNod
         if (!next) {
           sessionStorage.setItem(DISMISSAL_STORAGE_KEY, "true");
         } else {
-          sessionStorage.setItem(AUTO_OPEN_STORAGE_KEY, "true");
+          sessionStorage.setItem(AUTO_INVITE_STORAGE_KEY, "true");
         }
       }
       return next;
@@ -99,11 +118,13 @@ export function AssistantWidgetProvider({ children }: { children: React.ReactNod
     <AssistantWidgetContext.Provider
       value={{
         isOpen,
+        invitationVisible,
         activeTab,
         hasManuallyInteracted,
         openWidget,
         closeWidget,
         toggleWidget,
+        dismissInvitation,
         setActiveTab,
       }}
     >

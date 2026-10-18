@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Plus_Jakarta_Sans } from "next/font/google";
+import { Chivo, Hanken_Grotesk, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { AnnouncementBar } from "@/components/AnnouncementBar";
 import { Header } from "@/components/Header";
@@ -7,26 +7,42 @@ import { Footer } from "@/components/Footer";
 import { AssistantWidgetProvider } from "@/components/assistant/AssistantWidgetContext";
 import { AssistantWidget } from "@/components/assistant/AssistantWidget";
 
-const plusJakartaSans = Plus_Jakarta_Sans({
+const chivo = Chivo({
   subsets: ["latin"],
-  variable: "--font-plus-jakarta-sans",
+  variable: "--font-chivo",
   display: "swap",
+  weight: ["400", "600", "700", "800", "900"],
+});
+
+const hankenGrotesk = Hanken_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-hanken-grotesk",
+  display: "swap",
+  weight: ["300", "400", "500", "600", "700"],
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-jetbrains-mono",
+  display: "swap",
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
-  title: "Mahad | AI Product Engineering",
+  title: "Mirza Mahad Baig // AI Product Engineer",
   description:
-    "Intentionally over-engineered portfolio site showcasing deep AI Product Engineering, product design, and strategic decision-making capabilities.",
+    "Mirza Mahad Baig is an AI Product Engineer with nearly six years of product design and UI/UX experience, practical AI engineering expertise, and hands-on full-stack experience.",
   keywords: [
+    "Mirza Mahad Baig",
     "AI Product Engineer",
+    "Product Design",
     "Machine Learning",
     "RAG",
     "LangGraph",
     "Full Stack AI",
-    "Product Design",
-    "Mahad",
+    "UI/UX",
   ],
-  authors: [{ name: "Mahad" }],
+  authors: [{ name: "Mirza Mahad Baig" }],
 };
 
 export const viewport: Viewport = {
@@ -40,10 +56,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={plusJakartaSans.variable}>
+    <html
+      lang="en"
+      className={`${chivo.variable} ${hankenGrotesk.variable} ${jetbrainsMono.variable} scroll-smooth`}
+    >
       <body
         suppressHydrationWarning
-        className="min-h-screen bg-white font-sans text-foreground antialiased selection:bg-foreground selection:text-white"
+        className="min-h-screen bg-background font-sans text-on-surface antialiased selection:bg-tertiary-container selection:text-on-tertiary"
       >
         <AssistantWidgetProvider>
           <AnnouncementBar />
@@ -56,4 +75,5 @@ export default function RootLayout({
     </html>
   );
 }
+
 
