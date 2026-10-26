@@ -62,6 +62,10 @@ class Settings(BaseSettings):
         default="postgresql://postgres:postgres@localhost:5432/mahad_portfolio",
         description="Sync connection string for Alembic migrations",
     )
+    DATABASE_URL_UNPOOLED: str = Field(
+        default="",
+        description="Direct unpooled connection string for migrations and DDL",
+    )
 
     @field_validator("DATABASE_URL", mode="before")
     @classmethod
@@ -74,6 +78,23 @@ class Settings(BaseSettings):
                 scheme = "postgresql+asyncpg"
             query_dict = urllib.parse.parse_qs(parsed.query)
             # asyncpg accepts ssl via connect_args={'ssl': 'require'}, not query string
+            clean_query = urllib.parse.urlencode(
+                {k: val for k, val in query_dict.items() if k not in ("sslmode", "channel_binding")},
+                doseq=True,
+            )
+            return urllib.parse.urlunparse(parsed._replace(scheme=scheme, query=clean_query))
+        return v
+
+    @field_validator("DATABASE_URL_UNPOOLED", mode="before")
+    @classmethod
+    def assemble_unpooled_db_url(cls, v: str) -> str:
+        if isinstance(v, str) and v:
+            import urllib.parse
+            parsed = urllib.parse.urlparse(v)
+            scheme = parsed.scheme
+            if scheme in ("postgresql", "postgres"):
+                scheme = "postgresql+asyncpg"
+            query_dict = urllib.parse.parse_qs(parsed.query)
             clean_query = urllib.parse.urlencode(
                 {k: val for k, val in query_dict.items() if k not in ("sslmode", "channel_binding")},
                 doseq=True,

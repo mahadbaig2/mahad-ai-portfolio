@@ -66,13 +66,35 @@ async def _execute_runtime_retrieval(
     project_slug: str | None = None,
     language: str | None = None,
 ) -> RetrievalResult:
-    from apps.api.db.session import get_session_factory
+    from sqlalchemy.ext.asyncio import (
+        AsyncSession,
+        async_sessionmaker,
+        create_async_engine,
+    )
+    from sqlalchemy.pool import NullPool
+
+    from apps.api.core.config import get_settings
     from apps.api.providers.qdrant import QdrantVectorProvider
 
-    session_maker = get_session_factory()
-    async with session_maker() as session:
-        vector_provider = QdrantVectorProvider()
-        try:
+    settings = get_settings()
+    connect_args: dict[str, Any] = {}
+    if "neon.tech" in settings.DATABASE_URL or settings.ENVIRONMENT == "production":
+        connect_args["ssl"] = "require"
+
+    local_engine = create_async_engine(
+        settings.DATABASE_URL,
+        poolclass=NullPool,
+        connect_args=connect_args,
+    )
+    local_sessionmaker = async_sessionmaker(
+        bind=local_engine,
+        class_=AsyncSession,
+        expire_on_commit=False,
+        autoflush=False,
+    )
+    vector_provider = QdrantVectorProvider()
+    try:
+        async with local_sessionmaker() as session:
             service = RetrievalService(
                 session=session,
                 vector_provider=vector_provider,
@@ -86,9 +108,10 @@ async def _execute_runtime_retrieval(
                 project_slug=project_slug,
                 language=language,
             )
-        finally:
-            if hasattr(vector_provider, "close"):
-                await vector_provider.close()
+    finally:
+        if hasattr(vector_provider, "close"):
+            await vector_provider.close()
+        await local_engine.dispose()
 
 
 def retrieve_evidence_node(state: AssistantState) -> dict[str, Any]:

@@ -38,6 +38,8 @@ def get_url() -> str:
     override = config.get_main_option("sqlalchemy.url")
     if override and not override.startswith("postgresql://postgres:postgres@localhost"):
         return override
+    if settings.DATABASE_URL_UNPOOLED:
+        return settings.DATABASE_URL_UNPOOLED
     return settings.DATABASE_URL
 
 

@@ -9,7 +9,6 @@ import concurrent.futures
 import logging
 from typing import Any
 
-from apps.api.db.session import get_session_factory
 from apps.api.repositories.chat_repo import ChatRepository
 
 logger = logging.getLogger("assistant.audit")
@@ -24,9 +23,33 @@ async def _persist_retrieval_event_async(
     evidence_score: float | None = None,
 ) -> None:
     """Async persistence helper writing an audit log to retrieval_events table."""
+    from sqlalchemy.ext.asyncio import (
+        AsyncSession,
+        async_sessionmaker,
+        create_async_engine,
+    )
+    from sqlalchemy.pool import NullPool
+
+    from apps.api.core.config import get_settings
+
+    settings = get_settings()
+    connect_args: dict[str, Any] = {}
+    if "neon.tech" in settings.DATABASE_URL or settings.ENVIRONMENT == "production":
+        connect_args["ssl"] = "require"
+
+    local_engine = create_async_engine(
+        settings.DATABASE_URL,
+        poolclass=NullPool,
+        connect_args=connect_args,
+    )
+    local_sessionmaker = async_sessionmaker(
+        bind=local_engine,
+        class_=AsyncSession,
+        expire_on_commit=False,
+        autoflush=False,
+    )
     try:
-        session_maker = get_session_factory()
-        async with session_maker() as session:
+        async with local_sessionmaker() as session:
             repo = ChatRepository(session)
             await repo.record_retrieval(
                 query_text=query_text,
@@ -40,6 +63,8 @@ async def _persist_retrieval_event_async(
     except Exception as e:
         # Invariant: Observability failures must not fail a user request (AGENTS.md)
         logger.warning(f"Non-fatal error persisting retrieval event: {e}")
+    finally:
+        await local_engine.dispose()
 
 
 def record_safe_retrieval_event(
