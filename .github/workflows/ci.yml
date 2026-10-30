@@ -76,12 +76,14 @@ jobs:
         with:
           python-version: "3.12"
           cache: "pip"
-          cache-dependency-path: "pipelines/requirements.txt"
+          cache-dependency-path: |
+            pipelines/requirements.txt
+            pipelines/requirements-test.txt
 
-      - name: Install pipeline dependencies
+      - name: Install pipeline and test dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r pipelines/requirements.txt
+          python -m pip install -r pipelines/requirements-test.txt
 
       - name: Verify Reconciliation and Index Rebuild Startup & Mock Execution
         run: |
@@ -89,13 +91,13 @@ jobs:
           python -m pipelines.rebuild_index --confirm-rebuild --mock
 
       - name: Run Qdrant Configuration & Reconciliation Dependency Unit Tests
-        run: pytest apps/api/tests/test_qdrant_config_auth.py pipelines/tests/test_reconciliation_dependencies.py
+        run: python -m pytest apps/api/tests/test_qdrant_config_auth.py pipelines/tests/test_reconciliation_dependencies.py
 
       - name: Run Deterministic Evaluation Suite
         run: python -m pipelines.evaluation.evaluate_assistant
 
       - name: Run Regression Gate Unit Tests
-        run: pytest pipelines/tests/test_evaluation_regression_gate.py
+        run: python -m pytest pipelines/tests/test_evaluation_regression_gate.py
 
       - name: Upload Evaluation Summary Artifact
         uses: actions/upload-artifact@v4
