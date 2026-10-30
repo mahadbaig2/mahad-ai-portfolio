@@ -1,6 +1,7 @@
-# CI / test dependencies for the pipelines job (not needed by production ingestion or reconciliation)
+# CI / test dependencies for the Python job (not needed by production ingestion or reconciliation).
+# apps/api/tests/conftest.py imports the FastAPI app (langgraph, groq, fastapi, ...), so API deps are required.
 -r requirements.txt
+-r ../apps/api/requirements.txt
 
-pytest>=8.3,<9
+pytest>=8.3,<8.4
 pytest-asyncio>=0.25,<0.26
-

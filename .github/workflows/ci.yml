@@ -79,6 +79,7 @@ jobs:
           cache-dependency-path: |
             pipelines/requirements.txt
             pipelines/requirements-test.txt
+            apps/api/requirements.txt
 
       - name: Install pipeline and test dependencies
         run: |
