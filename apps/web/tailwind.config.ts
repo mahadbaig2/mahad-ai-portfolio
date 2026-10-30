@@ -57,7 +57,7 @@ const config: Config = {
         "on-tertiary": "#ffffff",
         "on-tertiary-container": "#b27375",
         outline: {
-          DEFAULT: "#787770",
+          DEFAULT: "#575651",
           variant: "#c8c7be",
         },
         error: {

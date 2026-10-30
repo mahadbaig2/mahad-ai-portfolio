@@ -165,9 +165,8 @@ async def main() -> None:
         async with engine.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)
     else:
-
-        embedder = MultilingualE5Embedder()
         vector_provider = QdrantVectorProvider()
+        embedder = MultilingualE5Embedder()
         connect_args: dict[str, Any] = {}
         if "neon.tech" in settings.DATABASE_URL or settings.ENVIRONMENT == "production":
             connect_args["ssl"] = "require"

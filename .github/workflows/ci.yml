@@ -14,6 +14,7 @@ jobs:
   validate:
     name: Lint, Typecheck, Test & Build
     runs-on: ubuntu-latest
+    timeout-minutes: 20
 
     steps:
       - name: Checkout repository
@@ -29,6 +30,7 @@ jobs:
         with:
           node-version: 22
           cache: "pnpm"
+          cache-dependency-path: "pnpm-lock.yaml"
 
       - name: Install dependencies (frozen lockfile)
         run: pnpm install --frozen-lockfile
@@ -51,9 +53,20 @@ jobs:
       - name: Run Playwright smoke and accessibility tests
         run: pnpm test:e2e
 
+      - name: Upload Playwright Failure Artifacts
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-failure-artifacts
+          path: |
+            apps/web/playwright-report/
+            apps/web/test-results/
+          retention-days: 7
+
   eval-gate:
-    name: LLMOps Regression Gate & CI Artifact
+    name: LLMOps Regression Gate & Pipeline Checks
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -63,11 +76,20 @@ jobs:
         with:
           python-version: "3.12"
           cache: "pip"
+          cache-dependency-path: "pipelines/requirements.txt"
 
-      - name: Install dependencies
+      - name: Install pipeline dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pydantic pytest
+          pip install -r pipelines/requirements.txt
+
+      - name: Verify Reconciliation and Index Rebuild Startup & Mock Execution
+        run: |
+          python -m pipelines.reconciliation --mock
+          python -m pipelines.rebuild_index --confirm-rebuild --mock
+
+      - name: Run Qdrant Configuration & Reconciliation Dependency Unit Tests
+        run: pytest apps/api/tests/test_qdrant_config_auth.py pipelines/tests/test_reconciliation_dependencies.py
 
       - name: Run Deterministic Evaluation Suite
         run: python -m pipelines.evaluation.evaluate_assistant
@@ -81,4 +103,3 @@ jobs:
         with:
           name: evaluation-summary
           path: pipelines/evaluation/reports/evaluation_summary.md
-

@@ -8,7 +8,7 @@ from typing import Any
 from qdrant_client import AsyncQdrantClient
 from qdrant_client.http import models as qmodels
 
-from apps.api.core.config import get_settings
+from apps.api.core.config import get_settings, validate_qdrant_credentials
 from apps.api.providers.base import VectorProvider
 from pipelines.ingestion.embedder import EMBEDDING_DIMENSION, EMBEDDING_MODEL_VERSION
 
@@ -25,6 +25,17 @@ INDEXED_PAYLOAD_FIELDS = [
 ]
 
 
+def _raise_sanitized_if_illegal_header(exc: Exception) -> None:
+    """Convert low-level httpcore/qdrant Illegal header value exceptions into a
+    sanitized ValueError without leaking raw header bytes in logs or tracebacks.
+    """
+    msg = f"{type(exc).__name__}: {exc}"
+    if "Illegal header value" in msg:
+        raise ValueError(
+            "QDRANT_API_KEY contains invalid whitespace or control characters."
+        ) from None
+
+
 class QdrantVectorProvider(VectorProvider):
     """Production vector provider managing Qdrant collection, indexes, and filtered search."""
 
@@ -34,11 +45,23 @@ class QdrantVectorProvider(VectorProvider):
         api_key: str | None = None,
         collection_name: str | None = None,
         timeout: float = 20.0,
+        *,
+        require_api_key: bool | None = None,
     ) -> None:
         settings = get_settings()
-        self.url = url or settings.QDRANT_URL
-        self.api_key = api_key or settings.QDRANT_API_KEY
-        self.collection_name = collection_name or settings.QDRANT_COLLECTION_NAME
+        raw_url = settings.QDRANT_URL if url is None else url
+        raw_key = settings.QDRANT_API_KEY if api_key is None else api_key
+
+        self.url, self.api_key = validate_qdrant_credentials(
+            raw_url,
+            raw_key,
+            require_api_key=require_api_key,
+        )
+        self.collection_name = (
+            collection_name or settings.QDRANT_COLLECTION_NAME
+        ).strip()
+        if not self.collection_name:
+            raise ValueError("QDRANT_COLLECTION_NAME is required and cannot be empty.")
         self.timeout = timeout
 
         self.client = AsyncQdrantClient(
@@ -49,7 +72,11 @@ class QdrantVectorProvider(VectorProvider):
 
     async def ensure_collection_exists(self, recreate: bool = False) -> bool:
         """P5.1.2 & P5.1.3: Verify or create Qdrant collection with cosine metric and payload indexes."""
-        exists = await self.client.collection_exists(self.collection_name)
+        try:
+            exists = await self.client.collection_exists(self.collection_name)
+        except Exception as exc:
+            _raise_sanitized_if_illegal_header(exc)
+            raise
 
         if exists and recreate:
             logger.warning(f"Recreating Qdrant collection: {self.collection_name}")
@@ -77,7 +104,7 @@ class QdrantVectorProvider(VectorProvider):
                         field_schema=schema_type,
                     )
                 except Exception as e:
-                    logger.warning(f"Index creation for {field_name} returned: {e}")
+                    logger.warning(f"Index creation for {field_name} returned: { type(e).__name__ }")
 
         return True
 
@@ -137,15 +164,16 @@ class QdrantVectorProvider(VectorProvider):
                 )
                 return len(qdrant_points)
             except Exception as e:
+                _raise_sanitized_if_illegal_header(e)
                 last_exception = e
                 logger.warning(
-                    f"Qdrant upsert attempt {attempt + 1}/{max_retries} failed: {e}"
+                    f"Qdrant upsert attempt {attempt + 1}/{max_retries} failed ({type(e).__name__})"
                 )
                 if attempt < max_retries - 1:
                     await asyncio.sleep(backoff_factor**attempt)
 
         raise RuntimeError(
-            f"Qdrant upsert failed after {max_retries} attempts: {last_exception}"
+            f"Qdrant upsert failed after {max_retries} attempts ({type(last_exception).__name__})"
         )
 
     async def delete(
@@ -166,7 +194,10 @@ class QdrantVectorProvider(VectorProvider):
                 )
                 return len(point_ids)
             except Exception as e:
-                logger.warning(f"Qdrant delete attempt {attempt + 1} failed: {e}")
+                _raise_sanitized_if_illegal_header(e)
+                logger.warning(
+                    f"Qdrant delete attempt {attempt + 1} failed ({type(e).__name__})"
+                )
                 if attempt < max_retries - 1:
                     await asyncio.sleep(1.0)
                 else:
@@ -215,14 +246,18 @@ class QdrantVectorProvider(VectorProvider):
             else:
                 q_filter = qmodels.Filter(must=[active_condition])
 
-        response = await self.client.query_points(
-            collection_name=self.collection_name,
-            query=query_vector,
-            limit=top_k,
-            score_threshold=score_threshold if score_threshold > 0.0 else None,
-            query_filter=q_filter,
-            with_payload=True,
-        )
+        try:
+            response = await self.client.query_points(
+                collection_name=self.collection_name,
+                query=query_vector,
+                limit=top_k,
+                score_threshold=score_threshold if score_threshold > 0.0 else None,
+                query_filter=q_filter,
+                with_payload=True,
+            )
+        except Exception as exc:
+            _raise_sanitized_if_illegal_header(exc)
+            raise
 
         return [
             {
@@ -239,7 +274,8 @@ class QdrantVectorProvider(VectorProvider):
             collections = await self.client.get_collections()
             return collections is not None
         except Exception as e:
-            logger.warning(f"Qdrant health check failed: {e}")
+            _raise_sanitized_if_illegal_header(e)
+            logger.warning(f"Qdrant health check failed ({type(e).__name__})")
             return False
 
     async def close(self) -> None:

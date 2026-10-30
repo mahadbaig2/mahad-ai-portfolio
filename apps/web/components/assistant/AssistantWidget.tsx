@@ -141,7 +141,7 @@ export function AssistantWidget() {
           </div>
 
           {/* Mode Switcher Tabs: Chat & Voice */}
-          <div className="grid grid-cols-2 border-b-2 border-[#11110f] bg-[#f3f0e9] p-1 font-mono text-[11px] font-bold uppercase tracking-wider">
+          <div role="tablist" aria-label="Assistant mode" className="grid grid-cols-2 border-b-2 border-[#11110f] bg-[#f3f0e9] p-1 font-mono text-[11px] font-bold uppercase tracking-wider">
             <button
               onClick={() => setActiveTab("chat")}
               aria-selected={activeTab === "chat"}

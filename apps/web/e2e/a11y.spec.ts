@@ -2,6 +2,12 @@ import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
 test.describe("Accessibility (WCAG 2.1 AA Compliance)", () => {
+  test.beforeEach(async ({ page }) => {
+    await page.addInitScript(() => {
+      window.sessionStorage.setItem("mahad_widget_dismissed", "true");
+    });
+  });
+
   const routes = [
     "/",
     "/work",

@@ -189,7 +189,6 @@ function ConversationalVoiceContent() {
         });
       }
     } catch (err: any) {
-      console.error("Failed to start voice session:", err);
       if (err.name === "NotAllowedError" || err.name === "PermissionDeniedError") {
         setSessionState("error");
         setErrorMessage("Microphone access was denied. You can continue in text chat.");
@@ -200,6 +199,7 @@ function ConversationalVoiceContent() {
         setSessionState("error");
         setErrorMessage("Another voice conversation is currently active. Please try again shortly or use text chat.");
       } else {
+        console.error("Failed to start voice session:", err);
         setSessionState("error");
         setErrorMessage(err.message || "Unable to start voice session. Please continue in text chat.");
       }

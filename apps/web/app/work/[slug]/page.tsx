@@ -81,9 +81,9 @@ export default async function CaseStudyPage({
             <ArrowLeft className="h-3.5 w-3.5" />
             <span>WORK ARCHIVE</span>
           </Link>
-          <span className="text-outline-variant">|</span>
+          <span className="text-outline" aria-hidden="true">|</span>
           <span className="text-secondary">SPEC // {project.slug.toUpperCase()}</span>
-          <span className="text-outline-variant hidden sm:inline-block">|</span>
+          <span className="text-outline hidden sm:inline-block" aria-hidden="true">|</span>
           <a href="#overview" className="hidden sm:inline-block hover:underline">
             01 OVERVIEW
           </a>

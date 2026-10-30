@@ -1,10 +1,11 @@
 """Application settings loaded through Pydantic V2."""
 
+import urllib.parse
 from functools import lru_cache
 from pathlib import Path
 from typing import Literal
 
-from pydantic import Field, field_validator
+from pydantic import AliasChoices, Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 # Root directory of the repository
@@ -12,11 +13,117 @@ ROOT_DIR = Path(__file__).resolve().parent.parent.parent.parent
 ENV_FILE = ROOT_DIR / ".env"
 
 
+def normalize_secret_value(
+    raw: str | None,
+    field_name: str,
+    *,
+    allow_empty: bool = True,
+) -> str:
+    """Normalize a secret-backed string by trimming horizontal whitespace and outer quotes,
+    and reject embedded whitespace, newlines, or control characters without logging the value.
+    """
+    if raw is None:
+        if allow_empty:
+            return ""
+        raise ValueError(f"{field_name} is required and cannot be empty.")
+
+    if not isinstance(raw, str):
+        raise ValueError(f"{field_name} must be a string.")
+
+    if raw == "":
+        if allow_empty:
+            return ""
+        raise ValueError(f"{field_name} is required and cannot be empty.")
+
+    # Reject newlines or ASCII control characters (except horizontal tab which is trimmed at edges)
+    if any((ord(ch) < 32 and ch != "\t") or ord(ch) == 127 for ch in raw):
+        raise ValueError(f"{field_name} contains invalid whitespace or control characters.")
+
+    trimmed = raw.strip(" \t")
+    if trimmed == "":
+        raise ValueError(f"{field_name} contains invalid whitespace or control characters.")
+
+    # Strip matching surrounding single or double quotes if present from env/secret configuration
+    if len(trimmed) >= 2 and (
+        (trimmed.startswith('"') and trimmed.endswith('"'))
+        or (trimmed.startswith("'") and trimmed.endswith("'"))
+    ):
+        trimmed = trimmed[1:-1].strip(" \t")
+
+    if trimmed == "":
+        if allow_empty:
+            return ""
+        raise ValueError(f"{field_name} is required and cannot be empty.")
+
+    if (
+        any(ch.isspace() for ch in trimmed)
+        or any(ord(ch) < 32 or ord(ch) == 127 for ch in trimmed)
+        or not trimmed.isascii()
+    ):
+        raise ValueError(f"{field_name} contains invalid whitespace or control characters.")
+
+    return trimmed
+
+
+def normalize_qdrant_url(raw: str | None) -> str:
+    """Normalize and validate QDRANT_URL without exposing sensitive parameters."""
+    if raw is None or not isinstance(raw, str):
+        raise ValueError("QDRANT_URL is required and cannot be empty.")
+
+    if any((ord(ch) < 32 and ch != "\t") or ord(ch) == 127 for ch in raw):
+        raise ValueError("QDRANT_URL contains invalid whitespace or control characters.")
+
+    trimmed = raw.strip(" \t")
+    if len(trimmed) >= 2 and (
+        (trimmed.startswith('"') and trimmed.endswith('"'))
+        or (trimmed.startswith("'") and trimmed.endswith("'"))
+    ):
+        trimmed = trimmed[1:-1].strip(" \t")
+
+    if not trimmed:
+        raise ValueError("QDRANT_URL is required and cannot be empty.")
+
+    if any(ch.isspace() for ch in trimmed) or any(ord(ch) < 32 or ord(ch) == 127 for ch in trimmed):
+        raise ValueError("QDRANT_URL contains invalid whitespace or control characters.")
+
+    parsed = urllib.parse.urlparse(trimmed)
+    if parsed.scheme not in ("http", "https") or not parsed.netloc or not parsed.hostname:
+        raise ValueError("QDRANT_URL must be a valid HTTP or HTTPS URL.")
+
+    return trimmed
+
+
+def validate_qdrant_credentials(
+    url: str | None,
+    api_key: str | None,
+    *,
+    require_api_key: bool | None = None,
+) -> tuple[str, str]:
+    """Validate and normalize Qdrant endpoint URL and API key.
+
+    Requires a non-empty API key automatically for any non-local Qdrant endpoint
+    (or when require_api_key=True is explicitly specified).
+    """
+    clean_url = normalize_qdrant_url(url)
+    parsed = urllib.parse.urlparse(clean_url)
+    hostname = (parsed.hostname or "").lower()
+    is_local = hostname in ("localhost", "127.0.0.1", "::1")
+
+    must_have_key = (not is_local) if require_api_key is None else require_api_key
+    clean_key = normalize_secret_value(
+        api_key,
+        "QDRANT_API_KEY",
+        allow_empty=not must_have_key,
+    )
+    return clean_url, clean_key
+
+
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         env_file=ENV_FILE if ENV_FILE.exists() else None,
         env_file_encoding="utf-8",
         extra="ignore",
+        populate_by_name=True,
     )
 
     # --------------------------------------------------------------------------
@@ -71,7 +178,7 @@ class Settings(BaseSettings):
     @classmethod
     def assemble_async_db_url(cls, v: str) -> str:
         if isinstance(v, str):
-            import urllib.parse
+            v = v.strip()
             parsed = urllib.parse.urlparse(v)
             scheme = parsed.scheme
             if scheme in ("postgresql", "postgres"):
@@ -88,8 +195,8 @@ class Settings(BaseSettings):
     @field_validator("DATABASE_URL_UNPOOLED", mode="before")
     @classmethod
     def assemble_unpooled_db_url(cls, v: str) -> str:
-        if isinstance(v, str) and v:
-            import urllib.parse
+        if isinstance(v, str) and v.strip():
+            v = v.strip()
             parsed = urllib.parse.urlparse(v)
             scheme = parsed.scheme
             if scheme in ("postgresql", "postgres"):
@@ -106,6 +213,7 @@ class Settings(BaseSettings):
     @classmethod
     def assemble_sync_db_url(cls, v: str) -> str:
         if isinstance(v, str):
+            v = v.strip()
             if v.startswith("postgresql+asyncpg://"):
                 return v.replace("postgresql+asyncpg://", "postgresql://", 1)
             if v.startswith("postgres://"):
@@ -119,13 +227,27 @@ class Settings(BaseSettings):
         default="http://localhost:6333",
         description="Qdrant endpoint URL",
     )
-    QDRANT_API_KEY: str = Field(default="", description="Qdrant Cloud API Key")
+    QDRANT_API_KEY: str = Field(
+        default="",
+        description="Qdrant Cloud API Key",
+        repr=False,
+    )
     QDRANT_COLLECTION_NAME: str = "mahad_portfolio_chunks"
+
+    @field_validator("QDRANT_URL", mode="before")
+    @classmethod
+    def validate_qdrant_url_setting(cls, v: str) -> str:
+        return normalize_qdrant_url(v)
+
+    @field_validator("QDRANT_API_KEY", mode="before")
+    @classmethod
+    def validate_qdrant_api_key_setting(cls, v: str | None) -> str:
+        return normalize_secret_value(v, "QDRANT_API_KEY", allow_empty=True)
 
     # --------------------------------------------------------------------------
     # Groq Inference (LLM & Whisper)
     # --------------------------------------------------------------------------
-    GROQ_API_KEY: str = Field(default="")
+    GROQ_API_KEY: str = Field(default="", repr=False)
     GROQ_CHAT_MODEL: str = "llama-3.3-70b-versatile"
     GROQ_WHISPER_MODEL: str = "whisper-large-v3"
 
@@ -142,26 +264,65 @@ class Settings(BaseSettings):
     # --------------------------------------------------------------------------
     # LangSmith Observability (P10.1.1 & P10.1.4)
     # --------------------------------------------------------------------------
-    LANGSMITH_TRACING: bool = Field(default=False, alias="LANGCHAIN_TRACING_V2")
-    LANGSMITH_ENDPOINT: str = Field(default="https://api.smith.langchain.com", alias="LANGCHAIN_ENDPOINT")
-    LANGSMITH_API_KEY: str = Field(default="", alias="LANGCHAIN_API_KEY")
-    LANGSMITH_PROJECT: str = Field(default="mahad-ai-portfolio", alias="LANGCHAIN_PROJECT")
+    LANGSMITH_TRACING: bool = Field(
+        default=False,
+        validation_alias=AliasChoices("LANGSMITH_TRACING", "LANGCHAIN_TRACING_V2"),
+    )
+    LANGSMITH_ENDPOINT: str = Field(
+        default="https://api.smith.langchain.com",
+        validation_alias=AliasChoices("LANGSMITH_ENDPOINT", "LANGCHAIN_ENDPOINT"),
+    )
+    LANGSMITH_API_KEY: str = Field(
+        default="",
+        validation_alias=AliasChoices("LANGSMITH_API_KEY", "LANGCHAIN_API_KEY"),
+        repr=False,
+    )
+    LANGSMITH_PROJECT: str = Field(
+        default="mahad-ai-portfolio",
+        validation_alias=AliasChoices("LANGSMITH_PROJECT", "LANGCHAIN_PROJECT"),
+    )
     LANGSMITH_SAMPLE_RATE: float = Field(default=1.0, ge=0.0, le=1.0)
-    LANGSMITH_MAX_MONTHLY_TRACES: int = Field(default=4000, description="Monthly threshold safely below 5000 free tier")
+    LANGSMITH_MAX_MONTHLY_TRACES: int = Field(
+        default=4000,
+        description="Monthly threshold safely below 5000 free tier",
+    )
 
     # --------------------------------------------------------------------------
     # Sanity CMS Integrations
     # --------------------------------------------------------------------------
     SANITY_PROJECT_ID: str = Field(
         default="rnjj6f7w",
-        alias="NEXT_PUBLIC_SANITY_PROJECT_ID",
+        validation_alias=AliasChoices("SANITY_PROJECT_ID", "NEXT_PUBLIC_SANITY_PROJECT_ID"),
     )
     SANITY_DATASET: str = Field(
         default="production",
-        alias="NEXT_PUBLIC_SANITY_DATASET",
+        validation_alias=AliasChoices("SANITY_DATASET", "NEXT_PUBLIC_SANITY_DATASET"),
     )
-    SANITY_API_READ_TOKEN: str = Field(default="")
-    SANITY_WEBHOOK_SECRET: str = Field(default="")
+    SANITY_API_READ_TOKEN: str = Field(default="", repr=False)
+    SANITY_WEBHOOK_SECRET: str = Field(default="", repr=False)
+
+    @field_validator(
+        "GROQ_API_KEY",
+        "LANGSMITH_API_KEY",
+        "SANITY_API_READ_TOKEN",
+        "SANITY_WEBHOOK_SECRET",
+        "ELEVENLABS_API_KEY",
+        "ELEVENLABS_CUSTOM_LLM_SECRET",
+        mode="before",
+    )
+    @classmethod
+    def strip_optional_secret_whitespace(cls, v: str | None) -> str:
+        if v is None:
+            return ""
+        if isinstance(v, str):
+            trimmed = v.strip()
+            if len(trimmed) >= 2 and (
+                (trimmed.startswith('"') and trimmed.endswith('"'))
+                or (trimmed.startswith("'") and trimmed.endswith("'"))
+            ):
+                trimmed = trimmed[1:-1].strip()
+            return trimmed
+        return v
 
     # --------------------------------------------------------------------------
     # In-Process ONNX Query Router Model
@@ -267,7 +428,6 @@ class Settings(BaseSettings):
     @property
     def is_test(self) -> bool:
         return self.ENVIRONMENT == "test"
-
 
 
 @lru_cache(maxsize=1)

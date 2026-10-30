@@ -29,11 +29,24 @@ jobs:
         with:
           python-version: "3.12"
           cache: "pip"
+          cache-dependency-path: "pipelines/requirements.txt"
 
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r pipelines/requirements.txt
+
+      - name: Validate pipeline configuration and credentials
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          QDRANT_URL: ${{ secrets.QDRANT_URL }}
+          QDRANT_API_KEY: ${{ secrets.QDRANT_API_KEY }}
+          SANITY_PROJECT_ID: ${{ secrets.SANITY_PROJECT_ID }}
+          SANITY_DATASET: ${{ secrets.SANITY_DATASET || 'production' }}
+          SANITY_API_READ_TOKEN: ${{ secrets.SANITY_API_READ_TOKEN }}
+          ENVIRONMENT: production
+        run: |
+          python -c "from apps.api.core.config import get_settings, validate_qdrant_credentials; s = get_settings(); validate_qdrant_credentials(s.QDRANT_URL, s.QDRANT_API_KEY, require_api_key=True); assert s.DATABASE_URL.strip(), 'DATABASE_URL is required'; print(f'[ingest-content] Configuration verified for env={s.ENVIRONMENT}, collection={s.QDRANT_COLLECTION_NAME}')"
 
       - name: Execute Incremental Content Ingestion
         env:
@@ -43,6 +56,7 @@ jobs:
           SANITY_PROJECT_ID: ${{ secrets.SANITY_PROJECT_ID }}
           SANITY_DATASET: ${{ secrets.SANITY_DATASET || 'production' }}
           SANITY_API_READ_TOKEN: ${{ secrets.SANITY_API_READ_TOKEN }}
+          ENVIRONMENT: production
         run: |
           DOC_ID="${{ github.event.inputs.document_id || github.event.client_payload.document_id }}"
           if [ -n "$DOC_ID" ]; then

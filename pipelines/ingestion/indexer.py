@@ -227,17 +227,17 @@ async def run_cli() -> None:
     engine = create_async_engine(settings.DATABASE_URL, connect_args=connect_args)
     session_factory = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 
-    embedder: BaseEmbedder
-    if args.mock_embedder or args.dry_run:
-        embedder = DeterministicMockEmbedder()
-    else:
-        embedder = MultilingualE5Embedder()
-
     vector_provider: VectorProvider | None = None
     if args.sync_qdrant and not args.dry_run:
         qdrant = QdrantVectorProvider()
         await qdrant.ensure_collection_exists()
         vector_provider = qdrant
+
+    embedder: BaseEmbedder
+    if args.mock_embedder or args.dry_run:
+        embedder = DeterministicMockEmbedder()
+    else:
+        embedder = MultilingualE5Embedder()
 
     async with session_factory() as session:
         pipeline = IngestionPipeline(session=session, embedder=embedder, vector_provider=vector_provider)

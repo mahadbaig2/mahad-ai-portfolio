@@ -272,9 +272,14 @@ async def main() -> None:
         async with engine.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)
     else:
-        embedder = MultilingualE5Embedder()
+        print(
+            f"[reconciliation] Target env={settings.ENVIRONMENT}, "
+            f"collection={settings.QDRANT_COLLECTION_NAME}, "
+            f"db={settings.DATABASE_URL.split('@')[-1] if '@' in settings.DATABASE_URL else 'local'}"
+        )
         vector_provider = QdrantVectorProvider()
         extractor = SanityExtractor()
+        embedder = MultilingualE5Embedder()
         connect_args: dict[str, Any] = {}
         if "neon.tech" in settings.DATABASE_URL or settings.ENVIRONMENT == "production":
             connect_args["ssl"] = "require"

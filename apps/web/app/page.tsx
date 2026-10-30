@@ -93,14 +93,14 @@ export default async function HomePage() {
                 >
                   <span>→ [GITHUB]</span>
                 </a>
-                <span className="text-outline-variant">·</span>
+                <span className="text-outline" aria-hidden="true">·</span>
                 <Link
                   href={siteSettings.resumePdfUrl || "/contact#resume"}
                   className="hover:text-tertiary-container transition-colors flex items-center gap-1 font-semibold"
                 >
                   <span>→ [DOWNLOAD_RÉSUMÉ]</span>
                 </Link>
-                <span className="text-outline-variant">·</span>
+                <span className="text-outline" aria-hidden="true">·</span>
                 <a
                   href={siteSettings.linkedinUrl}
                   target="_blank"
@@ -109,7 +109,7 @@ export default async function HomePage() {
                 >
                   <span>→ [LINKEDIN]</span>
                 </a>
-                <span className="text-outline-variant">·</span>
+                <span className="text-outline" aria-hidden="true">·</span>
                 <a
                   href={siteSettings.mediumUrl}
                   target="_blank"
@@ -191,11 +191,11 @@ export default async function HomePage() {
           <div className="flex flex-wrap items-center gap-3 font-mono text-xs font-bold tracking-widest uppercase">
             <span className="text-secondary-fixed">●</span>
             <span>PRODUCT DESIGN</span>
-            <span className="text-outline">→</span>
+            <span className="text-primary-fixed" aria-hidden="true">→</span>
             <span>FULL-STACK IMPLEMENTATION</span>
-            <span className="text-outline">→</span>
+            <span className="text-primary-fixed" aria-hidden="true">→</span>
             <span>AI INTEGRATION</span>
-            <span className="text-outline">→</span>
+            <span className="text-primary-fixed" aria-hidden="true">→</span>
             <span>EVALUATION</span>
           </div>
           <div className="font-mono text-xs italic text-primary-fixed opacity-90">
