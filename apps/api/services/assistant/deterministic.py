@@ -165,7 +165,7 @@ _GREETING_PATTERN = re.compile(
 )
 
 _CONTACT_PATTERN = re.compile(
-    r"\b(contact|email|e-mail|mail|linkedin|github|resume|cv|hire|hiring|rabta)\b",
+    r"\b(contact|email|e-mail|mail|linkedin|github|resume|cv|hire|hiring|rabta|based|location)\b",
     re.IGNORECASE,
 )
 
@@ -336,8 +336,9 @@ def resolve_deterministic_turn(
     language: str = "en",
 ) -> DeterministicResolution | None:
     """Top-level resolver for all deterministic non-LLM paths (P9.2.1)."""
-    # 1. Contact Info lookup (explicit intent or keyword pattern with word boundaries)
-    if intent == IntentLabel.CONTACT_INFO.value or bool(_CONTACT_PATTERN.search(query)):
+    # A model label alone can be wrong for technical questions. Require a
+    # contact term before bypassing retrieval and returning contact details.
+    if _CONTACT_PATTERN.search(query):
         return resolve_contact_lookup(query, language=language)
 
     # 2. Greeting lookup (explicit intent or keyword pattern with word boundaries)
