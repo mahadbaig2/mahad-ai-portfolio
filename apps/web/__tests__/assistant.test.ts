@@ -8,6 +8,7 @@ import {
   streamAssistantMessage,
   fetchVoiceConfig,
   requestVoiceToken,
+  resolveApiBaseUrl,
 } from "@/lib/assistant/client";
 
 describe("Shared Assistant Citations", () => {
@@ -61,6 +62,15 @@ describe("Shared Assistant Citations", () => {
 describe("Shared Assistant API Client", () => {
   beforeEach(() => {
     vi.restoreAllMocks();
+  });
+
+  it("keeps hosted browsers away from a build-time loopback API", () => {
+    expect(resolveApiBaseUrl("http://localhost:8000", "https://mahad-ai-portfolio.pages.dev"))
+      .toBe("https://mahad-ai-portfolio.pages.dev");
+    expect(resolveApiBaseUrl("http://localhost:8000", "http://localhost:3000"))
+      .toBe("http://localhost:8000");
+    expect(resolveApiBaseUrl("https://api.example.com", "https://mahad-ai-portfolio.pages.dev"))
+      .toBe("https://api.example.com");
   });
 
   it("checkAssistantHealth returns true when probe succeeds", async () => {

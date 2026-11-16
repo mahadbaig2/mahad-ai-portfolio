@@ -15,10 +15,25 @@ import {
 
 
 const DEFAULT_API_URL = "http://localhost:8000";
+const LOOPBACK_HOST = /^(localhost|127\.0\.0\.1|\[::1\])$/i;
+
+export function resolveApiBaseUrl(configured: string, pageOrigin: string): string {
+  const page = new URL(pageOrigin);
+  if (LOOPBACK_HOST.test(page.hostname)) return configured;
+  try {
+    if (!LOOPBACK_HOST.test(new URL(configured).hostname)) return configured;
+  } catch {
+    // Invalid build-time setting: keep the request on this site.
+  }
+  return page.origin;
+}
 
 export function getApiBaseUrl(): string {
   if (typeof window !== "undefined") {
-    return process.env.NEXT_PUBLIC_API_URL || DEFAULT_API_URL;
+    const configured = process.env.NEXT_PUBLIC_API_URL || DEFAULT_API_URL;
+    // A static export may be built without its hosted API binding. Never send
+    // requests from a public page to the visitor's own localhost.
+    return resolveApiBaseUrl(configured, window.location.origin);
   }
   return DEFAULT_API_URL;
 }

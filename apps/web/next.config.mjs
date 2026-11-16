@@ -18,7 +18,7 @@ if (fs.existsSync(rootEnvPath) && typeof process.loadEnvFile === 'function') {
 // A static export embeds this value in browser JavaScript. Reject loopback
 // addresses on hosted builds so production chat never silently targets a
 // visitor's own computer.
-if (process.env.CF_PAGES === '1' || process.env.PORTFOLIO_REQUIRE_PUBLIC_API_URL === '1') {
+if (process.env.PORTFOLIO_REQUIRE_PUBLIC_API_URL === '1') {
   let apiUrl;
   try {
     apiUrl = new URL(process.env.NEXT_PUBLIC_API_URL || '');
