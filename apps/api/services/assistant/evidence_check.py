@@ -76,7 +76,9 @@ def evaluate_evidence_node(state: dict[str, Any]) -> dict[str, Any]:
     retrieval_retries = state.get("retrieval_retries", 0)
 
     # Route update based on threshold evaluation (P9.2.5 & P9.3.1-3)
-    if status == "sufficient":
+    if state.get("retrieval_unavailable"):
+        next_route = "refusal"
+    elif status == "sufficient":
         next_route = "grounded_generation"
     elif status == "uncertain":
         next_route = "grade_evidence"

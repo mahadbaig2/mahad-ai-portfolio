@@ -7,6 +7,7 @@ import time
 from collections.abc import Coroutine
 from typing import Any, TypeVar
 
+from apps.api.core.errors import ServiceUnavailableError
 from apps.api.core.resilience import qdrant_breaker
 from apps.api.services.assistant.filter_planner import plan_retrieval_filters
 from apps.api.services.assistant.normalizer import normalize_query
@@ -139,6 +140,7 @@ def retrieve_evidence_node(state: AssistantState) -> dict[str, Any]:
     )
 
     evidence_chunks: list[dict[str, Any]] = []
+    retrieval_unavailable = False
     telemetry_details: dict[str, Any] = {
         "query": effective_query,
         "filters": filters.raw_filters,
@@ -194,8 +196,12 @@ def retrieve_evidence_node(state: AssistantState) -> dict[str, Any]:
                 }
             )
     except Exception as e:
+        retrieval_unavailable = True
         qdrant_breaker.record_failure(e)
-        logger.exception(f"Retrieval service execution failed: {e}")
+        if isinstance(e, ServiceUnavailableError):
+            logger.warning("Retrieval temporarily unavailable: %s", e)
+        else:
+            logger.exception("Retrieval service execution failed")
         telemetry_details["error"] = str(e)
 
     duration_ms = (time.perf_counter() - t0) * 1000.0
@@ -212,5 +218,6 @@ def retrieve_evidence_node(state: AssistantState) -> dict[str, Any]:
     return {
         "retrieval_query": effective_query,
         "evidence_chunks": evidence_chunks,
+        "retrieval_unavailable": retrieval_unavailable,
         "execution_steps": steps,
     }

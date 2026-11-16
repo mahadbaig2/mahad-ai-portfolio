@@ -22,17 +22,33 @@ async def test_health_live_endpoint(client: AsyncClient) -> None:
 
 
 @pytest.mark.asyncio
-async def test_health_ready_endpoint(client: AsyncClient) -> None:
+async def test_health_ready_endpoint(client: AsyncClient, monkeypatch: pytest.MonkeyPatch) -> None:
     """Verify /health/ready returns status and dependency checks."""
+    async def reachable() -> bool:
+        return True
+
+    monkeypatch.setattr("apps.api.db.session.ping_database", reachable)
     response = await client.get("/health/ready")
-    assert response.status_code in (200, 503)
+    assert response.status_code == 200
 
     data = response.json()
     assert data["status"] in ("ready", "not_ready")
     assert "checks" in data
     assert "api_runtime" in data["checks"]
     assert data["checks"]["api_runtime"]["status"] == "ok"
+    assert data["checks"]["database"]["status"] == "ok"
     assert response.status_code == (200 if data["status"] == "ready" else 503)
+
+
+@pytest.mark.asyncio
+async def test_health_ready_reports_database_outage(client: AsyncClient, monkeypatch: pytest.MonkeyPatch) -> None:
+    async def unreachable() -> bool:
+        return False
+
+    monkeypatch.setattr("apps.api.db.session.ping_database", unreachable)
+    response = await client.get("/health/ready")
+    assert response.status_code == 503
+    assert response.json()["checks"]["database"]["status"] == "error"
 
 
 @pytest.mark.asyncio

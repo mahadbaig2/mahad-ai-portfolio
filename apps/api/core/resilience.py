@@ -67,6 +67,10 @@ class CircuitBreaker:
 
     def record_failure(self, error: Exception) -> None:
         """Record a failed dependency invocation."""
+        # Requests rejected by an already-open breaker must not extend its
+        # recovery deadline; otherwise sustained traffic prevents half-open.
+        if self.state == CircuitBreakerState.OPEN:
+            return
         self.last_failure_time = time.monotonic()
         self.failure_count += 1
         logger.warning(

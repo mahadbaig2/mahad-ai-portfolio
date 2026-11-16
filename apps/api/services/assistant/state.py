@@ -43,6 +43,7 @@ class AssistantState(TypedDict):
     confidence: float
     retrieval_query: str
     evidence_chunks: list[dict[str, Any]]
+    retrieval_unavailable: bool
     retrieval_retries: int
     draft_answer: str
     final_answer: str
@@ -81,6 +82,7 @@ def create_initial_state(
         "confidence": 0.0,
         "retrieval_query": input_text,
         "evidence_chunks": [],
+        "retrieval_unavailable": False,
         "retrieval_retries": 0,
         "draft_answer": "",
         "final_answer": "",

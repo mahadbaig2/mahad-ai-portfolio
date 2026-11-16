@@ -1,5 +1,6 @@
 """Health, readiness, liveness, and version route handlers."""
 
+import asyncio
 import platform
 from datetime import UTC, datetime
 
@@ -52,11 +53,18 @@ async def get_readiness(response: Response, settings: Settings = Depends(get_set
         details="Router artifact available" if router_model.is_file() else "Router artifact missing",
     )
 
-    # If in test/development without live DB, report skipped or ok
+    # A configured URL does not mean Neon is reachable. Bound the probe so
+    # readiness remains responsive during cold starts and outages.
     if settings.DATABASE_URL:
+        from apps.api.db.session import ping_database
+
+        try:
+            database_ok = await asyncio.wait_for(ping_database(), timeout=15.0)
+        except TimeoutError:
+            database_ok = False
         checks["database"] = DependencyCheck(
-            status="ok",
-            details="Database connection string configured",
+            status="ok" if database_ok else "error",
+            details="Database reachable" if database_ok else "Database unavailable",
         )
     else:
         checks["database"] = DependencyCheck(

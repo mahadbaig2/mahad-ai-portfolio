@@ -30,6 +30,15 @@ _INJECTION_PATTERNS = [
 
 _COMPILED_INJECTIONS = [re.compile(p, re.IGNORECASE) for p in _INJECTION_PATTERNS]
 
+# The compact router can mistake a short project question for a greeting or an
+# out-of-domain prompt. Known project names require evidence, even when the
+# classifier is confident about a direct response.
+_KNOWN_PROJECT = re.compile(
+    r"\b(?:busyfile|evzino|freqtrade|marketing\s+os|alder\s+legal|"
+    r"cardioscan|verdict\s+ai|aurus\s+books|lispine|talk\s+to\s+mahad)\b",
+    re.IGNORECASE,
+)
+
 
 def validate_input_node(state: AssistantState) -> dict[str, Any]:
     """P9.1.2: Validate input bounds, sanitize control characters, and evaluate safety rules."""
@@ -136,8 +145,10 @@ def classify_query_node(state: AssistantState) -> dict[str, Any]:
     det_res = resolve_deterministic_turn(
         query, prediction.intent.value, prediction.language.value
     )
-    if det_res is not None and route != RouteLabel.REFUSAL.value:
+    if det_res is not None and route != RouteLabel.REFUSAL.value and not _KNOWN_PROJECT.search(query):
         route = RouteLabel.DIRECT_CHAT.value
+    elif _KNOWN_PROJECT.search(query):
+        route = RouteLabel.RAG_RETRIEVAL.value
 
     return {
         "classifier_output": pred_dict,
@@ -217,12 +228,19 @@ def refusal_node(state: AssistantState) -> dict[str, Any]:
                 "I cannot process this query as it violates safety guidelines or attempts system prompt manipulation. "
                 "I am designed to answer factual questions about Mahad's portfolio, architecture, and experience."
             )
+    elif state.get("retrieval_unavailable"):
+        answer = (
+            "The project search service is temporarily unavailable. Please try again shortly; "
+            "I can't verify a factual answer without its sources."
+            if language != "ur"
+            else "Project search service filhal dastiyab nahi hai. Bara-e-karam thori dair baad dobara koshish karein; baghair hawalay ke main tasdeeq shuda jawab nahi de sakta."
+        )
     elif retries > 0 or state.get("grader_decision") == "irrelevant":
         # P9.3.3: Refusal specifically after weak evidence was retrieved
         if language == "ur":
             answer = (
                 f"Mahad ke portfolio mein '{query}' ke mutalliq koi verified maloomat nahi mili. "
-                "Main sirf unke published projects (jaise CardioScan AI, INDKOM) aur engineering decisions ke baray mein bata sakta hoon."
+                "Main sirf unke published projects (jaise CardioScan AI, Busyfile) aur engineering decisions ke baray mein bata sakta hoon."
             )
         else:
             answer = (
@@ -271,13 +289,13 @@ def clarification_node(state: AssistantState) -> dict[str, Any]:
         if language == "ur":
             answer = (
                 f"Aap ke sawal '{query}' ke liye makhsoos technical context nahi mil saka. "
-                "Kya aap wazahat kar sakte hain ke aap kis project (jaise CardioScan AI, INDKOM, ya ML Router) "
+                "Kya aap wazahat kar sakte hain ke aap kis project (jaise CardioScan AI, Busyfile, ya ML Router) "
                 "ya Mahad ke kis skill set ke baray mein maloomat chahte hain?"
             )
         else:
             answer = (
                 f"I searched for '{query}', but couldn't find a precise match in Mahad's portfolio documentation. "
-                "Could you please specify which project (e.g. CardioScan AI, INDKOM Marketing Automation, "
+                "Could you please specify which project (e.g. CardioScan AI, Busyfile, "
                 "or In-Process ML Router) or architectural topic you are inquiring about?"
             )
     else:

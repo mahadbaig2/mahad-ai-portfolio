@@ -10,8 +10,11 @@ Verifies Milestone 9.1:
 
 from uuid import uuid4
 
+import pytest
+
 from apps.api.schemas.assistant import AssistantChatResponse
 from apps.api.schemas.router import IntentLabel, RouteLabel
+from apps.api.services.assistant.evidence_check import evaluate_evidence_node
 from apps.api.services.assistant.graph import (
     create_assistant_graph,
     get_assistant_graph,
@@ -87,6 +90,16 @@ def test_classification_node_onnx_invocation():
     assert result["confidence"] > 0.0
 
 
+@pytest.mark.parametrize("project", ["Busyfile", "Evzino", "Freqtrade", "Marketing OS", "Alder Legal"])
+def test_named_project_question_requires_retrieval(project: str) -> None:
+    state = create_initial_state(f"What is {project}?", str(uuid4()))
+    state["sanitized_query"] = state["input_text"]
+
+    result = classify_query_node(state)
+
+    assert result["route"] == RouteLabel.RAG_RETRIEVAL.value
+
+
 def test_direct_response_node_contact_english():
     """P9.1.4: Direct response node returns deterministic contact information."""
     state = create_initial_state("contact info", str(uuid4()))
@@ -122,6 +135,17 @@ def test_refusal_node_out_of_domain():
     result = refusal_node(state)
 
     assert "outside the scope of Mahad's AI portfolio" in result["final_answer"]
+
+
+def test_retrieval_outage_is_reported_without_rewrite() -> None:
+    state = create_initial_state("What is Busyfile?", str(uuid4()))
+    state["retrieval_unavailable"] = True
+    state["language"] = "en"
+    evidence_result = evaluate_evidence_node(state)
+    assert evidence_result["route"] == RouteLabel.REFUSAL.value
+    response = refusal_node(state)
+    assert "temporarily unavailable" in response["final_answer"]
+    assert response["citations"] == []
 
 
 def test_compiled_graph_traversal_direct_chat():

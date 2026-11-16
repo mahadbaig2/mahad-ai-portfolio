@@ -220,7 +220,7 @@ def test_weak_evidence_clarification_in_domain():
     state["language"] = "en"
     res = clarification_node(state)
     assert "CardioScan AI" in res["final_answer"]
-    assert "INDKOM" in res["final_answer"]
+    assert "Busyfile" in res["final_answer"]
 
 
 # =============================================================================

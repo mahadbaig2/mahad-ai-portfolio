@@ -212,10 +212,13 @@ async def test_circuit_breaker_transitions() -> None:
     # Record 2nd failure -> trips to OPEN
     breaker.record_failure(Exception("Transient failure 2"))
     assert breaker.state == CircuitBreakerState.OPEN
+    recovery_started = breaker.last_failure_time
 
     # While OPEN, check_available raises ServiceUnavailableError
     with pytest.raises(ServiceUnavailableError):
         breaker.check_available()
+    breaker.record_failure(ServiceUnavailableError(message="breaker open"))
+    assert breaker.last_failure_time == recovery_started
 
     # Wait for recovery timeout to transition to HALF_OPEN
     import asyncio

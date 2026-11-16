@@ -27,7 +27,7 @@ Your task is to rewrite the search query into a cleaner, entity-focused semantic
 
 REWRITING RULES:
 1. PRESERVE INTENT: Do not change what the user is asking.
-2. PRESERVE TECHNICAL ENTITIES: Keep specific project names (e.g. CardioScan AI, INDKOM, mimAR Studios), tech stacks (LangGraph, FastAPI, ONNX, Qdrant, Neon), and architectures intact.
+2. PRESERVE TECHNICAL ENTITIES: Keep specific published project names (e.g. CardioScan AI, Busyfile), tech stacks (LangGraph, FastAPI, ONNX, Qdrant, Neon), and architectures intact.
 3. REMOVE FLUFF: Strip conversational pleasantries and conversational framing.
 4. CODE-SWITCHING: If the question is in Roman Urdu, retain key context while clarifying semantic terms.
 5. CONCISE OUTPUT: Return ONLY the rewritten search query string. Do not include quotes, preamble, or explanations.

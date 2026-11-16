@@ -26,7 +26,7 @@ CONTACT_CHANNELS = {
     "linkedin": "https://linkedin.com/in/mahadbaig",
     "github": "https://github.com/mahadbaig2",
     "medium": "https://medium.com/@mirza.mahad",
-    "location": "Remote / Karachi, Pakistan",
+    "location": "Islamabad, Pakistan (originally from Karachi)",
     "contact_page": "/contact",
     "resume_url": "/contact",
 }
@@ -36,22 +36,22 @@ NAVIGATION_PAGES = {
     "work": {
         "title": "Selected Work & Case Studies",
         "url": "/work",
-        "description": "Production AI architectures, case studies, and engineering deliverables.",
+        "description": "Projects and case studies.",
     },
     "blog": {
         "title": "Articles & Engineering Notes",
         "url": "/blog",
-        "description": "Deep-dives into zero-cost cloud ops, in-process ML routing, and RAG evaluation.",
+        "description": "Articles on product design and engineering.",
     },
     "about": {
         "title": "About Mahad Baig",
         "url": "/about",
-        "description": "Career background, technical competencies, and architectural philosophy.",
+        "description": "Background and experience.",
     },
     "contact": {
-        "title": "Contact & Résumé",
+        "title": "Contact Mahad",
         "url": "/contact",
-        "description": "Direct communication channels, profiles, and downloadable résumé.",
+        "description": "Email and social profiles.",
     },
     "chat": {
         "title": "Talk to Mahad Assistant",
@@ -75,7 +75,7 @@ def resolve_contact_lookup(query: str, language: str = "en") -> DeterministicRes
         else:
             answer = (
                 f"You can reach Mahad directly via email at **[{CONTACT_CHANNELS['email']}](mailto:{CONTACT_CHANNELS['email']})**.\n\n"
-                f"He typically responds within 24–48 hours for engineering roles and technical discussions."
+                "You can use this address for engineering roles and technical discussions."
             )
         target = NAVIGATION_PAGES["contact"]
 
@@ -108,13 +108,13 @@ def resolve_contact_lookup(query: str, language: str = "en") -> DeterministicRes
     elif "resume" in q_lower or "cv" in q_lower:
         if language == "ur":
             answer = (
-                f"Mahad ka updated résumé download karne ke liye unke **[Contact & Résumé Page](/contact)** par visit karein.\n\n"
+                f"Résumé ke liye Mahad se **[contact page](/contact)** par rabta karein.\n\n"
                 f"- **Email**: [{CONTACT_CHANNELS['email']}](mailto:{CONTACT_CHANNELS['email']})\n"
                 f"- **Location**: {CONTACT_CHANNELS['location']}"
             )
         else:
             answer = (
-                f"You can review and download Mahad's complete professional résumé directly from the **[Contact & Résumé Page](/contact)**.\n\n"
+                f"Please contact Mahad through the **[Contact page](/contact)** to request his résumé.\n\n"
                 f"- **Location**: {CONTACT_CHANNELS['location']}\n"
                 f"- **Direct Email**: [{CONTACT_CHANNELS['email']}](mailto:{CONTACT_CHANNELS['email']})"
             )
@@ -130,7 +130,7 @@ def resolve_contact_lookup(query: str, language: str = "en") -> DeterministicRes
                 f"- **GitHub**: [github.com/mahadbaig2]({CONTACT_CHANNELS['github']})\n"
                 f"- **Medium / Articles**: [medium.com/@mirza.mahad]({CONTACT_CHANNELS['medium']})\n"
                 f"- **Location**: {CONTACT_CHANNELS['location']}\n\n"
-                "Mazeed details aur résumé ke liye **[/contact](/contact)** page visit karein."
+                "Mazeed details ke liye **[/contact](/contact)** page visit karein."
             )
         else:
             answer = (
@@ -140,7 +140,7 @@ def resolve_contact_lookup(query: str, language: str = "en") -> DeterministicRes
                 f"- **GitHub**: [github.com/mahadbaig2]({CONTACT_CHANNELS['github']})\n"
                 f"- **Medium Articles**: [medium.com/@mirza.mahad]({CONTACT_CHANNELS['medium']})\n"
                 f"- **Location**: {CONTACT_CHANNELS['location']}\n\n"
-                "Visit the **[/contact](/contact)** page to download his résumé or send an inquiry."
+                "Visit the **[/contact](/contact)** page to get in touch."
             )
         target = NAVIGATION_PAGES["contact"]
 
@@ -214,7 +214,7 @@ def resolve_navigation_lookup(
                 "Highlights include:\n"
                 "- **Mahad AI Portfolio**: Inspectable RAG, ONNX routing, and budget-constrained architecture.\n"
                 "- **CardioScan AI**: Deep learning echocardiography proof-of-concept.\n"
-                "- **INDKOM Platform**: High-throughput automated marketing pipeline.\n\n"
+                "- **Busyfile**: Accounting product workflows.\n\n"
                 "Aap kisi bhi project par click karke uski deep architecture aur trade-offs parh sakte hain."
             )
         else:
@@ -223,7 +223,7 @@ def resolve_navigation_lookup(
                 "Featured case studies include:\n"
                 "- **Mahad AI Portfolio**: Inspectable RAG system with in-process ML routing on $0 cloud budget.\n"
                 "- **CardioScan AI**: Academic proof-of-concept for automated cardiac view interpretation.\n"
-                "- **INDKOM Automation Platform**: Multi-channel marketing engine with resilient queueing.\n\n"
+                "- **Busyfile**: Accounting product workflows.\n\n"
                 "Click on any project card to inspect system topology, metrics, and key architectural decisions."
             )
         actions = [
