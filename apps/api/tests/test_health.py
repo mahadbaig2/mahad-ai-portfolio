@@ -25,13 +25,14 @@ async def test_health_live_endpoint(client: AsyncClient) -> None:
 async def test_health_ready_endpoint(client: AsyncClient) -> None:
     """Verify /health/ready returns status and dependency checks."""
     response = await client.get("/health/ready")
-    assert response.status_code == 200
+    assert response.status_code in (200, 503)
 
     data = response.json()
     assert data["status"] in ("ready", "not_ready")
     assert "checks" in data
     assert "api_runtime" in data["checks"]
     assert data["checks"]["api_runtime"]["status"] == "ok"
+    assert response.status_code == (200 if data["status"] == "ready" else 503)
 
 
 @pytest.mark.asyncio

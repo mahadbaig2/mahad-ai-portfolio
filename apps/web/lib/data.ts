@@ -123,6 +123,38 @@ export const PROJECTS: Project[] = [
       { label: "Uptime", value: "99.98%" },
     ],
   },
+  {
+    slug: "evzino", title: "Evzino", tagline: "Fitness journeys, live classes and coaching in one product", role: "Product team", year: "2026",
+    technologies: ["Next.js", "React", "Supabase", "Stripe"],
+    summary: "Evzino brings onboarding, live-class booking, coaching and checkout into a connected fitness experience. The repository includes product flows for members and coaches.",
+    problem: "Fitness journeys often break between sign-up, guidance, booking and payment.",
+    architecture: "The Next.js application includes onboarding, class reservation, member authentication, checkout and coach-facing routes.",
+    decisions: ["Keep the member journey connected across onboarding and booking.", "Provide distinct flows for members and coaches."], metrics: [], githubUrl: "https://github.com/asadnaqvii/Evzino-Web",
+  },
+  {
+    slug: "marketing-os", title: "Marketing OS", tagline: "Growth analytics and an AI ad lab across products", role: "Product team", year: "2026",
+    technologies: ["Next.js", "Supabase", "React", "AI"],
+    summary: "A product-keyed growth workspace that brings acquisition, funnel, retention, referrals and campaign analysis together with an evidence-aware AI assistant and ad lab. Evzino is its first connected product.",
+    problem: "Growth decisions need a shared view of spend, activation, retention and reliable data.",
+    architecture: "Next.js routes read from a separate Supabase database. Role checks guard reports, while the assistant uses dashboard reports and cannot mutate data.",
+    decisions: ["Keep each product's data separated by product key.", "Gate AI recommendations on supplied evidence and human review."], metrics: [], githubUrl: "https://github.com/asadnaqvii/marketingOS",
+  },
+  {
+    slug: "freqtrade", title: "Freqtrade Implementation", tagline: "A cryptocurrency trading automation playground", role: "Project contributor", year: "2026",
+    technologies: ["Python", "Freqtrade"],
+    summary: "An implementation of Freqtrade with strategy configuration, backtesting, risk controls, dry-run trading and a dashboard. It is presented as an experimentation project, not investment performance evidence.",
+    problem: "Trading strategies need a controlled path from configuration to historical testing and paper trading.",
+    architecture: "Python setup and configuration tools wrap Freqtrade strategies, exchange settings and monitoring.",
+    decisions: ["Document dry-run as the recommended first mode.", "Separate backtesting and live trading paths."], metrics: [], githubUrl: "https://github.com/asadnaqvii/Freqtrade-implementation",
+  },
+  {
+    slug: "alder-legal", title: "Alder Legal", tagline: "A connected legal operations workspace", role: "Product team", year: "2026",
+    technologies: ["Next.js", "FastAPI", "Supabase", "LangGraph"],
+    summary: "Presented as Alder Legal, this controlled pilot connects client intake, staff workflows, a WhatsApp inbox and scoped AI assistance. The portfolio demonstration uses mock data; pilot capabilities and remaining acceptance work are kept distinct.",
+    problem: "Legal intake and follow-up can scatter conversations, ownership and next actions across tools.",
+    architecture: "A Next.js interface and FastAPI service connect Supabase records, a private knowledge index and carefully bounded assistant workflows.",
+    decisions: ["Escalate unknown questions and legal advice to staff.", "Keep synthetic demonstration data separate from real client records."], metrics: [], githubUrl: "https://github.com/mahadbaig2/sak_os",
+  },
 ];
 
 export const ARTICLES: Article[] = [

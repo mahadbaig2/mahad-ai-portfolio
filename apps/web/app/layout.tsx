@@ -1,32 +1,10 @@
 import type { Metadata, Viewport } from "next";
-import { Chivo, Hanken_Grotesk, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
-import { AnnouncementBar } from "@/components/AnnouncementBar";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { AssistantWidgetProvider } from "@/components/assistant/AssistantWidgetContext";
 import { AssistantWidget } from "@/components/assistant/AssistantWidget";
 
-const chivo = Chivo({
-  subsets: ["latin"],
-  variable: "--font-chivo",
-  display: "swap",
-  weight: ["400", "600", "700", "800", "900"],
-});
-
-const hankenGrotesk = Hanken_Grotesk({
-  subsets: ["latin"],
-  variable: "--font-hanken-grotesk",
-  display: "swap",
-  weight: ["300", "400", "500", "600", "700"],
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  variable: "--font-jetbrains-mono",
-  display: "swap",
-  weight: ["400", "500", "600", "700"],
-});
 
 export const metadata: Metadata = {
   title: "Mirza Mahad Baig // AI Product Engineer",
@@ -58,14 +36,13 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${chivo.variable} ${hankenGrotesk.variable} ${jetbrainsMono.variable} scroll-smooth`}
+      className="scroll-smooth"
     >
       <body
         suppressHydrationWarning
         className="min-h-screen bg-background font-sans text-on-surface antialiased selection:bg-tertiary-container selection:text-on-tertiary"
       >
         <AssistantWidgetProvider>
-          <AnnouncementBar />
           <Header />
           <main className="min-h-[calc(100vh-160px)]">{children}</main>
           <Footer />

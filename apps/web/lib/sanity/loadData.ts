@@ -15,6 +15,16 @@ import {
   faqsQuery,
 } from './queries';
 import { PROJECTS, ARTICLES, type Project, type Article } from '@/lib/data';
+import { SHOWCASE } from '@/lib/showcase';
+
+function localProject(slug: string): Project | undefined {
+  const existing = PROJECTS.find((project) => project.slug === slug);
+  if (existing) return existing;
+  const item = SHOWCASE.find((project) => project.slug === slug);
+  if (!item) return undefined;
+  return { slug, title: item.title, tagline: item.line, role: 'Project', year: '', technologies: [],
+    summary: item.line, problem: '', architecture: '', decisions: [], metrics: [] };
+}
 
 export interface CmsProject extends Project {
   heroImage?: any;
@@ -549,7 +559,7 @@ export async function getFeaturedProjects(): Promise<CmsProject[]> {
  */
 export async function getProject(slug: string): Promise<CmsProject | undefined> {
   if (!isSanityConfigured()) {
-    return (PROJECTS as CmsProject[]).find((p) => p.slug === slug);
+    return localProject(slug);
   }
 
   const p = await sanityFetch<any>({
@@ -560,7 +570,7 @@ export async function getProject(slug: string): Promise<CmsProject | undefined> 
   });
 
   if (!p) {
-    return (PROJECTS as CmsProject[]).find((proj) => proj.slug === slug);
+    return localProject(slug);
   }
 
   return {

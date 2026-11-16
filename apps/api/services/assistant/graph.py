@@ -207,14 +207,14 @@ def run_assistant_turn(
         # Bounded fallback on unexpected runtime error
         return AssistantChatResponse(
             session_id=UUID(session_id),
-            answer="I encountered an unexpected internal error. Please try again.",
+            answer="The assistant is temporarily unavailable. Please try again later.",
             citations=[],
             route=RouteLabel.REFUSAL,
             language=LanguageLabel.EN,
             is_safe=False,
             mode=AssistantMode(mode),
             execution_steps=[],
-            errors=[str(e)],
+            errors=["ASSISTANT_UNAVAILABLE"],
         )
 
     # P9.3.7: Safe retrieval event persistence (non-fatal)

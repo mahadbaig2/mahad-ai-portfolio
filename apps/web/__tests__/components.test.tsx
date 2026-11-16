@@ -39,7 +39,7 @@ describe("Content Data Integrity", () => {
       expect(project.slug).toBeTruthy();
       expect(project.title).toBeTruthy();
       expect(project.summary).toBeTruthy();
-      expect(project.metrics.length).toBeGreaterThan(0);
+      expect(Array.isArray(project.metrics)).toBe(true);
       expect(slugs.has(project.slug)).toBe(false);
       slugs.add(project.slug);
     }
