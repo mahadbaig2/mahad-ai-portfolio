@@ -8,45 +8,48 @@ import { PortableText } from '@/components/PortableText';
 
 export async function generateStaticParams() {
   const projects = await getProjects();
-  const slugs = new Set([...projects.map((p) => p.slug), ...PROJECTS.map((p) => p.slug), ...SHOWCASE.map((p) => p.slug).filter((slug): slug is string => Boolean(slug))]);
-  return Array.from(slugs).map((slug) => ({ slug }));
+  const slugs = new Set([...projects.map((project) => project.slug), ...PROJECTS.map((project) => project.slug), ...SHOWCASE.map((project) => project.slug).filter((slug): slug is string => Boolean(slug))]);
+  return [...slugs].filter((slug) => !/indkom/i.test(slug)).map((slug) => ({ slug }));
 }
 
-export async function generateMetadata({ params }: { params: Promise<{slug: string}> }) {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const project = await getProject(slug);
   return { title: project ? `${project.title} | Mirza Mahad Baig` : 'Project not found', description: project?.summary };
 }
 
-export default async function CaseStudyPage({ params }: { params: Promise<{slug: string}> }) {
+export default async function CaseStudyPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const [project, study] = await Promise.all([getProject(slug), getCaseStudy(slug)]);
   if (!project) notFound();
-  const section = SHOWCASE.find((item) => item.slug === slug)?.kind;
-  const facts = [project.role, project.year, ...(project.technologies || [])].filter(Boolean);
-  return <div className="portfolio-shell case-page">
+  const facts = [project.role, project.year, ...(project.technologies || []).slice(0, 5)].filter(Boolean);
+  const supportedResults = study?.quantitativeResults?.filter((result) => result.methodology?.trim()) || [];
+  const lessons = study?.lessonsLearned?.length ? study.lessonsLearned : project.lessonsLearned;
+  const distinctLessons = JSON.stringify(lessons) === JSON.stringify(project.decisions) ? undefined : lessons;
+
+  return <div className="folio-page case-study-page">
     <main>
-      <section className="case-hero">
-        <Link href="/work" className="case-back"><ArrowLeft size={17}/> All work</Link>
-        <div><p>{section || 'Selected work'}</p><h1>{project.title}</h1><strong>{project.tagline}</strong></div>
-      </section>
-      <div className="case-placeholder" role="img" aria-label={`Placeholder image for ${project.title}`}><span>Project imagery coming soon</span><strong>{project.title}</strong></div>
-      <div className="case-content">
-        <div className="case-intro"><h2>{study?.summary || project.summary}</h2><div className="case-facts">{facts.map((fact) => <span key={fact}>{fact}</span>)}</div></div>
-        {(study?.contextAndProblem || project.problem) && <section><h2>The challenge</h2><CaseBody value={study?.contextAndProblem || project.problem}/></section>}
-        {(study?.engineeringApproach || project.architecture) && <section><h2>The approach</h2><CaseBody value={study?.engineeringApproach || project.architecture}/></section>}
-        {!!project.decisions?.length && <section><h2>Decisions that mattered</h2><ul>{project.decisions.map((decision) => <li key={decision}>{decision}</li>)}</ul></section>}
-        {!!study?.quantitativeResults?.length && <section><h2>Reported outcomes</h2><div className="case-results">{study.quantitativeResults.map((result) => <div key={result.metric}><strong>{result.result}</strong><span>{result.metric}</span></div>)}</div></section>}
-        {project.githubUrl && <a className="case-source" href={project.githubUrl} target="_blank" rel="noreferrer">Explore the repository <ArrowUpRight size={18}/></a>}
-        {project.liveUrl && <a className="case-source" href={project.liveUrl} target="_blank" rel="noreferrer">Open the product <ArrowUpRight size={18}/></a>}
+      <header className="case-hero folio-panel"><Link href="/work" className="case-back"><ArrowLeft size={17}/> All work</Link><div><h1>{project.title}</h1><p>{project.tagline || project.summary}</p></div></header>
+      <div className="case-placeholder folio-panel folio-placeholder" role="img" aria-label={`Image placeholder for ${project.title}`} />
+      <div className="case-content folio-panel">
+        <div className="case-intro"><h2>{study?.summary || project.summary}</h2>{facts.length > 0 && <p className="case-facts">{facts.join(' · ')}</p>}</div>
+        <CaseSection title="The challenge" value={study?.contextAndProblem || project.problem}/>
+        <CaseSection title="The approach" value={study?.engineeringApproach || project.engineeringApproach || project.architecture}/>
+        <CaseSection title="My contribution" value={project.responsibilities}/>
+        <CaseSection title="Constraints" value={project.constraints}/>
+        <CaseSection title="Design process" value={project.designProcess}/>
+        <CaseSection title="Technical decisions" value={project.keyDecisions?.length ? project.keyDecisions : project.decisions}/>
+        <CaseSection title="Trade-offs" value={study?.tradeOffsAndFailures || project.tradeOffs}/>
+        {supportedResults.length > 0 && <section className="case-section"><h2>Measured outcomes</h2><div className="case-results">{supportedResults.map((result) => <div key={result.metric}><strong>{result.result}</strong><span>{result.metric}</span><p>{result.methodology}</p></div>)}</div></section>}
+        <CaseSection title="What I learned" value={distinctLessons}/>
+        <div className="case-links">{project.githubUrl && <a className="folio-link" href={project.githubUrl} target="_blank" rel="noreferrer">Explore the repository <ArrowUpRight size={18}/></a>}{project.liveUrl && <a className="folio-link" href={project.liveUrl} target={project.liveUrl.startsWith('http') ? '_blank' : undefined} rel="noreferrer">Open the product <ArrowUpRight size={18}/></a>}</div>
       </div>
-      <div className="case-next"><Link href="/work">Explore more work <ArrowUpRight size={21}/></Link></div>
+      <div className="case-next folio-panel"><Link href="/work">More work <ArrowUpRight size={23}/></Link></div>
     </main>
   </div>;
 }
 
-function CaseBody({ value }: { value: unknown }) {
-  if (typeof value === 'string') return <p>{value}</p>;
-  if (Array.isArray(value)) return <PortableText value={value}/>;
-  return null;
+function CaseSection({ title, value }: { title: string; value: unknown }) {
+  if (!value || (Array.isArray(value) && value.length === 0)) return null;
+  return <section className="case-section"><h2>{title}</h2><div className="case-section-body">{typeof value === 'string' ? <p>{value}</p> : Array.isArray(value) && value.every((item) => typeof item === 'string') ? <ul>{value.map((item) => <li key={item}>{item}</li>)}</ul> : Array.isArray(value) ? <PortableText value={value}/> : null}</div></section>;
 }

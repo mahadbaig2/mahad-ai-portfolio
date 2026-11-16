@@ -8,7 +8,7 @@ const links = [
   { label: "Work", href: "/work" },
   { label: "About", href: "/about" },
   { label: "Writing", href: "/writing" },
-  { label: "Playground", href: "/playground" },
+  { label: "Travel", href: "/travel" },
   { label: "Contact", href: "/contact" },
 ];
 
@@ -17,7 +17,7 @@ export function Header() {
   const [open, setOpen] = useState(false);
   return <header className="new-header">
     <div className="new-header-inner">
-      <Link className="new-brand" href="/" onClick={() => setOpen(false)}>Mirza Mahad Baig<span>✱</span></Link>
+      <Link className="new-brand" href="/" onClick={() => setOpen(false)}>Mirza Mahad Baig<span className="brand-mark" aria-hidden="true" /></Link>
       <nav aria-label="Main navigation" className={open ? "new-nav is-open" : "new-nav"}>
         {links.map(({label, href}) => <Link onClick={() => setOpen(false)} aria-current={path === href ? "page" : undefined} href={href} key={href}>{label}</Link>)}
         <Link className="new-chat" href="/chat" onClick={() => setOpen(false)}>Talk to Mahad <ArrowUpRight size={16}/></Link>

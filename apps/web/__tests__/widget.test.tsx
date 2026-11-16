@@ -136,7 +136,7 @@ describe("5-Second Automatic Invitation (Section 17)", () => {
       vi.advanceTimersByTime(1);
     });
     expect(screen.getByRole("complementary", { name: /Assistant Inquiry Invitation/i })).toBeDefined();
-    expect(screen.getByText(/Looking for something specific\?/i)).toBeDefined();
+    expect(screen.getByText(/Ask about my work/i)).toBeDefined();
 
     // Full panel does not auto-open and obstruct content
     expect(screen.queryByRole("region", { name: /Talk to Mahad conversational companion/i })).toBeNull();

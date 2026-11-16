@@ -1,31 +1,30 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { ArrowUpRight } from 'lucide-react';
-import { getProjects } from '@/lib/sanity/loadData';
-import { SHOWCASE } from '@/lib/showcase';
-import { PROJECTS } from '@/lib/data';
+import { getProject, getProjects, type CmsProject } from '@/lib/sanity/loadData';
 
 export const metadata: Metadata = {
   title: 'Work | Mirza Mahad Baig',
-  description: 'Production systems, product design and applied AI projects by Mirza Mahad Baig.',
+  description: 'Products, interfaces and AI systems by Mirza Mahad Baig.',
 };
 
+const selectedSlugs = ['busyfile', 'talk-to-mahad', 'cardioscan-ai', 'evzino', 'alder-legal', 'marketing-os', 'freqtrade'];
+
 export default async function WorkPage() {
-  const cmsProjects = await getProjects();
-  const entries = SHOWCASE.map((item) => ({ ...item, slug: [...cmsProjects, ...PROJECTS].some((project) => project.slug === item.slug) ? item.slug : undefined }));
-  const extras = cmsProjects.filter((project) => !SHOWCASE.some((item) => item.slug === project.slug));
-  return <div className="portfolio-shell work-index">
-    <header className="work-index-hero"><h1>Work that holds up <em>in the real world.</em></h1><p>Products, systems and experiments. Each one reflects a different problem worth solving.</p></header>
-    <main className="portfolio-work">
-      {(['Production systems', 'Side projects & playground'] as const).map((kind) => <section key={kind}>
-        <div className="portfolio-section-head"><h2>{kind === 'Production systems' ? 'Production systems.' : 'Side projects & playground.'}</h2></div>
-        <div className="portfolio-grid">
-          {entries.filter((item) => item.kind === kind).map((item) => <article className="portfolio-card" key={item.title}>
-            {item.slug ? <Link href={`/work/${item.slug}`}><div className="portfolio-card-art" role="img" aria-label={`Placeholder image for ${item.title}`}><span>{item.image}</span><strong>{item.title}</strong></div><div className="portfolio-card-copy"><div><h3>{item.title}</h3><p>{item.line}</p></div><ArrowUpRight size={21}/></div></Link> : <><div className="portfolio-card-art" role="img" aria-label={`Placeholder image for ${item.title}`}><span>{item.image}</span><strong>{item.title}</strong></div><div className="portfolio-card-copy"><div><h3>{item.title}</h3><p>{item.line}</p></div></div></>}
-          </article>)}
-        </div>
-      </section>)}
-      {extras.length > 0 && <section><div className="portfolio-section-head"><h2>More work.</h2></div><div className="portfolio-grid">{extras.map((project) => <Link className="portfolio-card" key={project.slug} href={`/work/${project.slug}`}><div className="portfolio-card-art"><strong>{project.title}</strong></div><div className="portfolio-card-copy"><div><h3>{project.title}</h3><p>{project.tagline}</p></div><ArrowUpRight size={21}/></div></Link>)}</div></section>}
+  const [cmsProjects, selected] = await Promise.all([getProjects(), Promise.all(selectedSlugs.map(getProject))]);
+  const selectedProjects = selected.filter((project): project is CmsProject => Boolean(project));
+  const remaining = cmsProjects.filter((project) => !selectedSlugs.includes(project.slug));
+  const projects = [...selectedProjects, ...remaining];
+
+  return <div className="folio-page work-page">
+    <header className="folio-page-hero folio-panel"><h1>Work, in many forms.</h1><p>Products, interfaces, experiments and AI systems. Open a project to see the problem, decisions and source.</p></header>
+    <main className="work-main">
+      <div className="folio-section-heading"><h2>Projects</h2><span>{projects.length} selected</span></div>
+      <div className="work-grid">{projects.map((project, index) => <Link className={`work-tile folio-panel work-tile-${index % 4}`} href={`/work/${project.slug}`} key={project.slug}>
+        <div className="work-tile-art folio-placeholder" role="img" aria-label={`Image placeholder for ${project.title}`}/>
+        <div className="work-tile-copy"><h3>{project.title}</h3>{index < 2 && <p>{project.tagline || project.summary}</p>}<ArrowUpRight size={22} aria-hidden="true"/></div>
+      </Link>)}</div>
     </main>
+    <section className="work-end folio-panel"><h2>Want the full picture?</h2><Link className="folio-link folio-link-light" href="/about">About my approach <ArrowUpRight size={18}/></Link></section>
   </div>;
 }

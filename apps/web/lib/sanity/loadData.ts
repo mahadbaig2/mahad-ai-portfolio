@@ -501,7 +501,7 @@ export async function getProjects(): Promise<CmsProject[]> {
     return PROJECTS as CmsProject[];
   }
 
-  return cmsProjects.map((p) => ({
+  return cmsProjects.filter((p) => !/indkom/i.test(`${p.slug || ''} ${p.title || ''}`)).map((p) => ({
     slug: p.slug,
     title: p.title,
     tagline: p.subtitle || p.tagline || '',
@@ -558,6 +558,7 @@ export async function getFeaturedProjects(): Promise<CmsProject[]> {
  * Fetch a single project by slug with fallback.
  */
 export async function getProject(slug: string): Promise<CmsProject | undefined> {
+  if (/indkom/i.test(slug)) return undefined;
   if (!isSanityConfigured()) {
     return localProject(slug);
   }
@@ -569,7 +570,7 @@ export async function getProject(slug: string): Promise<CmsProject | undefined> 
     revalidate: 60,
   });
 
-  if (!p) {
+  if (!p || /indkom/i.test(`${p.slug || ''} ${p.title || ''}`)) {
     return localProject(slug);
   }
 

@@ -7,8 +7,12 @@ export const metadata: Metadata = { title: 'Writing | Mirza Mahad Baig', descrip
 
 export default async function WritingPage() {
   const articles = await getArticles();
-  return <div className="portfolio-shell editorial-page"><main>
-    <section className="editorial-hero"><p>Writing</p><h1>Thinking out loud <em>about building.</em></h1><div className="editorial-hero-bottom"><span>Notes on product work, engineering and applied AI.</span></div></section>
-    <section className="editorial-list"><h2>Latest writing</h2><div>{articles.map((article) => <Link className="writing-row" href={`/writing/${article.slug}`} key={article.slug}><div><h3>{article.title}</h3><p>{article.summary}</p></div><ArrowUpRight size={23}/></Link>)}</div></section>
-  </main></div>;
+  const [featured, ...rest] = articles;
+  return <div className="folio-page writing-page">
+    <header className="folio-page-hero folio-panel"><h1>Thinking out loud about building.</h1><p>Ideas, decisions and lessons from product design and AI engineering.</p></header>
+    <main>
+      {featured && <Link className="writing-feature folio-panel" href={`/writing/${featured.slug}`}><div className="writing-feature-art folio-placeholder" role="img" aria-label={`Image placeholder for ${featured.title}`}/><div><h2>{featured.title}</h2><p>{featured.summary}</p><span className="folio-link">Read article <ArrowUpRight size={18}/></span></div></Link>}
+      {rest.length > 0 && <div className="writing-list folio-panel">{rest.map((article) => <Link href={`/writing/${article.slug}`} key={article.slug}><h2>{article.title}</h2><ArrowUpRight size={22} aria-hidden="true"/></Link>)}</div>}
+    </main>
+  </div>;
 }

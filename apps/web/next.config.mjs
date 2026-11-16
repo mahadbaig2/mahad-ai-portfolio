@@ -15,6 +15,21 @@ if (fs.existsSync(rootEnvPath) && typeof process.loadEnvFile === 'function') {
   }
 }
 
+// A static export embeds this value in browser JavaScript. Reject loopback
+// addresses on hosted builds so production chat never silently targets a
+// visitor's own computer.
+if (process.env.CF_PAGES === '1' || process.env.PORTFOLIO_REQUIRE_PUBLIC_API_URL === '1') {
+  let apiUrl;
+  try {
+    apiUrl = new URL(process.env.NEXT_PUBLIC_API_URL || '');
+  } catch {
+    throw new Error('NEXT_PUBLIC_API_URL must be a public HTTPS API URL for deployment.');
+  }
+  if (apiUrl.protocol !== 'https:' || ['localhost', '127.0.0.1', '0.0.0.0', '[::1]'].includes(apiUrl.hostname)) {
+    throw new Error('NEXT_PUBLIC_API_URL must be a public HTTPS API URL for deployment.');
+  }
+}
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'export',
