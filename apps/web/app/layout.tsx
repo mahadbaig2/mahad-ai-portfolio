@@ -77,7 +77,7 @@ export default function RootLayout({
       >
         <AssistantWidgetProvider>
           <Header />
-          <main className="min-h-[calc(100vh-160px)] pt-20">{children}</main>
+          <main className="min-h-[calc(100vh-160px)] pt-28">{children}</main>
           <Footer />
           <AssistantWidget />
         </AssistantWidgetProvider>
