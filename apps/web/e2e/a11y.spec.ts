@@ -20,6 +20,8 @@ test.describe("Accessibility (WCAG 2.1 AA Compliance)", () => {
     "/writing",
     "/writing/architecting-an-intentionally-over-engineered-portfolio",
     "/playground",
+    "/travel",
+    "/travel/the-road-to-khunjerab",
     "/blog",
     "/blog/architecting-an-intentionally-over-engineered-portfolio",
     "/blog/i-decided-my-portfolio-should-be-the-project",

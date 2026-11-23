@@ -401,7 +401,7 @@ function ConversationalVoiceContent() {
           <span>Continue in text chat</span>
         </button>
 
-        <p className="text-[10px] text-muted-foreground/70 leading-relaxed">
+        <p className="text-[10px] text-muted-foreground leading-relaxed">
           AI-generated synthetic voice. Spoken answers are strictly grounded in portfolio records.
         </p>
       </div>
