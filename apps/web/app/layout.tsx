@@ -1,29 +1,40 @@
 import type { Metadata, Viewport } from "next";
-import { Newsreader, Manrope, JetBrains_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { AssistantWidgetProvider } from "@/components/assistant/AssistantWidgetContext";
 import { AssistantWidget } from "@/components/assistant/AssistantWidget";
 
-const newsreader = Newsreader({
-  subsets: ["latin"],
-  weight: ["400", "500"],
-  style: ["normal", "italic"],
+const newsreader = localFont({
+  src: [
+    {
+      path: "./fonts/newsreader-latin.woff2",
+      weight: "400 600",
+      style: "normal",
+    },
+    {
+      path: "./fonts/newsreader-latin-italic.woff2",
+      weight: "400 500",
+      style: "italic",
+    },
+  ],
   variable: "--font-newsreader",
   display: "swap",
 });
 
-const manrope = Manrope({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+const manrope = localFont({
+  src: "./fonts/manrope-latin.woff2",
+  weight: "400 700",
+  style: "normal",
   variable: "--font-manrope",
   display: "swap",
 });
 
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500"],
+const jetbrainsMono = localFont({
+  src: "./fonts/jetbrains-mono-latin.woff2",
+  weight: "400 600",
+  style: "normal",
   variable: "--font-jetbrains-mono",
   display: "swap",
 });
