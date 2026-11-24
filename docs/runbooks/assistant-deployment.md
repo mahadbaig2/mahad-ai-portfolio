@@ -12,23 +12,17 @@ files in `deploy/huggingface-api`. Set its SDK to Docker and build with a pinned
 installs CPU-only PyTorch, embeds the public E5 model, verifies the champion
 ONNX router and serves Uvicorn on port 7860.
 
-**Current hosting blocker (2026-11-24):** Hugging Face rejected changing that
+**Current hosting blocker (2026-11-24):** Hugging Face rejected changing the
 existing ZeroGPU Space to CPU Basic and rejected creating a new Docker Space
 with HTTP 402. Its current plan requires a PRO subscription for CPU Basic
-Docker hosting. Do not add a paid plan without Mahad's decision. Render's free
-service has 512 MB RAM; the current local API process used approximately 968 MB
-after loading the retrieval model, so deploying it there unchanged would risk
-an out-of-memory restart. No public API URL has been verified yet.
-
-The `deploy/huggingface-api/gradio` directory is an experimental alternative
-for the existing ZeroGPU Space: Hugging Face documents serving a custom Python
-server on port 7860 under the Gradio SDK as an unofficial workflow. Upload its
-four self-contained files to the Space root, set the
-`SOURCE_COMMIT` Space variable to the reviewed Git SHA, and keep the Gradio SDK
-in the Space README. ZeroGPU supplies a supported PyTorch build; do not install
-a separate torch wheel there. Verify build, health, and a cited chat response before
-configuring Pages. This path needs no paid plan, but its behavior on ZeroGPU
-has not yet been verified.
+Docker hosting. A Gradio SDK build of the CPU-only API reached startup, but
+ZeroGPU rejected it because no GPU function was registered. The Space was
+restored to its original files and has no running API. Do not use a dummy GPU
+function to bypass this hosting restriction. Render's free service has 512 MB
+RAM; the current local API process used approximately 968 MB after loading the
+retrieval model, so deploying it there unchanged would risk an out-of-memory
+restart. No public API URL has been verified yet. A compatible host with enough
+memory or a paid CPU Basic plan is required before connecting Cloudflare Pages.
 
 Set these **Space secrets** in Hugging Face, without putting values in Git:
 
