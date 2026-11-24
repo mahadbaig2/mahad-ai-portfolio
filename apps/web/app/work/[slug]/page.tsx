@@ -74,7 +74,7 @@ export default async function CaseStudyPage({
             )}
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-2">
+          <div className="case-meta grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-2">
             {project.role && <div className="bg-surface-white rounded-xl border border-hairline/80 p-4 shadow-editorial-sm flex flex-col justify-between">
               <span className="font-mono text-[11px] uppercase tracking-wider text-muted-text">
                 Role

@@ -80,6 +80,21 @@
   background: #eaf3ed;
 }
 
+.case-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 16px 32px;
+}
+
+.case-meta > div {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+}
+
 @keyframes hero-arrive {
   from {
     opacity: 0;
