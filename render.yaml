@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: mahad-ai-portfolio-api
+    runtime: docker
+    plan: free
+    repo: https://github.com/mahadbaig2/mahad-ai-portfolio
+    branch: main
+    dockerfilePath: ./deploy/render/Dockerfile
+    dockerContext: .
+    healthCheckPath: /health/ready
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: CORS_ORIGINS
+        value: https://mahad-ai-portfolio.pages.dev

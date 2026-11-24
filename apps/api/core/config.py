@@ -130,6 +130,7 @@ class Settings(BaseSettings):
     # Runtime & Service Metadata
     # --------------------------------------------------------------------------
     ENVIRONMENT: Literal["development", "test", "staging", "production"] = "development"
+    RETRIEVAL_BACKEND: Literal["qdrant", "lexical"] = "qdrant"
     LOG_LEVEL: Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"] = "INFO"
     PORT: int = Field(default=8000, ge=1, le=65535)
     APP_NAME: str = "Mahad AI Portfolio API"

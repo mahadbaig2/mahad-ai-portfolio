@@ -93,14 +93,19 @@ async def _execute_runtime_retrieval(
         expire_on_commit=False,
         autoflush=False,
     )
-    vector_provider = QdrantVectorProvider()
+    vector_provider = QdrantVectorProvider() if settings.RETRIEVAL_BACKEND == "qdrant" else None
     try:
         async with local_sessionmaker() as session:
-            service = RetrievalService(
-                session=session,
-                vector_provider=vector_provider,
-                embedder=_get_shared_embedder(),
-            )
+            if settings.RETRIEVAL_BACKEND == "lexical":
+                from apps.api.services.lexical_retrieval import LexicalRetrievalService
+
+                service = LexicalRetrievalService(session)
+            else:
+                service = RetrievalService(
+                    session=session,
+                    vector_provider=vector_provider,
+                    embedder=_get_shared_embedder(),
+                )
             return await service.retrieve(
                 query=query,
                 top_k=top_k,
@@ -110,7 +115,7 @@ async def _execute_runtime_retrieval(
                 language=language,
             )
     finally:
-        if hasattr(vector_provider, "close"):
+        if vector_provider is not None:
             await vector_provider.close()
         await local_engine.dispose()
 
@@ -149,9 +154,13 @@ def retrieve_evidence_node(state: AssistantState) -> dict[str, Any]:
     }
 
     retrieval_service = get_retrieval_service()
+    from apps.api.core.config import get_settings
+
+    uses_qdrant = retrieval_service is not None or get_settings().RETRIEVAL_BACKEND == "qdrant"
 
     try:
-        qdrant_breaker.check_available()
+        if uses_qdrant:
+            qdrant_breaker.check_available()
         if retrieval_service is not None:
             res: RetrievalResult = _run_async(
                 retrieval_service.retrieve(
@@ -174,7 +183,8 @@ def retrieve_evidence_node(state: AssistantState) -> dict[str, Any]:
                     language=filters.language,
                 )
             )
-        qdrant_breaker.record_success()
+        if uses_qdrant:
+            qdrant_breaker.record_success()
         telemetry_details["points_returned"] = res.metrics.qdrant_points_returned
         telemetry_details["hydrated_count"] = res.metrics.postgres_chunks_hydrated
         telemetry_details["deduplicated_count"] = res.metrics.deduplicated_count
@@ -197,7 +207,8 @@ def retrieve_evidence_node(state: AssistantState) -> dict[str, Any]:
             )
     except Exception as e:
         retrieval_unavailable = True
-        qdrant_breaker.record_failure(e)
+        if uses_qdrant:
+            qdrant_breaker.record_failure(e)
         if isinstance(e, ServiceUnavailableError):
             logger.warning("Retrieval temporarily unavailable: %s", e)
         else:
