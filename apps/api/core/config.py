@@ -251,7 +251,7 @@ class Settings(BaseSettings):
     # Groq Inference (LLM & Whisper)
     # --------------------------------------------------------------------------
     GROQ_API_KEY: str = Field(default="", repr=False)
-    GROQ_CHAT_MODEL: str = "llama-3.3-70b-versatile"
+    GROQ_CHAT_MODEL: str = "openai/gpt-oss-20b"
     GROQ_WHISPER_MODEL: str = "whisper-large-v3"
 
     # Voice transcription input constraints (P12.1.3)

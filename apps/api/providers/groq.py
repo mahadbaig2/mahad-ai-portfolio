@@ -29,13 +29,15 @@ class GroqLLMProvider(LLMProvider):
         api_key: str | None = None,
         model: str | None = None,
         timeout: float = 30.0,
-        mock_fallback: bool = True,
+        mock_fallback: bool | None = None,
     ) -> None:
         settings = get_settings()
         self.api_key = api_key if api_key is not None else settings.GROQ_API_KEY
-        self.model = model or settings.GROQ_CHAT_MODEL or "llama-3.3-70b-versatile"
+        self.model = model or settings.GROQ_CHAT_MODEL or "openai/gpt-oss-20b"
         self.timeout = timeout
-        self.mock_fallback = mock_fallback
+        self.mock_fallback = (
+            mock_fallback if mock_fallback is not None else settings.ENVIRONMENT != "production"
+        )
 
     def _generate_mock_grounded_response(self, messages: list[dict[str, str]]) -> str:
         """Deterministic mock response for local testing without live API keys."""
