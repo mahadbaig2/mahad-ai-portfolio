@@ -59,10 +59,7 @@ export default async function CaseStudyPage({
             </nav>
 
             {project.maturityStatus && (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sage text-primary font-mono text-xs font-medium">
-                <span className="w-1.5 h-1.5 rounded-full bg-primary" aria-hidden="true" />
-                <span>{project.maturityStatus}</span>
-              </span>
+              <span className="text-primary text-sm font-medium">{project.maturityStatus}</span>
             )}
           </div>
 
@@ -77,45 +74,44 @@ export default async function CaseStudyPage({
             )}
           </div>
 
-          {/* 5-Cell Metadata Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 pt-2">
-            <div className="bg-surface-white rounded-xl border border-hairline/80 p-4 shadow-editorial-sm flex flex-col justify-between">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-2">
+            {project.role && <div className="bg-surface-white rounded-xl border border-hairline/80 p-4 shadow-editorial-sm flex flex-col justify-between">
               <span className="font-mono text-[11px] uppercase tracking-wider text-muted-text">
                 Role
               </span>
               <p className="text-sm font-medium text-on-surface mt-2">
-                {project.role || "Product & Engineering"}
+                {project.role}
               </p>
-            </div>
+            </div>}
 
-            <div className="bg-surface-white rounded-xl border border-hairline/80 p-4 shadow-editorial-sm flex flex-col justify-between">
+            {(project.timeline || project.year) && <div className="bg-surface-white rounded-xl border border-hairline/80 p-4 shadow-editorial-sm flex flex-col justify-between">
               <span className="font-mono text-[11px] uppercase tracking-wider text-muted-text">
                 Timeline
               </span>
               <p className="text-sm font-medium text-on-surface mt-2">
-                {project.timeline || project.year || "Archived Record"}
+                {project.timeline || project.year}
               </p>
-            </div>
+            </div>}
 
-            <div className="bg-surface-white rounded-xl border border-hairline/80 p-4 shadow-editorial-sm flex flex-col justify-between">
+            {(project.maturityStatus || project.origin) && <div className="bg-surface-white rounded-xl border border-hairline/80 p-4 shadow-editorial-sm flex flex-col justify-between">
               <span className="font-mono text-[11px] uppercase tracking-wider text-muted-text">
                 Status
               </span>
               <p className="text-sm font-medium text-primary mt-2">
-                {project.maturityStatus || project.origin || "Documented"}
+                {project.maturityStatus || project.origin}
               </p>
-            </div>
+            </div>}
 
-            <div className="bg-surface-white rounded-xl border border-hairline/80 p-4 shadow-editorial-sm flex flex-col justify-between">
+            {project.technologies?.length > 0 && <div className="bg-surface-white rounded-xl border border-hairline/80 p-4 shadow-editorial-sm flex flex-col justify-between">
               <span className="font-mono text-[11px] uppercase tracking-wider text-muted-text">
                 Technologies
               </span>
               <p className="font-mono text-xs text-on-surface mt-2 leading-relaxed">
-                {(project.technologies || []).slice(0, 5).join(", ") || "Portfolio Archive"}
+                {project.technologies.slice(0, 5).join(", ")}
               </p>
-            </div>
+            </div>}
 
-            <div className="bg-surface-white rounded-xl border border-hairline/80 p-4 shadow-editorial-sm flex flex-col justify-between">
+            {(project.githubUrl || project.liveUrl) && <div className="bg-surface-white rounded-xl border border-hairline/80 p-4 shadow-editorial-sm flex flex-col justify-between">
               <span className="font-mono text-[11px] uppercase tracking-wider text-muted-text">
                 Links
               </span>
@@ -144,11 +140,8 @@ export default async function CaseStudyPage({
                     <ArrowUpRight className="h-3 w-3" aria-hidden="true" />
                   </Link>
                 )}
-                {!project.githubUrl && !project.liveUrl && (
-                  <span className="text-muted-text">Case study record only</span>
-                )}
               </div>
-            </div>
+            </div>}
           </div>
         </header>
 
