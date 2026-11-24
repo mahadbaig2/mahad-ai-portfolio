@@ -124,6 +124,39 @@ def test_normalized_document_schema_validation() -> None:
     assert "Inference Latency**: 18ms on CPU" in metrics_sec.content
 
 
+def test_project_stack_from_current_sanity_schema_is_indexed() -> None:
+    raw = dict(FIXTURE_PROJECT)
+    raw.pop("techStack")
+    raw["stack"] = ["Next.js", "Supabase"]
+
+    doc = normalize_sanity_document(raw)
+
+    assert doc.metadata["techStack"] == ["Next.js", "Supabase"]
+    assert any(
+        section.heading == "Technologies Used" and "Next.js, Supabase" in section.content
+        for section in doc.sections
+    )
+
+
+def test_current_project_overview_and_audiences_are_indexed() -> None:
+    raw = {
+        "_id": "project-alder-legal",
+        "_type": "project",
+        "title": "Alder Legal",
+        "slug": {"current": "alder-legal"},
+        "overview": "A controlled pilot using mock demonstration data.",
+        "stack": ["Next.js", "FastAPI"],
+        "audiences": ["general", "engineer"],
+        "ragEnabled": True,
+    }
+
+    doc = normalize_sanity_document(raw)
+
+    assert "mock demonstration data" in doc.raw_text
+    assert "Next.js, FastAPI" in doc.raw_text
+    assert doc.target_audiences == ["general", "engineer"]
+
+
 def test_sanity_extractor_endpoint_building() -> None:
     """P4.1.2: Validate SanityExtractor URL and header assembly."""
     extractor = SanityExtractor(

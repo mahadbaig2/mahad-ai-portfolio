@@ -96,8 +96,23 @@ def test_filter_planning_mimar_studios_alias():
     filters = plan_retrieval_filters(
         query="Show me the spatial systems at mimar studios"
     )
-    assert filters.project_slug == "mimar-studios"
-    assert filters.raw_filters["project_slug"] == "mimar-studios"
+    assert filters.project_slug == "mimar-studios-platform"
+    assert filters.raw_filters["project_slug"] == "mimar-studios-platform"
+
+
+@pytest.mark.parametrize(
+    ("query", "slug"),
+    [
+        ("What did Mahad do on Busyfile?", "busyfile"),
+        ("What is Evzino?", "evzino"),
+        ("Explain Marketing OS", "marketing-os"),
+        ("What is the Freqtrade implementation?", "freqtrade"),
+        ("What is Alder Legal?", "alder-legal"),
+        ("How does sak_os work?", "alder-legal"),
+    ],
+)
+def test_filter_planning_portfolio_projects(query: str, slug: str) -> None:
+    assert plan_retrieval_filters(query=query).project_slug == slug
 
 
 def test_filter_planning_audience_context():

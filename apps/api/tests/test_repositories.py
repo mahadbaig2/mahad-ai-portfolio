@@ -5,9 +5,11 @@ from collections.abc import AsyncIterator
 from datetime import UTC, datetime
 
 import pytest
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
 from apps.api.db.base import Base
+from apps.api.db.models.document import DocumentChunk
 from apps.api.repositories.chat_repo import ChatRepository
 from apps.api.repositories.document_repo import DocumentRepository
 from apps.api.services.session_cleanup import SessionCleanupService
@@ -76,6 +78,22 @@ async def test_document_repository_lifecycle(db_session: AsyncSession) -> None:
     # Inactive chunks should not be hydrated
     hydrated_after = await repo.get_chunks_by_point_ids([chunk_point_id])
     assert len(hydrated_after) == 0
+
+    # A metadata-only source update can produce the same deterministic chunk
+    # UUID. Reactivate it instead of attempting a duplicate primary key insert.
+    revived = await repo.create_chunk(
+        document_id=doc.id,
+        chunk_index=0,
+        chunk_text=chunk.chunk_text,
+        token_count=14,
+        heading_path="CardioScan AI > Architecture",
+        chunk_hash="chunk-hash-999",
+        embedding_model="intfloat/multilingual-e5-small",
+        chunk_id=chunk_point_id,
+    )
+    assert revived.id == chunk_point_id
+    assert revived.is_active is True
+    assert (await db_session.scalar(select(func.count()).select_from(DocumentChunk))) == 1
 
 
 @pytest.mark.asyncio

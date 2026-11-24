@@ -239,12 +239,15 @@ class IncrementalSynchronizer:
         result.vectors_upserted = upserted_count
 
         # 7. VALIDATION: Only after new vectors are successfully in Qdrant, deactivate stale chunks
-        if stale_chunk_ids:
-            deactivated_count = await self.doc_repo.deactivate_chunks_by_ids(stale_chunk_ids)
+        # A deterministic chunk ID can occur in both versions when its text is
+        # unchanged. Keep those reactivated rows and their freshly upserted vectors.
+        obsolete_chunk_ids = list(set(stale_chunk_ids) - set(new_chunk_ids))
+        if obsolete_chunk_ids:
+            deactivated_count = await self.doc_repo.deactivate_chunks_by_ids(obsolete_chunk_ids)
             result.chunks_deactivated = deactivated_count
 
             # 8. Delete stale points from Qdrant (P6.1.3)
-            stale_str_ids = [str(cid) for cid in stale_chunk_ids]
+            stale_str_ids = [str(cid) for cid in obsolete_chunk_ids]
             deleted_count = await self.vector_provider.delete(stale_str_ids)
             result.vectors_deleted = deleted_count
 

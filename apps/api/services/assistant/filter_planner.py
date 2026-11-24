@@ -6,12 +6,18 @@ from typing import Any
 
 # Mapping of known entity aliases to canonical project slugs
 PROJECT_ALIAS_MAP: dict[str, str] = {
+    "busyfile": "busyfile",
+    "evzino": "evzino",
+    "marketing os": "marketing-os",
+    "freqtrade": "freqtrade",
+    "alder legal": "alder-legal",
+    "sak_os": "alder-legal",
     "cardioscan": "cardioscan-ai",
     "cardioscan ai": "cardioscan-ai",
     "cardio scan": "cardioscan-ai",
-    "mimar": "mimar-studios",
-    "mimar studios": "mimar-studios",
-    "spatial systems": "mimar-studios",
+    "mimar": "mimar-studios-platform",
+    "mimar studios": "mimar-studios-platform",
+    "spatial systems": "mimar-studios-platform",
     "ml router": "in-process-ml-router",
     "onnx router": "in-process-ml-router",
     "query router": "in-process-ml-router",

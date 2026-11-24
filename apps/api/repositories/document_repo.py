@@ -77,7 +77,21 @@ class DocumentRepository:
         embedding_version: str = "1.0.0",
         chunk_id: uuid.UUID | None = None,
     ) -> DocumentChunk:
-        """Store a canonical text chunk. Optionally supply explicit point UUID."""
+        """Store or reactivate a canonical chunk with a stable point UUID."""
+        if chunk_id is not None:
+            existing = await self.session.get(DocumentChunk, chunk_id)
+            if existing is not None:
+                if existing.document_id != document_id or existing.chunk_hash != chunk_hash:
+                    raise ValueError("Existing chunk UUID does not match its canonical source")
+                existing.chunk_index = chunk_index
+                existing.chunk_text = chunk_text
+                existing.token_count = token_count
+                existing.heading_path = heading_path
+                existing.embedding_model = embedding_model
+                existing.embedding_version = embedding_version
+                existing.is_active = True
+                await self.session.flush()
+                return existing
         chunk = DocumentChunk(
             id=chunk_id or uuid.uuid4(),
             document_id=document_id,

@@ -6,11 +6,28 @@ clients require a separate public FastAPI service. A Pages build with an empty
 
 ## API Space
 
-The existing `mirzaMahad/mahad-ai-portfolio-api` Hugging Face Space uses the
+The existing `mirzaMahad/mahad-ai-portfolio-api` Hugging Face Space can use the
 files in `deploy/huggingface-api`. Set its SDK to Docker and build with a pinned
 `SOURCE_COMMIT` argument matching the reviewed GitHub main commit. The image
 installs CPU-only PyTorch, embeds the public E5 model, verifies the champion
 ONNX router and serves Uvicorn on port 7860.
+
+**Current hosting blocker (2026-11-24):** Hugging Face rejected changing that
+existing ZeroGPU Space to CPU Basic and rejected creating a new Docker Space
+with HTTP 402. Its current plan requires a PRO subscription for CPU Basic
+Docker hosting. Do not add a paid plan without Mahad's decision. Render's free
+service has 512 MB RAM; the current local API process used approximately 968 MB
+after loading the retrieval model, so deploying it there unchanged would risk
+an out-of-memory restart. No public API URL has been verified yet.
+
+The `deploy/huggingface-api/gradio` directory is an experimental alternative
+for the existing ZeroGPU Space: Hugging Face documents serving a custom Python
+server on port 7860 under the Gradio SDK as an unofficial workflow. Upload its
+four files plus `requirements-runtime.txt` to the Space root, set the
+`SOURCE_COMMIT` Space variable to the reviewed Git SHA, and keep the Gradio SDK
+in the Space README. Verify build, health, and a cited chat response before
+configuring Pages. This path needs no paid plan, but its behavior on ZeroGPU
+has not yet been verified.
 
 Set these **Space secrets** in Hugging Face, without putting values in Git:
 

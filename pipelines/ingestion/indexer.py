@@ -104,8 +104,15 @@ class IngestionPipeline:
                 # If document previously existed in database, deactivate its chunks
                 existing = await self.doc_repo.get_by_sanity_id(norm_doc.sanity_id)
                 if existing and not dry_run:
+                    old_point_ids = (
+                        [str(chunk.id) for chunk in await self.doc_repo.get_active_chunks_by_document(existing.id)]
+                        if self.vector_provider
+                        else []
+                    )
                     deactivated = await self.doc_repo.deactivate_chunks(existing.id)
                     result.chunks_deactivated += deactivated
+                    if old_point_ids:
+                        result.vectors_deleted += await self.vector_provider.delete(old_point_ids)
                 continue
 
             # P4.3.5: Check existing document in PostgreSQL and compare hashes
@@ -126,6 +133,12 @@ class IngestionPipeline:
                 result.documents_indexed += 1
                 result.chunks_created += len(chunks)
                 continue
+
+            old_point_ids = (
+                {str(chunk.id) for chunk in await self.doc_repo.get_active_chunks_by_document(existing_doc.id)}
+                if existing_doc and self.vector_provider
+                else set()
+            )
 
             # Batch embed chunks with 'passage: ' prefix
             chunk_texts = [c.content for c in chunks]
@@ -185,6 +198,9 @@ class IngestionPipeline:
                     })
                 upserted = await self.vector_provider.upsert(points)
                 result.vectors_upserted += upserted
+                obsolete_ids = list(old_point_ids - {str(chunk.chunk_id) for chunk in chunks})
+                if obsolete_ids:
+                    result.vectors_deleted += await self.vector_provider.delete(obsolete_ids)
 
             result.documents_indexed += 1
 

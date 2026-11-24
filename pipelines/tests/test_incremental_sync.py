@@ -128,6 +128,35 @@ async def test_atomic_update_write_before_deactivate(sync_environment) -> None:
 
 
 @pytest.mark.asyncio
+async def test_metadata_update_keeps_reused_chunk_and_vector(sync_environment) -> None:
+    sync = sync_environment["synchronizer"]
+    vp = sync_environment["vector_provider"]
+    session = sync_environment["session"]
+    original = {
+        "_id": "project-metadata-test",
+        "_type": "project",
+        "title": "Same Project",
+        "slug": {"current": "same-project"},
+        "ragEnabled": True,
+        "overview": "The same project description remains available.",
+        "audiences": ["general"],
+    }
+    assert (await sync.handle_event("publish", original)).status == "completed"
+    point_ids = set(vp.points)
+
+    updated = {**original, "audiences": ["general", "engineer"]}
+    result = await sync.handle_event("update", updated)
+
+    assert result.status == "completed"
+    assert result.chunks_deactivated == 0
+    assert result.vectors_deleted == 0
+    assert set(vp.points) == point_ids
+    rows = (await session.execute(select(DocumentChunk))).scalars().all()
+    assert len(rows) == len(point_ids)
+    assert all(row.is_active for row in rows)
+
+
+@pytest.mark.asyncio
 async def test_failure_preserves_previous_active_version(sync_environment) -> None:
     """P6.1.5: Verify failure during vector upsert preserves previous active version and rolls back."""
     sync = sync_environment["synchronizer"]

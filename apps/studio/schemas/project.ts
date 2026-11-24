@@ -68,8 +68,7 @@ export const project = defineType({
       title: 'Role / Focus',
       type: 'string',
       group: 'main',
-      initialValue: 'AI Product Engineer',
-      validation: (Rule) => Rule.required(),
+      description: 'Leave blank when the contribution is not verified. Do not infer a role from repository ownership.',
     }),
     defineField({
       name: 'category',

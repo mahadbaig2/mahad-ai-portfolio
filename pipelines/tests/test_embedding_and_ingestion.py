@@ -7,6 +7,7 @@ import pytest
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
 from apps.api.db.base import Base
+from apps.api.providers.doubles import MockVectorProvider
 from apps.api.repositories.document_repo import DocumentRepository
 from pipelines.ingestion.embedder import (
     EMBEDDING_DIMENSION,
@@ -138,6 +139,27 @@ async def test_document_modification_reindexes_and_deactivates_old_chunks(test_s
     assert res_2.documents_skipped == 0
     assert res_2.chunks_deactivated == first_chunk_count  # Previous chunks deactivated
     assert res_2.chunks_created > 0
+
+
+@pytest.mark.asyncio
+async def test_full_ingestion_removes_obsolete_vectors(test_session: AsyncSession) -> None:
+    vectors = MockVectorProvider()
+    pipeline = IngestionPipeline(
+        session=test_session,
+        embedder=DeterministicMockEmbedder(),
+        vector_provider=vectors,
+    )
+    await pipeline.ingest(raw_documents=[FIXTURE_PROJECT])
+    original_ids = set(vectors.points)
+
+    changed = dict(FIXTURE_PROJECT)
+    changed["summary"] = "A changed description for the project."
+    updated = await pipeline.ingest(raw_documents=[changed])
+    doc = await DocumentRepository(test_session).get_by_sanity_id("project-cardioscan-ai")
+    active_ids = {str(chunk.id) for chunk in await DocumentRepository(test_session).get_active_chunks_by_document(doc.id)}
+
+    assert updated.vectors_deleted == len(original_ids - active_ids)
+    assert set(vectors.points) == active_ids
 
 
 @pytest.mark.asyncio

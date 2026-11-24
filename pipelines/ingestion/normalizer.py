@@ -119,11 +119,11 @@ def normalize_sanity_document(raw_doc: dict[str, Any]) -> NormalizedDocument:
     if doc_type == "experience":
         role = raw_doc.get("role", "")
         company = raw_doc.get("company", "")
-        raw_title = f"{role} at {company}".strip(" at ") or raw_doc.get("title", "")
+        raw_title = " at ".join(part for part in (role, company) if part) or raw_doc.get("title", "")
     elif doc_type == "education":
         degree = raw_doc.get("degree", "")
         institution = raw_doc.get("institution", "")
-        raw_title = f"{degree} - {institution}".strip(" - ") or raw_doc.get("title", "")
+        raw_title = " - ".join(part for part in (degree, institution) if part) or raw_doc.get("title", "")
     else:
         raw_title = str(raw_doc.get("title") or raw_doc.get("name") or raw_doc.get("question") or "")
     title = normalize_whitespace(normalize_unicode(raw_title))
@@ -148,6 +148,7 @@ def normalize_sanity_document(raw_doc: dict[str, Any]) -> NormalizedDocument:
     )
     target_audiences = (
         raw_doc.get("targetAudiences")
+        or raw_doc.get("audiences")
         or rag_metadata.get("targetAudiences")
         or ["general"]
     )
@@ -230,7 +231,7 @@ def normalize_sanity_document(raw_doc: dict[str, Any]) -> NormalizedDocument:
                 )
 
         # Tech stack
-        tech_stack = raw_doc.get("techStack") or []
+        tech_stack = raw_doc.get("stack") or raw_doc.get("techStack") or []
         if isinstance(tech_stack, list) and tech_stack:
             sections.append(
                 DocumentSection(
@@ -384,8 +385,9 @@ def normalize_sanity_document(raw_doc: dict[str, Any]) -> NormalizedDocument:
     }
     if slug:
         metadata["slug"] = slug
-    if "techStack" in raw_doc:
-        metadata["techStack"] = raw_doc["techStack"]
+    tech_stack = raw_doc.get("stack") or raw_doc.get("techStack")
+    if tech_stack:
+        metadata["techStack"] = tech_stack
     if "publishedAt" in raw_doc:
         metadata["publishedAt"] = raw_doc["publishedAt"]
 
