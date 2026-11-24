@@ -6,36 +6,24 @@ import { Footer } from "@/components/Footer";
 import { AssistantWidgetProvider } from "@/components/assistant/AssistantWidgetContext";
 import { AssistantWidget } from "@/components/assistant/AssistantWidget";
 
-const newsreader = localFont({
+const creato = localFont({
   src: [
-    {
-      path: "./fonts/newsreader-latin.woff2",
-      weight: "400 600",
-      style: "normal",
-    },
-    {
-      path: "./fonts/newsreader-latin-italic.woff2",
-      weight: "400 500",
-      style: "italic",
-    },
+    { path: "./fonts/CreatoDisplay-Thin.otf", weight: "100", style: "normal" },
+    { path: "./fonts/CreatoDisplay-Light.otf", weight: "300", style: "normal" },
+    { path: "./fonts/CreatoDisplay-Regular.otf", weight: "400", style: "normal" },
+    { path: "./fonts/CreatoDisplay-Medium.otf", weight: "500", style: "normal" },
+    { path: "./fonts/CreatoDisplay-Bold.otf", weight: "700", style: "normal" },
+    { path: "./fonts/CreatoDisplay-ExtraBold.otf", weight: "800", style: "normal" },
+    { path: "./fonts/CreatoDisplay-Black.otf", weight: "900", style: "normal" },
+    { path: "./fonts/CreatoDisplay-ThinItalic.otf", weight: "100", style: "italic" },
+    { path: "./fonts/CreatoDisplay-LightItalic.otf", weight: "300", style: "italic" },
+    { path: "./fonts/CreatoDisplay-RegularItalic.otf", weight: "400", style: "italic" },
+    { path: "./fonts/CreatoDisplay-MediumItalic.otf", weight: "500", style: "italic" },
+    { path: "./fonts/CreatoDisplay-BoldItalic.otf", weight: "700", style: "italic" },
+    { path: "./fonts/CreatoDisplay-ExtraBoldItalic.otf", weight: "800", style: "italic" },
+    { path: "./fonts/CreatoDisplay-BlackItalic.otf", weight: "900", style: "italic" },
   ],
-  variable: "--font-newsreader",
-  display: "swap",
-});
-
-const manrope = localFont({
-  src: "./fonts/manrope-latin.woff2",
-  weight: "400 700",
-  style: "normal",
-  variable: "--font-manrope",
-  display: "swap",
-});
-
-const jetbrainsMono = localFont({
-  src: "./fonts/jetbrains-mono-latin.woff2",
-  weight: "400 600",
-  style: "normal",
-  variable: "--font-jetbrains-mono",
+  variable: "--font-creato",
   display: "swap",
 });
 
@@ -69,7 +57,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${newsreader.variable} ${manrope.variable} ${jetbrainsMono.variable} scroll-smooth`}
+      className={`${creato.variable} scroll-smooth`}
     >
       <body
         suppressHydrationWarning

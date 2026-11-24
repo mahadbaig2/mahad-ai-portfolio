@@ -10,13 +10,13 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        serif: ["var(--font-newsreader)", "Newsreader", "Georgia", "serif"],
-        headline: ["var(--font-newsreader)", "Newsreader", "Georgia", "serif"],
-        display: ["var(--font-newsreader)", "Newsreader", "Georgia", "serif"],
-        sans: ["var(--font-manrope)", "Manrope", "system-ui", "sans-serif"],
-        body: ["var(--font-manrope)", "Manrope", "system-ui", "sans-serif"],
-        mono: ["var(--font-jetbrains-mono)", "JetBrains Mono", "ui-monospace", "monospace"],
-        label: ["var(--font-jetbrains-mono)", "JetBrains Mono", "ui-monospace", "monospace"],
+        serif: ["var(--font-creato)", "Creato Display", "sans-serif"],
+        headline: ["var(--font-creato)", "Creato Display", "sans-serif"],
+        display: ["var(--font-creato)", "Creato Display", "sans-serif"],
+        sans: ["var(--font-creato)", "Creato Display", "sans-serif"],
+        body: ["var(--font-creato)", "Creato Display", "sans-serif"],
+        mono: ["var(--font-creato)", "Creato Display", "sans-serif"],
+        label: ["var(--font-creato)", "Creato Display", "sans-serif"],
       },
       colors: {
         paper: "#F7F8F5",

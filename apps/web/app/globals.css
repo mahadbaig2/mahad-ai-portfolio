@@ -4,9 +4,7 @@
 
 @layer base {
   :root {
-    --font-newsreader: Georgia, serif;
-    --font-manrope: system-ui, -apple-system, sans-serif;
-    --font-jetbrains-mono: ui-monospace, SFMono-Regular, monospace;
+    --font-creato: "Creato Display", sans-serif;
     --background: #F7F8F5;
     --foreground: #17211C;
     --muted: #EAF3ED;
