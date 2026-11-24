@@ -76,6 +76,10 @@
   background: #f7f8f5;
 }
 
+.home-mosaic > section[class*="bg-mint"] {
+  background: #eaf3ed;
+}
+
 @keyframes hero-arrive {
   from {
     opacity: 0;
