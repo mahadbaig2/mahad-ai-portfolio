@@ -23,7 +23,7 @@ an out-of-memory restart. No public API URL has been verified yet.
 The `deploy/huggingface-api/gradio` directory is an experimental alternative
 for the existing ZeroGPU Space: Hugging Face documents serving a custom Python
 server on port 7860 under the Gradio SDK as an unofficial workflow. Upload its
-three self-contained files to the Space root, set the
+four self-contained files to the Space root, set the
 `SOURCE_COMMIT` Space variable to the reviewed Git SHA, and keep the Gradio SDK
 in the Space README. ZeroGPU supplies a supported PyTorch build; do not install
 a separate torch wheel there. Verify build, health, and a cited chat response before
