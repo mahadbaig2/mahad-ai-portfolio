@@ -1,0 +1,20 @@
+name: Monitor Live Portfolio
+
+on:
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Check public site
+        run: curl --fail --silent --show-error --retry 3 --retry-all-errors --retry-delay 10 --max-time 30 https://mahad-ai-portfolio.pages.dev/ -o /dev/null
+
+      - name: Check API readiness after a possible free-tier cold start
+        run: |
+          curl --fail --silent --show-error --retry 3 --retry-all-errors --retry-delay 10 --max-time 90 \
+            https://mahad-ai-portfolio-api.onrender.com/health/ready > ready.json
+          jq -e '.status == "ready" and .checks.api_runtime.status == "ok" and .checks.query_router_model.status == "ok" and .checks.database.status == "ok"' ready.json > /dev/null

@@ -12,10 +12,14 @@ The database URL must point to the same Neon database used by the successful
 reconciliation workflow. Do not commit either value. The health check is
 `/health/ready`; it checks the ONNX artifact and a live Neon connection.
 
-After the public API passes `/health/ready` and cited chat requests, set the
-Cloudflare Pages build variable `NEXT_PUBLIC_API_URL` to its `https://...onrender.com`
-origin and trigger a new production build. Verify the browser's chat request
-goes to the API origin and the response includes a project citation.
+The public API is deployed at `https://mahad-ai-portfolio-api.onrender.com`.
+Cloudflare Pages production has `NEXT_PUBLIC_API_URL` set to that origin. On
+November 25, 2026 (Asia/Karachi), `/health/ready` returned ready with the API,
+ONNX router artifact, and Neon database checks all OK. Live Busyfile, Alder
+Legal, and Marketing OS questions returned specific answers with case-study
+citations. The Pages chat widget returned a cited Busyfile answer on mobile.
+`monitor-live.yml` probes the public site and API readiness every six hours;
+GitHub Actions reports failures in the workflow run history.
 
 Render free services sleep after idle time and may take about a minute to wake.
 They can also be suspended when free usage limits are reached. This is not an
