@@ -178,10 +178,10 @@ export default async function HomePage() {
       <section className="w-full max-w-[1440px] mx-auto px-5 md:px-10 lg:px-16 py-10 lg:py-16">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
           {/* Left Editorial Column (7 cols) */}
-          <div className="lg:col-span-7 flex flex-col justify-start">
+          <div className="hero-copy lg:col-span-7 flex flex-col justify-start">
             <div className="flex flex-wrap items-center gap-3 mb-5">
               <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sage text-primary font-mono text-xs font-medium">
-                <span className="w-2 h-2 rounded-full bg-primary animate-pulse" aria-hidden="true" />
+                <span className="w-2 h-2 rounded-full bg-primary" aria-hidden="true" />
                 <span>{siteSettings.availabilityStatus || "Open to AI Product Engineering roles"}</span>
               </span>
               <span className="font-mono text-xs text-muted-text">
@@ -270,7 +270,7 @@ export default async function HomePage() {
           </div>
 
           {/* Right Editorial Photographic Plate (5 cols) */}
-          <div className="lg:col-span-5 flex flex-col">
+          <div className="hero-visual lg:col-span-5 flex flex-col">
             <div className="bg-surface-white p-3.5 md:p-4 rounded-2xl border border-hairline/80 shadow-editorial">
               <div className="relative overflow-hidden rounded-xl aspect-[4/5] bg-surface-container">
                 <Image
