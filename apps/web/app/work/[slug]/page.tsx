@@ -1,12 +1,11 @@
 import Link from "next/link";
-import Image from "next/image";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ArrowUpRight, FolderGit2, Layers, Terminal } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, FolderGit2, Terminal } from "lucide-react";
 import { getProjects, getProject, getCaseStudy } from "@/lib/sanity/loadData";
 import { PROJECTS } from "@/lib/data";
 import { SHOWCASE } from "@/lib/showcase";
 import { PortableText } from "@/components/PortableText";
-import { urlForImage } from "@/lib/sanity/image";
+import { VisualPlaceholder } from "@/components/VisualPlaceholder";
 
 export async function generateStaticParams() {
   const projects = await getProjects();
@@ -36,7 +35,6 @@ export default async function CaseStudyPage({
   const [project, study] = await Promise.all([getProject(slug), getCaseStudy(slug)]);
   if (!project) notFound();
 
-  const heroUrl = project.heroImage ? urlForImage(project.heroImage)?.width(1400).url() : null;
   const supportedResults =
     study?.quantitativeResults?.filter((result) => result.methodology?.trim()) || [];
   const lessons = study?.lessonsLearned?.length ? study.lessonsLearned : project.lessonsLearned;
@@ -154,44 +152,13 @@ export default async function CaseStudyPage({
           </div>
         </header>
 
-        {/* 02. Visual Plate or Green Editorial Specimen Frame */}
+        {/* 02. Visual placeholder until approved project images are available */}
         <section>
-          {heroUrl ? (
-            <figure className="bg-surface-white rounded-2xl border border-hairline/80 p-3 shadow-editorial-sm">
-              <div className="relative aspect-[16/9] max-h-[560px] w-full overflow-hidden rounded-xl bg-surface-container">
-                <Image
-                  src={heroUrl}
-                  alt={`Image placeholder for ${project.title}`}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 1024px) 100vw, 1280px"
-                />
-              </div>
-            </figure>
-          ) : (
-            <div
-              role="img"
-              aria-label={`Image placeholder for ${project.title}`}
-              className="rounded-2xl bg-gradient-to-br from-primary via-primary-container to-charcoal-gutter text-on-primary p-8 sm:p-12 min-h-[260px] sm:min-h-[340px] flex flex-col justify-between shadow-editorial"
-            >
-              <div className="flex items-center justify-between font-mono text-xs text-secondary-fixed">
-                <span className="inline-flex items-center gap-2">
-                  <Layers className="h-4 w-4" aria-hidden="true" />
-                  <span>SPECIMEN // {project.slug.toUpperCase()}</span>
-                </span>
-                {project.year && <span>{project.year}</span>}
-              </div>
-
-              <div className="space-y-2 max-w-3xl">
-                <div className="font-serif text-3xl sm:text-5xl font-normal tracking-tight text-surface-white">
-                  {project.title}
-                </div>
-                {project.tagline && (
-                  <p className="text-base sm:text-lg text-on-primary-container">{project.tagline}</p>
-                )}
-              </div>
+          <figure className="bg-surface-white rounded-2xl border border-hairline/80 p-3 shadow-editorial-sm">
+            <div className="relative aspect-[16/9] max-h-[560px] w-full overflow-hidden rounded-xl bg-surface-container">
+              <VisualPlaceholder label={`${project.title} project imagery`} />
             </div>
-          )}
+          </figure>
         </section>
 
         {/* 03. Case Study Body Container */}

@@ -26,12 +26,6 @@ export function Header() {
 
   return (
     <header className="fixed top-0 left-0 w-full z-50 bg-paper/90 backdrop-blur-md border-b border-hairline/70 shadow-editorial-sm">
-      <div
-        role="status"
-        className="h-8 bg-primary text-on-primary border-b border-primary-container flex items-center justify-center px-4 text-center font-mono text-xs tracking-wide"
-      >
-        Portfolio under construction
-      </div>
       <div className="h-20 max-w-[1440px] mx-auto px-4 sm:px-6 md:px-10 lg:px-16 flex items-center justify-between gap-2 sm:gap-4">
         <Link
           href="/"
@@ -59,7 +53,7 @@ export function Header() {
           aria-label="Main navigation"
           className={
             open
-              ? "flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-1 absolute lg:static top-28 left-0 right-0 max-h-[calc(100vh-7rem)] overflow-y-auto bg-paper lg:bg-transparent border-b lg:border-b-0 border-hairline px-5 py-5 lg:p-0 shadow-editorial lg:shadow-none"
+              ? "flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-1 absolute lg:static top-20 left-0 right-0 max-h-[calc(100vh-5rem)] overflow-y-auto bg-paper lg:bg-transparent border-b lg:border-b-0 border-hairline px-5 py-5 lg:p-0 shadow-editorial lg:shadow-none"
               : "hidden lg:flex lg:items-center lg:gap-1"
           }
         >

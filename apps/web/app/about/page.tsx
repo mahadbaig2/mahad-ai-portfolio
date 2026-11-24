@@ -1,5 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
+import { VisualPlaceholder } from "@/components/VisualPlaceholder";
 import type { Metadata } from "next";
 import { ArrowRight, ArrowUpRight, Compass, CheckCircle2 } from "lucide-react";
 import {
@@ -8,7 +8,6 @@ import {
   getSkills,
   getSiteSettings,
 } from "@/lib/sanity/loadData";
-import { urlForImage } from "@/lib/sanity/image";
 
 export const metadata: Metadata = {
   title: "About | Mirza Mahad Baig",
@@ -54,7 +53,7 @@ const TRAJECTORY_STEPS = [
     period: "Applied AI",
     title: "RAG, Routing & Guardrails",
     summary:
-      "Heading-aware document chunking, Qdrant vector retrieval hydrated from PostgreSQL, ONNX classification, and LangGraph orchestration.",
+      "Heading-aware document chunking, cited retrieval from PostgreSQL, ONNX classification, and LangGraph orchestration. Qdrant remains a rebuildable vector index.",
     shift: "Enclosed probabilistic generation inside inspectable, deterministic boundaries.",
   },
   {
@@ -74,11 +73,6 @@ export default async function AboutPage() {
     getSkills(),
     getSiteSettings(),
   ]);
-
-  const touringPhotoUrl = settings.touringPhoto
-    ? urlForImage(settings.touringPhoto)?.width(1000).url()
-    : null;
-  const heroPhoto = touringPhotoUrl || "/images/travel/travel-hero-motorcycle.png";
 
   return (
     <div className="flex flex-col w-full bg-paper">
@@ -144,13 +138,7 @@ export default async function AboutPage() {
           <div className="lg:col-span-5">
             <div className="bg-surface-white p-3.5 rounded-2xl border border-hairline/80 shadow-editorial">
               <div className="relative overflow-hidden rounded-xl aspect-[3/4] bg-surface-container">
-                <Image
-                  src={heroPhoto}
-                  alt="Mirza Mahad Baig riding toward Khunjerab Pass in northern Pakistan"
-                  fill
-                  className="object-cover object-center"
-                  sizes="(max-width: 1024px) 100vw, 40vw"
-                />
+                <VisualPlaceholder label="a personal portrait or travel photograph" />
                 <div className="absolute bottom-3 left-3 bg-charcoal-gutter/85 backdrop-blur-sm px-3 py-1 rounded text-surface-white font-mono text-xs flex items-center gap-1.5">
                   <Compass className="h-3.5 w-3.5 text-secondary-fixed" aria-hidden="true" />
                   <span>Khunjerab Pass · 4,693m</span>
@@ -405,13 +393,7 @@ export default async function AboutPage() {
           </div>
           <div className="lg:col-span-5 bg-charcoal-gutter rounded-xl overflow-hidden border border-white/10">
             <div className="relative aspect-[16/10] w-full">
-              <Image
-                src="/images/travel/travel-karakoram-highway.png"
-                alt="Karakoram Highway winding through mountain valleys in northern Pakistan"
-                fill
-                className="object-cover"
-                sizes="(max-width: 1024px) 100vw, 35vw"
-              />
+              <VisualPlaceholder label="a Karakoram Highway photograph" />
             </div>
           </div>
         </div>

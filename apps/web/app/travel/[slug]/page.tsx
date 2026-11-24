@@ -1,10 +1,9 @@
 import Link from "next/link";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { getTravelJourneys, getTravelJourney } from "@/lib/sanity/loadData";
 import { PortableText } from "@/components/PortableText";
-import { urlForImage } from "@/lib/sanity/image";
+import { VisualPlaceholder } from "@/components/VisualPlaceholder";
 
 export async function generateStaticParams() {
   return (await getTravelJourneys()).map((journey) => ({ slug: journey.slug }));
@@ -30,10 +29,6 @@ export default async function TravelDetailPage({
   const { slug } = await params;
   const journey = await getTravelJourney(slug);
   if (!journey) notFound();
-
-  const heroUrl = journey.heroImage
-    ? urlForImage(journey.heroImage)?.width(1400).url()
-    : null;
 
   return (
     <div className="w-full bg-paper min-h-screen">
@@ -100,14 +95,7 @@ export default async function TravelDetailPage({
         {/* Panoramic Photo Plate */}
         <div className="bg-surface-white p-3 rounded-2xl border border-hairline/80 shadow-editorial-sm">
           <div className="relative w-full aspect-[16/9] max-h-[540px] overflow-hidden rounded-xl bg-surface-container">
-            <Image
-              src={heroUrl || "/images/travel/travel-karakoram-highway.png"}
-              alt={`${journey.title} photographic record`}
-              fill
-              priority
-              className="object-cover"
-              sizes="(max-width: 1024px) 100vw, 1280px"
-            />
+            <VisualPlaceholder label={`${journey.title} travel photography`} />
           </div>
         </div>
 

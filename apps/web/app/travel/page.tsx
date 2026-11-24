@@ -1,5 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
+import { VisualPlaceholder } from "@/components/VisualPlaceholder";
 import { ArrowRight, Compass, Mountain } from "lucide-react";
 import { getTravelJourneys } from "@/lib/sanity/loadData";
 
@@ -67,14 +67,7 @@ export default async function TravelPage() {
         {/* Main Hero Plate */}
         <div className="bg-surface-white rounded-2xl border border-hairline/80 overflow-hidden shadow-editorial">
           <div className="relative w-full aspect-[4/3] sm:aspect-[16/9] max-h-[560px] bg-surface-container-high">
-            <Image
-              src="/images/travel/travel-hero-motorcycle.png"
-              alt="Mirza Mahad Baig with his motorcycle on the Karakoram Highway approach toward Khunjerab Pass"
-              fill
-              priority
-              className="object-cover object-center"
-              sizes="(max-width: 1024px) 100vw, 1400px"
-            />
+            <VisualPlaceholder label="the Khunjerab motorcycle journey" />
             <div className="absolute inset-0 bg-gradient-to-t from-charcoal-gutter/70 via-transparent to-transparent pointer-events-none" />
             <div className="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 flex flex-col sm:flex-row sm:items-end justify-between gap-2 text-surface-white">
               <div>
@@ -102,13 +95,7 @@ export default async function TravelPage() {
               className="bg-surface-white rounded-xl border border-hairline/80 overflow-hidden shadow-editorial-sm"
             >
               <div className="relative aspect-[4/3] bg-surface-container">
-                <Image
-                  src={item.src}
-                  alt={item.caption}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 33vw"
-                />
+                <VisualPlaceholder label={item.caption} />
               </div>
               <figcaption className="p-4 space-y-1">
                 <span className="font-mono text-xs text-secondary uppercase">{item.tag}</span>

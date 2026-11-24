@@ -1,6 +1,6 @@
 import Link from "next/link";
-import Image from "next/image";
 import type { Metadata } from "next";
+import { VisualPlaceholder } from "@/components/VisualPlaceholder";
 import { ArrowRight, ArrowUpRight, AudioLines, BookOpen } from "lucide-react";
 import { getArticles } from "@/lib/sanity/loadData";
 import { urlForImage } from "@/lib/sanity/image";
@@ -110,13 +110,7 @@ export default async function WritingPage() {
               <div className="lg:col-span-5 flex flex-col justify-between bg-charcoal-gutter text-surface-white rounded-xl p-6">
                 {featuredHero ? (
                   <div className="relative w-full h-56 rounded-lg overflow-hidden mb-4">
-                    <Image
-                      src={featuredHero}
-                      alt={featured.title}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 1024px) 100vw, 40vw"
-                    />
+                    <VisualPlaceholder label={`${featured.title} article imagery`} />
                   </div>
                 ) : (
                   <div className="space-y-4 my-auto">

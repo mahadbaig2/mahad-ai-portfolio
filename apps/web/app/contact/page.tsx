@@ -1,5 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
+import { VisualPlaceholder } from "@/components/VisualPlaceholder";
 import type { Metadata } from "next";
 import { ArrowRight, ArrowUpRight, AudioLines, BookOpen, Code2, FileText, Mail } from "lucide-react";
 import { getSiteSettings } from "@/lib/sanity/loadData";
@@ -291,13 +291,7 @@ export default async function ContactPage() {
 
           <div className="lg:col-span-5">
             <div className="relative aspect-[4/3] rounded-xl overflow-hidden border border-white/15">
-              <Image
-                src="/images/travel/travel-handlebars.png"
-                alt="Motorcycle handlebars overlooking a northern Pakistan mountain pass road"
-                fill
-                className="object-cover"
-                sizes="(max-width: 1024px) 100vw, 40vw"
-              />
+              <VisualPlaceholder label="a travel photograph" />
             </div>
           </div>
         </div>

@@ -42,11 +42,11 @@ export const PROJECTS: Project[] = [
       "ElevenLabs",
     ],
     summary:
-      "This portfolio assistant routes questions through an ONNX classifier and uses cited retrieval for factual answers. The frontend, API, and model are implemented; production availability and source coverage are still being verified.",
+      "This live portfolio assistant routes questions through an ONNX classifier and uses cited retrieval for factual answers. Neon stores the canonical evidence; the free public API uses lexical retrieval to stay within its memory limit.",
     problem:
       "A portfolio assistant needs to distinguish simple navigation from factual questions and show where its answers came from.",
     architecture:
-      "An in-process ONNX classifier recommends a route. LangGraph coordinates deterministic responses or retrieval from Qdrant vectors hydrated from Neon PostgreSQL. The chat page streams responses and displays execution steps.",
+      "An in-process ONNX classifier recommends a route. LangGraph coordinates deterministic responses and cited retrieval from Neon PostgreSQL. Qdrant remains a rebuildable vector index; the free public API uses a smaller lexical retriever. The chat page streams responses and displays execution steps.",
     decisions: [
       "Serve the ONNX classifier in the API process.",
       "Keep Neon PostgreSQL as the canonical source and Qdrant as a rebuildable vector index.",

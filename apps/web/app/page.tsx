@@ -1,5 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
+import { VisualPlaceholder } from "@/components/VisualPlaceholder";
 import {
   ArrowDown,
   ArrowRight,
@@ -21,7 +21,6 @@ import {
 } from "lucide-react";
 import { OpenAssistantButton } from "@/components/OpenAssistantButton";
 import { getArticles, getProject, getSiteSettings } from "@/lib/sanity/loadData";
-import { urlForImage } from "@/lib/sanity/image";
 
 export default async function HomePage() {
   const [
@@ -39,11 +38,6 @@ export default async function HomePage() {
     getArticles(),
     getSiteSettings(),
   ]);
-
-  const touringPhotoUrl = siteSettings.touringPhoto
-    ? urlForImage(siteSettings.touringPhoto)?.width(1000).url()
-    : null;
-  const heroImageSrc = touringPhotoUrl || "/images/travel/travel-hero-motorcycle.png";
 
   const recentArticles = articles.slice(0, 2);
 
@@ -70,7 +64,7 @@ export default async function HomePage() {
       index: "03 / INTELLIGENCE",
       title: "Practical AI & Agents",
       description:
-        "ONNX query routing, LangGraph orchestration, Qdrant vector retrieval hydrated from PostgreSQL, and explicit citations.",
+        "ONNX query routing, LangGraph orchestration, cited retrieval from PostgreSQL, and a rebuildable Qdrant vector index.",
       href: "/work/talk-to-mahad",
       cta: "Examine Architecture",
       icon: Cpu,
@@ -158,7 +152,7 @@ export default async function HomePage() {
       period: "Stage 05",
       title: "Applied AI & RAG",
       description:
-        "LangGraph state machines, in-process ONNX routing, dual-store Qdrant + Neon retrieval, and evaluations.",
+        "LangGraph state machines, in-process ONNX routing, cited Neon retrieval, and evaluations.",
       tag: "Model Orchestration",
       active: false,
     },
@@ -173,15 +167,14 @@ export default async function HomePage() {
   ];
 
   return (
-    <div className="flex flex-col w-full bg-paper">
+    <div className="home-mosaic flex flex-col w-full">
       {/* SECTION 1: EDITORIAL HERO */}
       <section className="w-full max-w-[1440px] mx-auto px-5 md:px-10 lg:px-16 py-10 lg:py-16">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
           {/* Left Editorial Column (7 cols) */}
           <div className="hero-copy lg:col-span-7 flex flex-col justify-start">
             <div className="flex flex-wrap items-center gap-3 mb-5">
-              <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sage text-primary font-mono text-xs font-medium">
-                <span className="w-2 h-2 rounded-full bg-primary" aria-hidden="true" />
+              <span className="text-primary text-sm font-medium">
                 <span>{siteSettings.availabilityStatus || "Open to AI Product Engineering roles"}</span>
               </span>
               <span className="font-mono text-xs text-muted-text">
@@ -263,7 +256,7 @@ export default async function HomePage() {
               <p className="font-mono text-xs text-primary flex items-start sm:items-center gap-2 leading-relaxed">
                 <span className="w-2 h-2 rounded-full bg-primary mt-1.5 sm:mt-0 shrink-0" aria-hidden="true" />
                 <span>
-                  Inspectable portfolio architecture powered by Sanity CMS, Neon PostgreSQL, Qdrant, ONNX routing, and LangGraph.
+                  Inspectable portfolio architecture powered by Sanity CMS, Neon PostgreSQL, ONNX routing, and LangGraph.
                 </span>
               </p>
             </div>
@@ -273,14 +266,7 @@ export default async function HomePage() {
           <div className="hero-visual lg:col-span-5 flex flex-col">
             <div className="bg-surface-white p-3.5 md:p-4 rounded-2xl border border-hairline/80 shadow-editorial">
               <div className="relative overflow-hidden rounded-xl aspect-[4/5] bg-surface-container">
-                <Image
-                  src={heroImageSrc}
-                  alt="Mirza Mahad Baig on his motorcycle expedition toward Khunjerab Pass in northern Pakistan"
-                  fill
-                  priority
-                  className="object-cover object-center"
-                  sizes="(max-width: 1024px) 100vw, 40vw"
-                />
+                <VisualPlaceholder label="a personal portrait or travel photograph" />
                 <div className="absolute bottom-3 left-3 bg-charcoal-gutter/85 backdrop-blur-sm px-3 py-1 rounded text-surface-white font-mono text-xs flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-secondary-fixed" aria-hidden="true" />
                   <span>Karakoram Highway · N-35</span>
@@ -439,7 +425,7 @@ export default async function HomePage() {
                         Dual Storage &amp; Voice Limits
                       </div>
                       <div className="text-xs text-on-surface-variant mt-0.5">
-                        Neon PostgreSQL hydrates canonical chunks matched in Qdrant; voice caps sessions at 120 seconds with text fallback.
+                        Neon PostgreSQL stores canonical chunks; this free API uses lexical retrieval. Voice caps sessions at 120 seconds with text fallback.
                       </div>
                     </div>
                   </div>
@@ -478,9 +464,9 @@ export default async function HomePage() {
                     </p>
                   </div>
                   <div className="bg-primary-container border border-secondary-fixed/30 rounded-lg p-3.5 space-y-1.5">
-                    <div className="text-secondary-fixed font-medium">2. LangGraph + Qdrant</div>
+                    <div className="text-secondary-fixed font-medium">2. LangGraph + Neon</div>
                     <p className="text-xs text-inverse-on-surface font-sans leading-snug">
-                      Retrieves vector points and hydrates canonical chunk text from PostgreSQL.
+                      Retrieves matching evidence from canonical PostgreSQL chunks.
                     </p>
                   </div>
                   <div className="bg-inverse-surface border border-white/10 rounded-lg p-3.5 space-y-1.5">
@@ -812,7 +798,7 @@ export default async function HomePage() {
 
                 <div className="bg-inverse-surface border border-white/10 p-4 rounded-xl text-inverse-on-surface text-sm space-y-3">
                   <p className="leading-relaxed">
-                    Every factual query passes through the ONNX query router, retrieves matching Qdrant vectors hydrated from Neon PostgreSQL, and requires valid citations or explicitly clarifies / refuses.
+                    Factual queries pass through the ONNX query router, search verified Neon PostgreSQL chunks, and require valid citations or explicitly clarify or refuse.
                   </p>
                   <div className="flex flex-wrap gap-2 pt-1 font-mono text-xs">
                     <span className="px-2.5 py-1 rounded bg-primary-container text-secondary-fixed">

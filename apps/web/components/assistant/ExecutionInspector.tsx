@@ -71,8 +71,8 @@ export function ExecutionInspector({
               <span className="font-mono font-medium text-foreground">{modelName} ({modelVersion})</span>
             </div>
             <div className="rounded border border-border bg-background p-2">
-              <span className="text-muted-foreground block text-[10px]">Vector DB</span>
-              <span className="font-mono font-medium text-foreground">Qdrant Cloud (384-d)</span>
+              <span className="text-muted-foreground block text-[10px]">Retrieval</span>
+              <span className="font-mono font-medium text-foreground">Neon PostgreSQL</span>
             </div>
             <div className="rounded border border-border bg-background p-2">
               <span className="text-muted-foreground block text-[10px]">State Engine</span>

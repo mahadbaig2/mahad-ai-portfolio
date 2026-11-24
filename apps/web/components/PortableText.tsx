@@ -1,7 +1,6 @@
 import React from "react";
 import { PortableText as BasePortableText, type PortableTextComponents } from "@portabletext/react";
-import Image from "next/image";
-import { urlForImage } from "@/lib/sanity/image";
+import { VisualPlaceholder } from "@/components/VisualPlaceholder";
 
 const components: PortableTextComponents = {
   block: {
@@ -77,20 +76,10 @@ const components: PortableTextComponents = {
       if (!value?.asset?._ref) {
         return null;
       }
-      const imageUrl = urlForImage(value)?.width(1200).url();
-      if (!imageUrl) {
-        return null;
-      }
       return (
         <figure className="my-6">
           <div className="relative aspect-video w-full overflow-hidden rounded-xl border border-hairline bg-surface-white shadow-editorial-sm">
-            <Image
-              src={imageUrl}
-              alt={value.alt || "Content image"}
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, 800px"
-            />
+            <VisualPlaceholder label={value.alt || "article imagery"} />
           </div>
           {value.caption && (
             <figcaption className="text-center font-mono text-xs text-muted-text mt-2">

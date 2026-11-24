@@ -191,7 +191,7 @@ export function ChatInterface() {
           if (step.step_name === "classify_query") {
             setCurrentStep("Routing query via in-process classifier...");
           } else if (step.step_name === "retrieve_context") {
-            setCurrentStep("Searching Qdrant and Neon PostgreSQL...");
+            setCurrentStep("Searching portfolio sources...");
           } else if (step.step_name === "generate_grounded_response") {
             setCurrentStep("Generating cited answer...");
           } else {

@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
+import { VisualPlaceholder } from "@/components/VisualPlaceholder";
 import { ArrowLeft, ArrowUpRight, Calendar, Clock } from "lucide-react";
 import { getArticles, getArticle } from "@/lib/sanity/loadData";
 import { PortableText } from "@/components/PortableText";
@@ -108,13 +108,7 @@ export default async function WritingArticlePage({
         {heroUrl && (
           <figure className="bg-surface-white rounded-2xl border border-hairline p-3 shadow-editorial-sm">
             <div className="relative aspect-[16/9] max-h-[520px] w-full overflow-hidden rounded-xl bg-surface-container">
-              <Image
-                src={heroUrl}
-                alt={article.title}
-                fill
-                className="object-cover"
-                sizes="(max-width: 1024px) 100vw, 1200px"
-              />
+              <VisualPlaceholder label={`${article.title} article imagery`} />
             </div>
           </figure>
         )}
