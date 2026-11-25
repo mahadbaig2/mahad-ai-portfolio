@@ -26,11 +26,26 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-creato);
+    font-weight: 700 !important;
+  }
+
   /* Accessible focus states required by AGENTS.md */
   :focus-visible {
     outline: 2px solid #145440;
     outline-offset: 2px;
   }
+}
+
+/* Editorial titles also appear as links and spans outside semantic headings. */
+.font-serif:not(blockquote) {
+  font-weight: 700 !important;
 }
 
 /* Subtle editorial grid pattern (used sparingly in architectural figures) */
