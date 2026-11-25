@@ -73,7 +73,7 @@
 }
 
 .home-mosaic {
-  background: #0a100d;
+  background: var(--background);
   gap: 10px;
   padding: 10px;
 }
