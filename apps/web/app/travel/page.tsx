@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { VisualPlaceholder } from "@/components/VisualPlaceholder";
-import { ArrowRight, Compass, Mountain } from "lucide-react";
+import { ArrowRight, Mountain } from "lucide-react";
 import { getTravelJourneys } from "@/lib/sanity/loadData";
 
 export const metadata = {
@@ -35,10 +35,6 @@ export default async function TravelPage() {
       <section className="max-w-[1440px] mx-auto w-full px-5 md:px-10 lg:px-16 pt-12 pb-10 space-y-8">
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
           <div className="max-w-3xl space-y-4">
-            <div className="inline-flex items-center gap-2 font-mono text-xs text-secondary tracking-widest uppercase">
-              <Compass className="h-3.5 w-3.5" aria-hidden="true" />
-              <span>Off-Screen // Travel &amp; Field Journal</span>
-            </div>
             <h1 className="font-serif text-4xl sm:text-5xl lg:text-[3.75rem] font-normal text-primary tracking-tight leading-[1.08]">
               Roads, altitude and everything between.
             </h1>
@@ -65,7 +61,7 @@ export default async function TravelPage() {
         </div>
 
         {/* Main Hero Plate */}
-        <div className="bg-surface-white rounded-2xl border border-hairline/80 overflow-hidden shadow-editorial">
+        <div className="bg-surface-white border-2 border-primary overflow-hidden shadow-editorial">
           <div className="relative w-full aspect-[4/3] sm:aspect-[16/9] max-h-[560px] bg-surface-container-high">
             <VisualPlaceholder label="the Khunjerab motorcycle journey" />
             <div className="absolute inset-0 bg-gradient-to-t from-charcoal-gutter/70 via-transparent to-transparent pointer-events-none" />
@@ -92,7 +88,7 @@ export default async function TravelPage() {
           {FIELD_GALLERY.map((item) => (
             <figure
               key={item.src}
-              className="bg-surface-white rounded-xl border border-hairline/80 overflow-hidden shadow-editorial-sm"
+              className="bg-surface-white border-2 border-primary overflow-hidden shadow-editorial-sm"
             >
               <div className="relative aspect-[4/3] bg-surface-container">
                 <VisualPlaceholder label={item.caption} />
@@ -106,7 +102,7 @@ export default async function TravelPage() {
         </div>
 
         {/* Logged Journeys List */}
-        <div className="bg-surface-white rounded-2xl border border-hairline/80 p-6 sm:p-10 shadow-editorial-sm space-y-6">
+        <div className="bg-surface-white border-2 border-primary p-6 sm:p-10 shadow-editorial-sm space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 pb-4 border-b border-hairline">
             <div>
               <span className="font-mono text-xs text-secondary uppercase tracking-wider">

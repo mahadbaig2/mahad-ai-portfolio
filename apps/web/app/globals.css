@@ -4,12 +4,11 @@
 
 @layer base {
   :root {
-    --font-creato: "Creato Display", sans-serif;
-    --background: #F7F8F5;
-    --foreground: #17211C;
-    --muted: #EAF3ED;
-    --muted-foreground: #4F5F56;
-    --border: #C8D3CA;
+    --background: #fcf9f2;
+    --foreground: #1c1c18;
+    --muted: #f1eee7;
+    --muted-foreground: #474741;
+    --border: #c8c7be;
   }
 
   html {
@@ -32,20 +31,14 @@
   h4,
   h5,
   h6 {
-    font-family: var(--font-creato);
-    font-weight: 700 !important;
+    font-family: var(--font-chivo), sans-serif;
   }
 
   /* Accessible focus states required by AGENTS.md */
   :focus-visible {
-    outline: 2px solid #145440;
+    outline: 2px solid #360d11;
     outline-offset: 2px;
   }
-}
-
-/* Editorial titles also appear as links and spans outside semantic headings. */
-.font-serif:not(blockquote) {
-  font-weight: 700 !important;
 }
 
 /* Subtle editorial grid pattern (used sparingly in architectural figures) */
@@ -72,29 +65,6 @@
   mix-blend-mode: multiply;
 }
 
-.home-mosaic {
-  background: var(--background);
-  gap: 10px;
-  padding: 10px;
-}
-
-.home-mosaic > * {
-  width: 100%;
-  max-width: 1440px;
-  margin-inline: auto;
-  border-radius: 12px;
-  overflow: clip;
-}
-
-.home-mosaic > section:not([class*="bg-"]),
-.home-mosaic > div:not([class*="bg-"]) {
-  background: #f7f8f5;
-}
-
-.home-mosaic > section[class*="bg-mint"] {
-  background: #eaf3ed;
-}
-
 .case-meta {
   display: flex;
   flex-wrap: wrap;
@@ -108,25 +78,6 @@
   border-radius: 0;
   box-shadow: none;
   padding: 0;
-}
-
-@keyframes hero-arrive {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.hero-copy {
-  animation: hero-arrive 420ms cubic-bezier(0.2, 0, 0, 1) both;
-}
-
-.hero-visual {
-  animation: hero-arrive 520ms cubic-bezier(0.2, 0, 0, 1) 70ms both;
 }
 
 /* Reduced motion compliance */

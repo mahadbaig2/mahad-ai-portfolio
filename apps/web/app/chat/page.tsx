@@ -57,7 +57,7 @@ export default function ChatPage() {
         </div>
 
         {/* Explicit Non-Human Disclosure Banner */}
-        <div className="w-full bg-mint/70 border border-hairline rounded-xl p-4 sm:p-5">
+        <div className="w-full bg-mint/70 border-2 border-primary p-4 sm:p-5">
           <div className="flex flex-col sm:flex-row items-start gap-3">
             <div className="p-2 rounded-lg bg-surface-white border border-hairline text-primary shrink-0">
               <ShieldCheck className="h-5 w-5" aria-hidden="true" />
@@ -66,9 +66,6 @@ export default function ChatPage() {
               <div className="flex flex-wrap items-center gap-2">
                 <span className="font-mono text-xs font-medium text-primary uppercase tracking-wider">
                   AI Portfolio Assistant
-                </span>
-                <span className="px-2 py-0.5 rounded-full bg-sage font-mono text-[11px] text-primary">
-                  Explicit Non-Human Disclosure
                 </span>
               </div>
               <p className="text-sm text-on-surface-variant leading-relaxed">
@@ -81,7 +78,7 @@ export default function ChatPage() {
 
       {/* Main Chat Panel Container */}
       <section className="max-w-[1440px] mx-auto px-5 md:px-10 lg:px-16 pb-16">
-        <div className="rounded-2xl border border-hairline bg-surface-white p-4 sm:p-6 shadow-editorial">
+        <div className="border-2 border-primary bg-surface-white p-4 sm:p-6 shadow-editorial">
           <ChatInterface />
         </div>
       </section>

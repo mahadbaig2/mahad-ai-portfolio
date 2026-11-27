@@ -62,7 +62,7 @@ export default async function TravelDetailPage({
           </div>
 
           {/* Route Facts Strip */}
-          <div className="bg-surface-white rounded-xl border border-hairline/80 shadow-editorial-sm p-5 grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div className="bg-surface-white border-2 border-primary shadow-editorial-sm p-5 grid grid-cols-2 sm:grid-cols-4 gap-4">
             <div>
               <span className="font-mono text-[11px] text-muted-text uppercase block">Route</span>
               <span className="text-sm font-medium text-on-surface mt-1 block">
@@ -93,14 +93,14 @@ export default async function TravelDetailPage({
         </header>
 
         {/* Panoramic Photo Plate */}
-        <div className="bg-surface-white p-3 rounded-2xl border border-hairline/80 shadow-editorial-sm">
+        <div className="bg-surface-white p-3 border-2 border-primary shadow-editorial-sm">
           <div className="relative w-full aspect-[16/9] max-h-[540px] overflow-hidden rounded-xl bg-surface-container">
             <VisualPlaceholder label={`${journey.title} travel photography`} />
           </div>
         </div>
 
         {/* Story & Field Reflections */}
-        <article className="bg-surface-white rounded-2xl border border-hairline/80 shadow-editorial-sm px-6 py-10 sm:px-12 lg:px-20 lg:py-14">
+        <article className="bg-surface-white border-2 border-primary shadow-editorial-sm px-6 py-10 sm:px-12 lg:px-20 lg:py-14">
           <div className="max-w-prose mx-auto space-y-6">
             {journey.story ? (
               <PortableText value={journey.story} />

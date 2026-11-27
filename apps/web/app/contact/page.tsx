@@ -30,7 +30,7 @@ export default async function ContactPage() {
             </p>
           </div>
 
-          <div className="hidden lg:block max-w-xs bg-surface-white p-4 rounded-xl border border-hairline shadow-editorial-sm space-y-2">
+          <div className="hidden lg:block max-w-xs bg-surface-white p-4 border-2 border-primary shadow-editorial-sm space-y-2">
             <div className="font-serif text-lg font-medium text-primary">
               {settings.authorName}
             </div>
@@ -42,7 +42,7 @@ export default async function ContactPage() {
         </div>
 
         {/* Four-Cell Information Band */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-5 bg-surface-white rounded-2xl border border-hairline/80 shadow-editorial-sm">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-5 bg-surface-white border-2 border-primary shadow-editorial-sm">
           <div className="p-3.5 rounded-xl bg-surface-container-low/70 space-y-1">
             <div className="font-mono text-[11px] text-muted-text uppercase tracking-wider">
               Location
@@ -88,9 +88,6 @@ export default async function ContactPage() {
         <div className="max-w-[1440px] mx-auto px-5 md:px-10 lg:px-16 space-y-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-3">
             <div>
-              <span className="font-mono text-xs text-secondary uppercase tracking-widest">
-                Verified Channels
-              </span>
               <h2 className="font-serif text-3xl sm:text-4xl font-normal text-primary mt-1">
                 Direct ways to connect
               </h2>
@@ -102,7 +99,7 @@ export default async function ContactPage() {
 
           {/* Primary Cards: Email + LinkedIn */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-surface-white p-7 sm:p-8 rounded-2xl border border-hairline shadow-editorial-sm flex flex-col justify-between">
+            <div className="bg-surface-white p-7 sm:p-8 border-2 border-primary shadow-editorial-sm flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <span className="inline-flex items-center gap-1.5 font-mono text-xs bg-sage text-primary px-3 py-1 rounded-full font-medium">
@@ -131,7 +128,7 @@ export default async function ContactPage() {
               </div>
             </div>
 
-            <div className="bg-surface-white p-7 sm:p-8 rounded-2xl border border-hairline shadow-editorial-sm flex flex-col justify-between">
+            <div className="bg-surface-white p-7 sm:p-8 border-2 border-primary shadow-editorial-sm flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <span className="inline-flex items-center gap-1.5 font-mono text-xs bg-mint text-primary px-3 py-1 rounded-full font-medium">
@@ -164,7 +161,7 @@ export default async function ContactPage() {
 
           {/* Secondary Cards: GitHub, Writing/Medium, Résumé / Photo */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-surface-white p-6 rounded-xl border border-hairline shadow-editorial-sm flex flex-col justify-between space-y-4">
+            <div className="bg-surface-white p-6 border-2 border-primary shadow-editorial-sm flex flex-col justify-between space-y-4">
               <div className="space-y-2.5">
                 <div className="flex items-center justify-between font-mono text-xs text-muted-text uppercase">
                   <span>Repositories</span>
@@ -186,7 +183,7 @@ export default async function ContactPage() {
               </a>
             </div>
 
-            <div className="bg-surface-white p-6 rounded-xl border border-hairline shadow-editorial-sm flex flex-col justify-between space-y-4">
+            <div className="bg-surface-white p-6 border-2 border-primary shadow-editorial-sm flex flex-col justify-between space-y-4">
               <div className="space-y-2.5">
                 <div className="flex items-center justify-between font-mono text-xs text-muted-text uppercase">
                   <span>Publications</span>
@@ -219,7 +216,7 @@ export default async function ContactPage() {
               </div>
             </div>
 
-            <div className="bg-surface-white p-6 rounded-xl border border-hairline shadow-editorial-sm flex flex-col justify-between space-y-4">
+            <div id="resume" className="scroll-mt-20 bg-surface-white p-6 border-2 border-primary shadow-editorial-sm flex flex-col justify-between space-y-4">
               <div className="space-y-2.5">
                 <div className="flex items-center justify-between font-mono text-xs text-muted-text uppercase">
                   <span>Credentials &amp; Context</span>
@@ -262,9 +259,6 @@ export default async function ContactPage() {
       <section className="max-w-[1440px] mx-auto w-full px-5 md:px-10 lg:px-16 py-14">
         <div className="bg-primary text-on-primary rounded-2xl p-8 sm:p-12 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center shadow-editorial">
           <div className="lg:col-span-7 space-y-4">
-            <span className="font-mono text-xs text-secondary-fixed uppercase tracking-widest">
-              Fast Paths to Signal
-            </span>
             <h2 className="font-serif text-3xl sm:text-4xl font-normal">
               Evaluating fit? Inspect the work or ask the assistant directly.
             </h2>

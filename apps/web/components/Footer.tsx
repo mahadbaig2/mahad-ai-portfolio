@@ -3,7 +3,7 @@ import { ArrowUpRight } from "lucide-react";
 
 export function Footer() {
   return (
-    <footer className="w-full bg-paper border-t border-hairline">
+    <footer className="w-full border-t-2 border-primary bg-surface">
       <div className="max-w-[1440px] mx-auto px-5 md:px-10 lg:px-16 py-12 lg:py-16">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 pb-10 border-b border-hairline/70 items-start">
           <div className="space-y-2 md:col-span-1">
@@ -13,9 +13,6 @@ export function Footer() {
             >
               Mirza Mahad Baig
             </Link>
-            <p className="text-sm text-muted-text leading-relaxed">
-              AI product engineering, interface craft, and inspectable full-stack systems.
-            </p>
           </div>
 
           <div className="space-y-2">
@@ -45,15 +42,6 @@ export function Footer() {
           </div>
 
           <div className="space-y-2">
-            <div className="font-mono text-xs uppercase tracking-wider text-muted-text">
-              Base &amp; Assistant
-            </div>
-            <div className="flex items-center gap-2 pt-1">
-              <span className="h-2 w-2 rounded-full bg-primary" aria-hidden="true" />
-              <span className="font-mono text-xs text-primary font-medium">
-                Islamabad, Pakistan · Remote
-              </span>
-            </div>
             <div className="pt-1">
               <Link
                 href="/chat"
@@ -106,8 +94,7 @@ export function Footer() {
         </div>
 
         <div className="pt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 font-mono text-xs text-muted-text">
-          <span>© {new Date().getFullYear()} Mirza Mahad Baig. AI Product Engineering &amp; Design.</span>
-          <span>Green Editorial System · Sanity CMS + Inspectable RAG</span>
+          <span>© {new Date().getFullYear()} Mirza Mahad Baig.</span>
         </div>
       </div>
     </footer>

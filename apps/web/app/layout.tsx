@@ -6,24 +6,24 @@ import { Footer } from "@/components/Footer";
 import { AssistantWidgetProvider } from "@/components/assistant/AssistantWidgetContext";
 import { AssistantWidget } from "@/components/assistant/AssistantWidget";
 
-const creato = localFont({
-  src: [
-    { path: "./fonts/CreatoDisplay-Thin.otf", weight: "100", style: "normal" },
-    { path: "./fonts/CreatoDisplay-Light.otf", weight: "300", style: "normal" },
-    { path: "./fonts/CreatoDisplay-Regular.otf", weight: "400", style: "normal" },
-    { path: "./fonts/CreatoDisplay-Medium.otf", weight: "500", style: "normal" },
-    { path: "./fonts/CreatoDisplay-Bold.otf", weight: "700", style: "normal" },
-    { path: "./fonts/CreatoDisplay-ExtraBold.otf", weight: "800", style: "normal" },
-    { path: "./fonts/CreatoDisplay-Black.otf", weight: "900", style: "normal" },
-    { path: "./fonts/CreatoDisplay-ThinItalic.otf", weight: "100", style: "italic" },
-    { path: "./fonts/CreatoDisplay-LightItalic.otf", weight: "300", style: "italic" },
-    { path: "./fonts/CreatoDisplay-RegularItalic.otf", weight: "400", style: "italic" },
-    { path: "./fonts/CreatoDisplay-MediumItalic.otf", weight: "500", style: "italic" },
-    { path: "./fonts/CreatoDisplay-BoldItalic.otf", weight: "700", style: "italic" },
-    { path: "./fonts/CreatoDisplay-ExtraBoldItalic.otf", weight: "800", style: "italic" },
-    { path: "./fonts/CreatoDisplay-BlackItalic.otf", weight: "900", style: "italic" },
-  ],
-  variable: "--font-creato",
+const chivo = localFont({
+  src: "./fonts/chivo-latin.woff2",
+  weight: "100 900",
+  variable: "--font-chivo",
+  display: "swap",
+});
+
+const hankenGrotesk = localFont({
+  src: "./fonts/hanken-grotesk-latin.woff2",
+  weight: "100 900",
+  variable: "--font-hanken-grotesk",
+  display: "swap",
+});
+
+const jetbrainsMono = localFont({
+  src: "./fonts/jetbrains-mono-latin.woff2",
+  weight: "100 800",
+  variable: "--font-jetbrains-mono",
   display: "swap",
 });
 
@@ -57,7 +57,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${creato.variable} scroll-smooth`}
+      className={`${chivo.variable} ${hankenGrotesk.variable} ${jetbrainsMono.variable} scroll-smooth`}
     >
       <body
         suppressHydrationWarning
@@ -65,7 +65,7 @@ export default function RootLayout({
       >
         <AssistantWidgetProvider>
           <Header />
-          <main className="min-h-[calc(100vh-160px)] pt-20">{children}</main>
+          <main className="min-h-[calc(100vh-160px)]">{children}</main>
           <Footer />
           <AssistantWidget />
         </AssistantWidgetProvider>

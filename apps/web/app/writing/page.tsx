@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { VisualPlaceholder } from "@/components/VisualPlaceholder";
-import { ArrowRight, ArrowUpRight, AudioLines, BookOpen } from "lucide-react";
+import { ArrowRight, ArrowUpRight, BookOpen } from "lucide-react";
 import { getArticles } from "@/lib/sanity/loadData";
 import { urlForImage } from "@/lib/sanity/image";
 
@@ -22,37 +22,15 @@ export default async function WritingPage() {
       <div className="max-w-[1440px] mx-auto w-full px-5 md:px-10 lg:px-16 py-12 lg:py-16 space-y-12">
         {/* Hero Editorial Section */}
         <section className="space-y-5">
-          <div className="flex items-center gap-2.5">
-            <span className="inline-block w-2 h-2 rounded-full bg-primary" aria-hidden="true" />
-            <span className="font-mono text-xs text-muted-text uppercase tracking-wider">
-              Essays, Architecture Notes &amp; Writing
-            </span>
-          </div>
-
           <h1 className="font-serif text-4xl sm:text-5xl lg:text-[4rem] font-normal text-primary tracking-tight leading-[1.08] max-w-4xl">
             Notes from building between product and AI.
           </h1>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 pt-2 items-start">
-            <div className="lg:col-span-8">
-              <p className="text-lg text-on-surface leading-relaxed max-w-prose">
-                Architectural breakdowns, routing notes, and practical lessons written directly from building interfaces, RAG pipelines, and full-stack software.
-              </p>
-            </div>
-            <div className="lg:col-span-4 bg-surface-white rounded-xl border border-hairline/80 p-5 shadow-editorial-sm">
-              <div className="font-mono text-xs text-secondary uppercase tracking-wider mb-1">
-                Publication Approach
-              </div>
-              <p className="text-sm text-on-surface-variant leading-relaxed">
-                Grounded technical writing focused on architecture trade-offs, evaluation constraints, and product clarity rather than generic commentary.
-              </p>
-            </div>
-          </div>
         </section>
 
         {/* Featured Article Split Card */}
         {featured && (
-          <article className="bg-surface-white rounded-2xl border border-hairline/80 shadow-editorial-sm overflow-hidden p-6 lg:p-10">
+          <article className="bg-surface-white border-2 border-primary shadow-editorial-sm overflow-hidden p-6 lg:p-10">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
               <div className="lg:col-span-7 flex flex-col justify-between space-y-5">
                 <div className="space-y-4">
@@ -155,7 +133,7 @@ export default async function WritingPage() {
               {rest.map((article, idx) => (
                 <article
                   key={article.slug}
-                  className="bg-surface-white rounded-xl border border-hairline/80 p-6 lg:p-8 shadow-editorial-sm hover:shadow-editorial transition-shadow group"
+                  className="bg-surface-white border-2 border-primary p-6 lg:p-8 shadow-editorial-sm hover:shadow-editorial transition-shadow group"
                 >
                   <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
                     <div className="lg:col-span-3 space-y-1 font-mono text-xs">
@@ -208,16 +186,9 @@ export default async function WritingPage() {
         {/* Deep Forest Assistant Query Banner */}
         <section className="bg-primary text-on-primary rounded-2xl p-8 sm:p-12 shadow-editorial flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
           <div className="space-y-3 max-w-2xl">
-            <div className="inline-flex items-center gap-2 font-mono text-xs text-secondary-fixed uppercase tracking-wider">
-              <AudioLines className="h-4 w-4" aria-hidden="true" />
-              <span>Portfolio Assistant</span>
-            </div>
             <h2 className="font-serif text-3xl sm:text-4xl font-normal text-on-primary">
               Have a question about these articles?
             </h2>
-            <p className="text-base text-on-primary-container leading-relaxed">
-              Indexed articles and architecture notes can be queried interactively through the grounded portfolio assistant.
-            </p>
           </div>
           <Link
             href="/chat"

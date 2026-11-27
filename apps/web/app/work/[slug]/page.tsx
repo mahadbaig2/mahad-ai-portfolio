@@ -75,7 +75,7 @@ export default async function CaseStudyPage({
           </div>
 
           <div className="case-meta grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-2">
-            {project.role && <div className="bg-surface-white rounded-xl border border-hairline/80 p-4 shadow-editorial-sm flex flex-col justify-between">
+            {project.role && <div className="bg-surface-white border-2 border-primary p-4 shadow-editorial-sm flex flex-col justify-between">
               <span className="font-mono text-[11px] uppercase tracking-wider text-muted-text">
                 Role
               </span>
@@ -84,7 +84,7 @@ export default async function CaseStudyPage({
               </p>
             </div>}
 
-            {(project.timeline || project.year) && <div className="bg-surface-white rounded-xl border border-hairline/80 p-4 shadow-editorial-sm flex flex-col justify-between">
+            {(project.timeline || project.year) && <div className="bg-surface-white border-2 border-primary p-4 shadow-editorial-sm flex flex-col justify-between">
               <span className="font-mono text-[11px] uppercase tracking-wider text-muted-text">
                 Timeline
               </span>
@@ -93,7 +93,7 @@ export default async function CaseStudyPage({
               </p>
             </div>}
 
-            {(project.maturityStatus || project.origin) && <div className="bg-surface-white rounded-xl border border-hairline/80 p-4 shadow-editorial-sm flex flex-col justify-between">
+            {(project.maturityStatus || project.origin) && <div className="bg-surface-white border-2 border-primary p-4 shadow-editorial-sm flex flex-col justify-between">
               <span className="font-mono text-[11px] uppercase tracking-wider text-muted-text">
                 Status
               </span>
@@ -102,7 +102,7 @@ export default async function CaseStudyPage({
               </p>
             </div>}
 
-            {project.technologies?.length > 0 && <div className="bg-surface-white rounded-xl border border-hairline/80 p-4 shadow-editorial-sm flex flex-col justify-between">
+            {project.technologies?.length > 0 && <div className="bg-surface-white border-2 border-primary p-4 shadow-editorial-sm flex flex-col justify-between">
               <span className="font-mono text-[11px] uppercase tracking-wider text-muted-text">
                 Technologies
               </span>
@@ -111,7 +111,7 @@ export default async function CaseStudyPage({
               </p>
             </div>}
 
-            {(project.githubUrl || project.liveUrl) && <div className="bg-surface-white rounded-xl border border-hairline/80 p-4 shadow-editorial-sm flex flex-col justify-between">
+            {(project.githubUrl || project.liveUrl) && <div className="bg-surface-white border-2 border-primary p-4 shadow-editorial-sm flex flex-col justify-between">
               <span className="font-mono text-[11px] uppercase tracking-wider text-muted-text">
                 Links
               </span>
@@ -147,7 +147,7 @@ export default async function CaseStudyPage({
 
         {/* 02. Visual placeholder until approved project images are available */}
         <section>
-          <figure className="bg-surface-white rounded-2xl border border-hairline/80 p-3 shadow-editorial-sm">
+          <figure className="bg-surface-white border-2 border-primary p-3 shadow-editorial-sm">
             <div className="relative aspect-[16/9] max-h-[560px] w-full overflow-hidden rounded-xl bg-surface-container">
               <VisualPlaceholder label={`${project.title} project imagery`} />
             </div>
@@ -155,11 +155,8 @@ export default async function CaseStudyPage({
         </section>
 
         {/* 03. Case Study Body Container */}
-        <section className="bg-surface-white rounded-2xl border border-hairline/80 shadow-editorial-sm p-6 sm:p-10 lg:p-14">
+        <section className="bg-surface-white border-2 border-primary shadow-editorial-sm p-6 sm:p-10 lg:p-14">
           <div className="pb-8 border-b border-hairline/70">
-            <span className="font-mono text-xs text-secondary uppercase tracking-widest block mb-2">
-              Summary
-            </span>
             <h2 className="font-serif text-2xl sm:text-3xl font-normal text-primary leading-snug max-w-3xl">
               {study?.summary || project.summary}
             </h2>

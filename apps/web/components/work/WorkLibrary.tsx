@@ -58,7 +58,7 @@ export function WorkLibrary({ initialProjects }: WorkLibraryProps) {
   return (
     <div className="w-full">
       {/* Sticky Filter & Classification Bar */}
-      <section className="w-full bg-surface-white border-y border-hairline/80 py-4 sticky top-20 z-30 shadow-editorial-sm">
+      <section className="w-full bg-surface-white border-y border-hairline/80 py-4 sticky top-16 z-30 shadow-editorial-sm">
         <div className="max-w-[1440px] mx-auto px-5 md:px-10 lg:px-16 flex flex-col md:flex-row md:items-center justify-between gap-3">
           <div className="flex flex-wrap items-center gap-2" role="group" aria-label="Filter projects by discipline">
             {CATEGORIES.map((cat) => {
@@ -92,14 +92,14 @@ export function WorkLibrary({ initialProjects }: WorkLibraryProps) {
       {/* Main Archive Body */}
       <div className="max-w-[1440px] mx-auto px-5 md:px-10 lg:px-16 py-12 lg:py-16 space-y-12">
         {filteredProjects.length === 0 ? (
-          <div className="bg-surface-white rounded-2xl border border-hairline p-12 text-center font-mono text-sm text-muted-text">
+          <div className="bg-surface-white border-2 border-primary p-12 text-center font-mono text-sm text-muted-text">
             No projects match the selected discipline filter.
           </div>
         ) : (
           <>
             {/* Featured Specimen 01 */}
             {featuredProject && (
-              <article className="bg-surface-white rounded-2xl border border-hairline/80 shadow-editorial overflow-hidden grid grid-cols-1 lg:grid-cols-12">
+              <article className="bg-surface-white border-2 border-primary shadow-editorial overflow-hidden grid grid-cols-1 lg:grid-cols-12">
                 <div className="lg:col-span-7 p-6 sm:p-10 flex flex-col justify-between space-y-6">
                   <div className="space-y-4">
                     <div className="flex flex-wrap items-center gap-2.5">
@@ -215,7 +215,7 @@ export function WorkLibrary({ initialProjects }: WorkLibraryProps) {
                 {gridProjects.map((project, idx) => (
                   <article
                     key={project.slug}
-                    className="bg-surface-white rounded-2xl border border-hairline/80 shadow-editorial-sm p-6 sm:p-7 flex flex-col justify-between hover:shadow-editorial transition-all group"
+                    className="bg-surface-white border-2 border-primary shadow-editorial-sm p-6 sm:p-7 flex flex-col justify-between hover:shadow-editorial transition-all group"
                   >
                     <div className="space-y-4">
                       <div className="flex flex-wrap items-center justify-between gap-2">

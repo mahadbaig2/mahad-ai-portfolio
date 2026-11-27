@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { ArrowRight, FlaskConical, ShieldAlert, CheckCircle2, Layers } from "lucide-react";
+import { ArrowRight, ShieldAlert, CheckCircle2, Layers } from "lucide-react";
 import { SHOWCASE } from "@/lib/showcase";
 
 export const metadata: Metadata = {
@@ -45,10 +45,6 @@ export default function PlaygroundPage() {
       {/* Top Archival Header */}
       <section className="max-w-[1440px] mx-auto w-full px-5 md:px-10 lg:px-16 pt-12 pb-10 space-y-6">
         <div className="max-w-4xl space-y-4">
-          <div className="inline-flex items-center gap-2 font-mono text-xs text-primary tracking-widest uppercase">
-            <FlaskConical className="h-3.5 w-3.5" aria-hidden="true" />
-            <span>Playground // Prototypes &amp; Explorations</span>
-          </div>
           <h1 className="font-serif text-4xl sm:text-5xl lg:text-[3.75rem] font-normal text-primary tracking-tight leading-[1.08]">
             Small builds. Unfinished ideas. Useful experiments.
           </h1>
@@ -64,7 +60,7 @@ export default function PlaygroundPage() {
             return (
               <div
                 key={proto.index}
-                className="bg-surface-container-low p-6 rounded-xl border border-hairline/80 flex flex-col justify-between"
+                className="bg-surface-container-low p-6 border-2 border-primary flex flex-col justify-between"
               >
                 <div>
                   <div className="flex items-center justify-between mb-3">
@@ -108,7 +104,7 @@ export default function PlaygroundPage() {
             <Link
               key={item.slug}
               href={`/work/${item.slug}`}
-              className="bg-surface-white rounded-xl border border-hairline/80 shadow-editorial-sm overflow-hidden flex flex-col justify-between group hover:shadow-editorial transition-shadow"
+              className="bg-surface-white border-2 border-primary shadow-editorial-sm overflow-hidden flex flex-col justify-between group hover:shadow-editorial transition-shadow"
             >
               <div className="h-40 bg-gradient-to-br from-primary via-primary-container to-charcoal-gutter p-5 flex flex-col justify-between text-on-primary">
                 <div className="flex items-center justify-between font-mono text-xs text-secondary-fixed">

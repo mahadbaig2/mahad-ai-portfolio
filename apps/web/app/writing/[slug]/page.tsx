@@ -84,7 +84,7 @@ export default async function WritingArticlePage({
           </div>
 
           {/* Author & Metadata Bar */}
-          <div className="bg-surface-container-low border border-hairline/80 rounded-xl px-5 py-4 flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-xs text-muted-text">
+          <div className="bg-surface-container-low border-2 border-primary px-5 py-4 flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-xs text-muted-text">
             <span className="font-sans text-sm font-semibold text-primary">
               Mirza Mahad Baig
             </span>
@@ -106,7 +106,7 @@ export default async function WritingArticlePage({
         </header>
 
         {heroUrl && (
-          <figure className="bg-surface-white rounded-2xl border border-hairline p-3 shadow-editorial-sm">
+          <figure className="bg-surface-white border-2 border-primary p-3 shadow-editorial-sm">
             <div className="relative aspect-[16/9] max-h-[520px] w-full overflow-hidden rounded-xl bg-surface-container">
               <VisualPlaceholder label={`${article.title} article imagery`} />
             </div>
@@ -114,7 +114,7 @@ export default async function WritingArticlePage({
         )}
 
         {/* Long-form Reading Canvas (68ch Measure) */}
-        <div className="bg-surface-white rounded-2xl border border-hairline/80 shadow-editorial-sm px-6 py-10 sm:px-12 lg:px-20 lg:py-14">
+        <div className="bg-surface-white border-2 border-primary shadow-editorial-sm px-6 py-10 sm:px-12 lg:px-20 lg:py-14">
           <div className="max-w-prose mx-auto space-y-6">
             {article.body ? (
               <PortableText value={article.body} />

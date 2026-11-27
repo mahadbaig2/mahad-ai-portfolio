@@ -82,9 +82,6 @@ export default async function AboutPage() {
           <div className="lg:col-span-7 flex flex-col justify-between space-y-6">
             <div>
               <div className="flex items-center gap-3 mb-4">
-                <span className="font-mono text-xs text-primary font-medium tracking-widest uppercase">
-                  01 // Background &amp; Perspective
-                </span>
                 <span className="w-8 h-px bg-hairline" aria-hidden="true" />
                 <span className="font-mono text-xs text-muted-text">Mirza Mahad Baig</span>
               </div>
@@ -103,7 +100,7 @@ export default async function AboutPage() {
             </div>
 
             {/* 3 Compact Anchors Strip */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3 bg-surface-container-low rounded-xl border border-hairline/70">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3 bg-surface-container-low border-2 border-primary">
               <div className="p-3 bg-surface-white rounded-lg border border-hairline/60">
                 <span className="font-mono text-[11px] text-muted-text uppercase tracking-wider block">
                   Design Background
@@ -136,7 +133,7 @@ export default async function AboutPage() {
 
           {/* Right Documentary Plate */}
           <div className="lg:col-span-5">
-            <div className="bg-surface-white p-3.5 rounded-2xl border border-hairline/80 shadow-editorial">
+            <div className="bg-surface-white p-3.5 border-2 border-primary shadow-editorial">
               <div className="relative overflow-hidden rounded-xl aspect-[3/4] bg-surface-container">
                 <VisualPlaceholder label="a personal portrait or travel photograph" />
                 <div className="absolute bottom-3 left-3 bg-charcoal-gutter/85 backdrop-blur-sm px-3 py-1 rounded text-surface-white font-mono text-xs flex items-center gap-1.5">
@@ -166,9 +163,6 @@ export default async function AboutPage() {
       <section className="w-full bg-mint/60 border-y border-hairline/70 py-14 lg:py-20">
         <div className="max-w-[1440px] mx-auto px-5 md:px-10 lg:px-16">
           <div className="max-w-3xl mb-10">
-            <span className="font-mono text-xs text-primary font-medium tracking-widest uppercase block mb-2">
-              02 // Trajectory
-            </span>
             <h2 className="font-serif text-3xl sm:text-4xl font-normal text-primary tracking-tight mb-3">
               Not a reinvention. An expansion.
             </h2>
@@ -181,7 +175,7 @@ export default async function AboutPage() {
             {TRAJECTORY_STEPS.map((step) => (
               <div
                 key={step.index}
-                className="bg-surface-white p-6 rounded-xl border border-hairline/70 shadow-editorial-sm flex flex-col justify-between"
+                className="bg-surface-white p-6 border-2 border-primary shadow-editorial-sm flex flex-col justify-between"
               >
                 <div>
                   <div className="flex items-center justify-between pb-3 mb-4 border-b border-hairline/50">
@@ -215,9 +209,6 @@ export default async function AboutPage() {
       <section className="w-full max-w-[1440px] mx-auto px-5 md:px-10 lg:px-16 py-14 lg:py-20">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 pb-4 border-b border-hairline">
           <div>
-            <span className="font-mono text-xs text-primary font-medium tracking-widest uppercase block mb-1">
-              03 // Track Record
-            </span>
             <h2 className="font-serif text-3xl sm:text-4xl font-normal text-primary tracking-tight">
               Where I’ve worked
             </h2>
@@ -231,7 +222,7 @@ export default async function AboutPage() {
           {experiences.map((exp) => (
             <article
               key={`${exp.company}-${exp.role}`}
-              className="bg-surface-white p-6 sm:p-8 rounded-xl border border-hairline/80 shadow-editorial-sm"
+              className="bg-surface-white p-6 sm:p-8 border-2 border-primary shadow-editorial-sm"
             >
               <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-2 pb-4 mb-4 border-b border-hairline/50">
                 <div className="flex flex-wrap items-center gap-3">
@@ -287,9 +278,6 @@ export default async function AboutPage() {
         <section className="w-full bg-mint/50 border-y border-hairline/70 py-14 lg:py-20">
           <div className="max-w-[1440px] mx-auto px-5 md:px-10 lg:px-16">
             <div className="mb-10">
-              <span className="font-mono text-xs text-primary font-medium tracking-widest uppercase block mb-1">
-                04 // Capabilities
-              </span>
               <h2 className="font-serif text-3xl sm:text-4xl font-normal text-primary tracking-tight">
                 Technical &amp; Design Stack
               </h2>
@@ -299,7 +287,7 @@ export default async function AboutPage() {
               {skills.map((skill) => (
                 <div
                   key={skill.name}
-                  className="bg-surface-white p-6 rounded-xl border border-hairline/80 shadow-editorial-sm flex flex-col justify-between"
+                  className="bg-surface-white p-6 border-2 border-primary shadow-editorial-sm flex flex-col justify-between"
                 >
                   <div>
                     <div className="flex items-center justify-between mb-3">
@@ -331,9 +319,6 @@ export default async function AboutPage() {
         <section className="w-full max-w-[1440px] mx-auto px-5 md:px-10 lg:px-16 py-14 lg:py-16">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             <div className="lg:col-span-4">
-              <span className="font-mono text-xs text-primary font-medium tracking-widest uppercase block mb-1">
-                05 // Academic Foundation
-              </span>
               <h2 className="font-serif text-3xl font-normal text-primary tracking-tight mb-2">
                 Education &amp; Credentials
               </h2>
@@ -346,7 +331,7 @@ export default async function AboutPage() {
               {education.map((edu) => (
                 <div
                   key={`${edu.institution}-${edu.degree}`}
-                  className="bg-surface-white p-5 rounded-xl border border-hairline/80 shadow-editorial-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+                  className="bg-surface-white p-5 border-2 border-primary shadow-editorial-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4"
                 >
                   <div>
                     <span className="font-mono text-xs text-secondary uppercase tracking-wider block mb-1">
@@ -374,9 +359,6 @@ export default async function AboutPage() {
       <section className="max-w-[1440px] w-full mx-auto px-5 md:px-10 lg:px-16 pb-16 space-y-6">
         <div className="bg-primary text-on-primary rounded-2xl p-8 sm:p-12 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center shadow-editorial">
           <div className="lg:col-span-7 space-y-4">
-            <span className="font-mono text-xs text-secondary-fixed uppercase tracking-widest">
-              Off-Screen
-            </span>
             <h2 className="font-serif text-3xl sm:text-4xl font-normal">
               Karachi, Islamabad, and the road between.
             </h2>
@@ -398,7 +380,7 @@ export default async function AboutPage() {
           </div>
         </div>
 
-        <div className="bg-surface-white rounded-2xl border border-hairline p-8 sm:p-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-editorial-sm">
+        <div className="bg-surface-white border-2 border-primary p-8 sm:p-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-editorial-sm">
           <div>
             <h2 className="font-serif text-2xl sm:text-3xl font-normal text-primary">
               Let’s build something useful.
