@@ -113,14 +113,22 @@ export function WorkLibrary({ initialProjects }: WorkLibraryProps) {
                     <span className="font-bold text-primary">
                       SPECIMEN ID: {specimenId} {`//`} {project.slug.toUpperCase()}
                     </span>
-                    <span className="text-outline">/</span>
-                    <span className="bg-surface px-1.5 border border-outline-variant">
-                      YEAR: {project.year}
-                    </span>
-                    <span className="text-outline">/</span>
-                    <span className="text-primary font-semibold">
-                      ROLE: {project.role.toUpperCase()}
-                    </span>
+                    {project.year && (
+                      <>
+                        <span className="text-outline">/</span>
+                        <span className="bg-surface px-1.5 border border-outline-variant">
+                          YEAR: {project.year}
+                        </span>
+                      </>
+                    )}
+                    {project.role && (
+                      <>
+                        <span className="text-outline">/</span>
+                        <span className="text-primary font-semibold">
+                          ROLE: {project.role.toUpperCase()}
+                        </span>
+                      </>
+                    )}
                   </div>
                   <div className="flex items-center gap-2">
                     <span
