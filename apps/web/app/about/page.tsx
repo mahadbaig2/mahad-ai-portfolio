@@ -1,7 +1,20 @@
+import React from "react";
 import Link from "next/link";
-import { VisualPlaceholder } from "@/components/VisualPlaceholder";
-import type { Metadata } from "next";
-import { ArrowRight, ArrowUpRight, Compass, CheckCircle2 } from "lucide-react";
+import Image from "next/image";
+import { Metadata } from "next";
+import {
+  ArrowUpRight,
+  Terminal,
+  CheckCircle2,
+  Briefcase,
+  GraduationCap,
+  Layers,
+  Cpu,
+  Database,
+  Code2,
+  ShieldCheck,
+  Compass,
+} from "lucide-react";
 import {
   getExperiences,
   getEducation,
@@ -10,394 +23,544 @@ import {
 } from "@/lib/sanity/loadData";
 
 export const metadata: Metadata = {
-  title: "About | Mirza Mahad Baig",
+  title: "About & Trajectory | Mirza Mahad Baig // AI Product Engineer",
   description:
-    "Background, career trajectory, product design foundation, and applied AI engineering experience of Mirza Mahad Baig.",
+    "Mirza Mahad Baig is an AI Product Engineer with nearly six years of product design and UI/UX experience, practical AI engineering expertise, and hands-on full-stack experience.",
 };
 
-const TRAJECTORY_STEPS = [
-  {
-    index: "01 / Foundation",
-    period: "Visual Systems",
-    title: "Visual & Brand Foundations",
-    summary:
-      "Grid systems, typographic hierarchy, and visual communication craft focused on clarity under constraint.",
-    shift: "Mastered typographic restraint and structured information hierarchy.",
-  },
-  {
-    index: "02 / Craft",
-    period: "UI/UX Design",
-    title: "Product Design & Interaction",
-    summary:
-      "User research, wireframing, component libraries, and usability across web and mobile applications.",
-    shift: "Moved from isolated screens to coherent, testable user mental models.",
-  },
-  {
-    index: "03 / Scale",
-    period: "Enterprise SaaS",
-    title: "Complex B2B Workflows",
-    summary:
-      "Designed 500+ screens across client, firm-admin, internal-operations, and super-admin workflows for tax and compliance SaaS.",
-    shift: "Learned to organize high-density operational states without overwhelming users.",
-  },
-  {
-    index: "04 / Code",
-    period: "Full-Stack Web",
-    title: "Frontend & Service Implementation",
-    summary:
-      "React, Next.js App Router, TypeScript strict mode, Tailwind CSS, Python FastAPI endpoints, and PostgreSQL persistence.",
-    shift: "Closed the handoff gap by shipping working full-stack software directly.",
-  },
-  {
-    index: "05 / Intelligence",
-    period: "Applied AI",
-    title: "RAG, Routing & Guardrails",
-    summary:
-      "Heading-aware document chunking, cited retrieval from PostgreSQL, ONNX classification, and LangGraph orchestration. Qdrant remains a rebuildable vector index.",
-    shift: "Enclosed probabilistic generation inside inspectable, deterministic boundaries.",
-  },
-  {
-    index: "06 / Current",
-    period: "Unified Practice",
-    title: "AI Product Engineering",
-    summary:
-      "Owning the full path from user problem and interface craft to backend APIs, evaluations, and deployment.",
-    shift: "Building AI products where UX clarity and engineering rigor reinforce each other.",
-  },
-];
-
 export default async function AboutPage() {
-  const [experiences, education, skills, settings] = await Promise.all([
+  const [experiences, educations, skills, siteSettings] = await Promise.all([
     getExperiences(),
     getEducation(),
     getSkills(),
     getSiteSettings(),
   ]);
 
+  // Group skills by category
+  const skillCategories = [
+    { key: "product_design", title: "Product Design & UI/UX" },
+    { key: "ai_ml", title: "AI & Machine Learning" },
+    { key: "backend", title: "Backend & Systems Engineering" },
+    { key: "frontend", title: "Frontend Product Engineering" },
+    { key: "cloud_data", title: "Data, Vector Stores & Cloud" },
+    { key: "llmops", title: "Evaluation & LLMOps" },
+  ];
+
   return (
-    <div className="flex flex-col w-full bg-paper">
-      {/* 01 // ESSAY HERO & PHOTOGRAPHIC PLATE */}
-      <section className="w-full max-w-[1440px] mx-auto px-5 md:px-10 lg:px-16 py-12 lg:py-16">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
-          <div className="lg:col-span-7 flex flex-col justify-between space-y-6">
-            <div>
-              <div className="flex items-center gap-3 mb-4">
-                <span className="w-8 h-px bg-hairline" aria-hidden="true" />
-                <span className="font-mono text-xs text-muted-text">Mirza Mahad Baig</span>
-              </div>
+    <div className="w-full bg-background text-on-surface">
+      {/* Top Subheader Metrics Strip */}
+      <div className="w-full bg-surface-container border-b-[1.5px] border-primary px-6 py-2 flex flex-wrap justify-between items-center font-mono text-xs text-on-surface-variant overflow-x-auto gap-4">
+        <div className="flex items-center gap-3">
+          <span className="font-bold text-primary">DOSSIER REF: MMB-ABOUT-01</span>
+          <span>·</span>
+          <span>DISCIPLINE: APPLIED AI × SYSTEMS DESIGN</span>
+        </div>
+        <div className="flex items-center gap-3">
+          <span>LOCATION: ISLAMABAD [33.6844° N, 73.0479° E]</span>
+          <span>·</span>
+          <span className="text-secondary font-bold inline-flex items-center gap-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-secondary inline-block animate-pulse" />
+            RECORD: VERIFIED
+          </span>
+        </div>
+      </div>
 
-              <h1 className="font-serif text-4xl sm:text-5xl lg:text-[3.5rem] font-normal text-primary tracking-tight leading-[1.08] mb-6">
-                I started with how products feel. Then I learned how they work.
-              </h1>
-
-              <div className="space-y-4 text-base sm:text-lg text-on-surface-variant leading-relaxed max-w-prose">
-                <p>{settings.shortBio}</p>
-                <p>
-                  {settings.careerNarrative ||
-                    "Nearly six years of product design and UI/UX work taught me how users read interfaces, where ambiguity breaks trust, and how visual hierarchy shapes comprehension. Moving into full-stack engineering and applied AI lets me build the underlying systems directly—from FastAPI services and PostgreSQL schemas to ONNX routing and cited RAG."}
-                </p>
-              </div>
+      <div className="max-w-[1440px] mx-auto px-6 sm:px-8 py-10 sm:py-16 space-y-16">
+        {/* ========================================================================= */}
+        {/* HERO SECTION: IDENTITY & EDITORIAL STANCE                                 */}
+        {/* ========================================================================= */}
+        <section className="border-2 border-primary bg-surface-container-lowest p-6 sm:p-10 stamp-shadow">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center pb-4 mb-8 border-b border-outline-variant gap-2 font-mono text-xs text-on-surface-variant">
+            <div className="flex items-center gap-2">
+              <span className="px-2 py-0.5 bg-primary text-on-primary font-bold">DOSSIER // 01</span>
+              <span className="font-semibold text-primary uppercase">IDENTITY & TRAJECTORY</span>
             </div>
-
-            {/* 3 Compact Anchors Strip */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3 bg-surface-container-low border-2 border-primary">
-              <div className="p-3 bg-surface-white rounded-lg border border-hairline/60">
-                <span className="font-mono text-[11px] text-muted-text uppercase tracking-wider block">
-                  Design Background
-                </span>
-                <span className="font-serif text-lg font-medium text-primary mt-0.5 block">
-                  ~6 Years UI/UX
-                </span>
-                <span className="text-xs text-on-surface-variant">Systems &amp; SaaS workflows</span>
-              </div>
-              <div className="p-3 bg-surface-white rounded-lg border border-hairline/60">
-                <span className="font-mono text-[11px] text-muted-text uppercase tracking-wider block">
-                  Engineering Scope
-                </span>
-                <span className="font-serif text-lg font-medium text-primary mt-0.5 block">
-                  Full-Stack AI
-                </span>
-                <span className="text-xs text-on-surface-variant">Next.js, FastAPI, RAG</span>
-              </div>
-              <div className="p-3 bg-surface-white rounded-lg border border-hairline/60">
-                <span className="font-mono text-[11px] text-muted-text uppercase tracking-wider block">
-                  Base
-                </span>
-                <span className="font-serif text-lg font-medium text-primary mt-0.5 block">
-                  Islamabad, PK
-                </span>
-                <span className="text-xs text-on-surface-variant">Available globally remote</span>
-              </div>
+            <div className="flex items-center gap-2 font-semibold">
+              <span>ORIGIN: KARACHI</span>
+              <span>→</span>
+              <span>POST: ISLAMABAD</span>
+              <span>→</span>
+              <span className="text-secondary font-bold">STATUS: DEPLOYED</span>
             </div>
           </div>
 
-          {/* Right Documentary Plate */}
-          <div className="lg:col-span-5">
-            <div className="bg-surface-white p-3.5 border-2 border-primary shadow-editorial">
-              <div className="relative overflow-hidden rounded-xl aspect-[3/4] bg-surface-container">
-                <VisualPlaceholder label="a personal portrait or travel photograph" />
-                <div className="absolute bottom-3 left-3 bg-charcoal-gutter/85 backdrop-blur-sm px-3 py-1 rounded text-surface-white font-mono text-xs flex items-center gap-1.5">
-                  <Compass className="h-3.5 w-3.5 text-secondary-fixed" aria-hidden="true" />
-                  <span>Khunjerab Pass · 4,693m</span>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
+            {/* Left Column (7 cols): Stance */}
+            <div className="lg:col-span-7 flex flex-col justify-between space-y-6">
+              <div className="space-y-4">
+                <div className="inline-block px-2 py-0.5 font-mono text-[11px] font-semibold bg-surface-container border border-outline-variant text-on-surface-variant uppercase">
+                  ORIGIN STAMP // KARACHI-BORN • ISLAMABAD-BASED • BUILDING ACROSS PRODUCT & ENGINEERING
+                </div>
+                <h1 className="font-headline text-3xl sm:text-5xl font-black text-primary tracking-tight leading-tight uppercase">
+                  I STARTED WITH HOW PRODUCTS FEEL. THEN I LEARNED HOW THEY WORK.
+                </h1>
+                <div className="p-4 bg-surface-container-low border-l-4 border-primary">
+                  <p className="font-sans text-base sm:text-lg text-on-surface leading-relaxed">
+                    My foundation is product design and UI/UX. Over nearly six years, I designed complex enterprise workflows, multi-tenant SaaS architectures, and more than 500 screens for Busyfile. Along the way, I expanded into frontend implementation, full-stack systems, machine learning, and applied AI. Today, I operate as an <strong className="font-bold text-primary">AI Product Engineer</strong>.
+                  </p>
+                </div>
+                <p className="font-sans text-sm sm:text-base text-on-surface-variant leading-relaxed">
+                  Design systems without runtime understanding decay into static prototypes. Machine learning systems without human ergonomics become unapproachable black boxes. I eliminate the boundary between what is conceived in Figma, verified in code, and executed across neural runtime models.
+                </p>
+              </div>
+
+              {/* Technical Spec Badges */}
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-4 border-t border-outline-variant font-mono text-xs">
+                <div className="p-3 bg-surface-container border border-outline-variant">
+                  <div className="text-outline text-[10px] uppercase">Core Discipline</div>
+                  <div className="text-primary font-bold mt-1 uppercase">AI Product Engineering</div>
+                </div>
+                <div className="p-3 bg-surface-container border border-outline-variant">
+                  <div className="text-outline text-[10px] uppercase">Architecture Depth</div>
+                  <div className="text-primary font-bold mt-1 uppercase">Full-Stack / Graph RAG</div>
+                </div>
+                <div className="p-3 bg-surface-container border border-outline-variant col-span-2 sm:col-span-1">
+                  <div className="text-outline text-[10px] uppercase">Execution Modality</div>
+                  <div className="text-secondary font-bold mt-1 uppercase">Deterministic Systems</div>
                 </div>
               </div>
-              <div className="pt-3.5 px-1 space-y-1">
-                <p className="text-sm text-muted-text leading-snug">
-                  {settings.personalHighlight ||
-                    "Karakoram Highway motorcycle expedition from Islamabad to Khunjerab Pass."}
+            </div>
+
+            {/* Right Column (5 cols): Authentic Portrait Plate */}
+            <div className="lg:col-span-5 flex flex-col border-2 border-primary bg-surface-container-low p-3 stamp-shadow-sm">
+              <div className="relative overflow-hidden bg-surface-dim border border-primary aspect-[4/5] w-full">
+                <Image
+                  src="/images/travel/travel-hero-motorcycle.png"
+                  alt="Mirza Mahad Baig with motorcycle on high-altitude touring expedition"
+                  fill
+                  className="object-cover grayscale contrast-125 hover:grayscale-0 transition-all duration-500"
+                  sizes="(max-width: 1024px) 100vw, 40vw"
+                />
+                <div className="absolute top-2 right-2 bg-primary text-on-primary font-mono text-[10px] font-bold px-2 py-0.5">
+                  36.8522° N, 75.4312° E
+                </div>
+                <div className="absolute bottom-2 left-2 bg-surface border border-primary font-mono text-[10px] font-bold text-primary px-2 py-0.5">
+                  ALT: 4,693 METERS
+                </div>
+              </div>
+              <div className="mt-3 p-3 bg-surface border-t border-outline-variant font-mono text-xs flex flex-col gap-1">
+                <div className="flex justify-between items-center text-primary font-bold">
+                  <span>FIG. 01 — EXPEDITIONARY FIELD NOTE</span>
+                  <span className="text-secondary">VERIFIED</span>
+                </div>
+                <p className="font-sans text-[11px] leading-tight text-on-surface-variant">
+                  Rode to Khunjerab Pass, one of the world’s highest paved international border crossings, on my motorcycle. Unforgiving altitude, cold starts, and zero cell service.
                 </p>
-                <Link
-                  href="/travel"
-                  className="inline-flex items-center gap-1.5 font-mono text-xs text-primary hover:text-primary-container transition-colors"
-                >
-                  <span>Explore the travel journal</span>
-                  <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-                </Link>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* 02 // TRAJECTORY CHRONOLOGY */}
-      <section className="w-full bg-mint/60 border-y border-hairline/70 py-14 lg:py-20">
-        <div className="max-w-[1440px] mx-auto px-5 md:px-10 lg:px-16">
-          <div className="max-w-3xl mb-10">
-            <h2 className="font-serif text-3xl sm:text-4xl font-normal text-primary tracking-tight mb-3">
-              Not a reinvention. An expansion.
-            </h2>
-            <p className="text-base sm:text-lg text-on-surface-variant leading-relaxed">
-              Every step added technical range on top of product judgment—making design intent directly executable in production code.
-            </p>
+        {/* ========================================================================= */}
+        {/* SECTION 1: CAREER TRAJECTORY & ESSAY                                      */}
+        {/* ========================================================================= */}
+        <section className="border-2 border-primary bg-surface p-6 sm:p-10 stamp-shadow">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end pb-3 mb-8 border-b-2 border-primary gap-2">
+            <div>
+              <span className="font-mono text-xs font-bold text-tertiary-container uppercase tracking-widest block">
+                SECTION 01 // EVOLUTIONARY NARRATIVE
+              </span>
+              <h2 className="font-headline text-3xl sm:text-4xl font-black text-primary tracking-tight uppercase mt-1">
+                Not a Reinvention. An Expansion.
+              </h2>
+            </div>
+            <span className="font-mono text-xs text-on-surface-variant">CADENCE: 2019 — PRESENT</span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {TRAJECTORY_STEPS.map((step) => (
+            {/* Part 1 */}
+            <article className="p-5 border-2 border-primary bg-surface-container-lowest flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between font-mono text-xs text-outline pb-2 border-b border-outline-variant mb-3">
+                  <span>PART 01</span>
+                  <span>2019–2022</span>
+                </div>
+                <h3 className="font-headline text-lg font-bold uppercase text-primary mb-2">
+                  Brand & Visual Foundations
+                </h3>
+                <p className="font-sans text-xs text-on-surface-variant leading-relaxed">
+                  Began in visual design and brand identity, mastering typography, color theory, layout grids, and communication hierarchy. Developed a strong intuition for clarity and user perception.
+                </p>
+              </div>
+              <div className="mt-4 pt-2 border-t border-outline-variant font-mono text-[10px] text-primary font-bold">
+                FOCUS: VISUAL ARCHITECTURE
+              </div>
+            </article>
+
+            {/* Part 2 */}
+            <article className="p-5 border-2 border-primary bg-surface-container-lowest flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between font-mono text-xs text-outline pb-2 border-b border-outline-variant mb-3">
+                  <span>PART 02</span>
+                  <span>2022–2023</span>
+                </div>
+                <h3 className="font-headline text-lg font-bold uppercase text-primary mb-2">
+                  Product Design & UI/UX
+                </h3>
+                <p className="font-sans text-xs text-on-surface-variant leading-relaxed">
+                  Shifted into software interface design, product discovery, user flows, and wireframing for web and mobile startups. Learned to translate ambiguous business goals into testable interface workflows.
+                </p>
+              </div>
+              <div className="mt-4 pt-2 border-t border-outline-variant font-mono text-[10px] text-primary font-bold">
+                FOCUS: USER FLOWS & DISCOVERY
+              </div>
+            </article>
+
+            {/* Part 3 */}
+            <article className="p-5 border-2 border-primary bg-surface-container-lowest flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between font-mono text-xs text-outline pb-2 border-b border-outline-variant mb-3">
+                  <span>PART 03</span>
+                  <span>2023–2024</span>
+                </div>
+                <h3 className="font-headline text-lg font-bold uppercase text-primary mb-2">
+                  Complex Enterprise SaaS
+                </h3>
+                <p className="font-sans text-xs text-on-surface-variant leading-relaxed">
+                  Designed Busyfile, an enterprise taxation and compliance platform. Created more than 500 screens across client portals, firm admins, and internal operations, establishing reusable design systems.
+                </p>
+              </div>
+              <div className="mt-4 pt-2 border-t border-outline-variant font-mono text-[10px] text-primary font-bold">
+                FOCUS: 500+ BUSYFILE SCREENS
+              </div>
+            </article>
+
+            {/* Part 4 */}
+            <article className="p-5 border-2 border-primary bg-surface-container-lowest flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between font-mono text-xs text-outline pb-2 border-b border-outline-variant mb-3">
+                  <span>PART 04</span>
+                  <span>2024–2025</span>
+                </div>
+                <h3 className="font-headline text-lg font-bold uppercase text-primary mb-2">
+                  Frontend & Full Stack
+                </h3>
+                <p className="font-sans text-xs text-on-surface-variant leading-relaxed">
+                  Bridged design into production code using Next.js 15, React 19, TypeScript strict mode, and Tailwind CSS. Built custom REST endpoints and integrated state management for client applications.
+                </p>
+              </div>
+              <div className="mt-4 pt-2 border-t border-outline-variant font-mono text-[10px] text-primary font-bold">
+                FOCUS: NEXT.JS & TYPESCRIPT
+              </div>
+            </article>
+
+            {/* Part 5 */}
+            <article className="p-5 border-2 border-primary bg-surface-container-lowest flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between font-mono text-xs text-outline pb-2 border-b border-outline-variant mb-3">
+                  <span>PART 05</span>
+                  <span>2025–2026</span>
+                </div>
+                <h3 className="font-headline text-lg font-bold uppercase text-primary mb-2">
+                  Applied AI & Machine Learning
+                </h3>
+                <p className="font-sans text-xs text-on-surface-variant leading-relaxed">
+                  Engineered production AI features at Techomatrix and independently: RAG pipelines with Qdrant, in-process ONNX query routing, LangGraph state machines, and LangSmith evaluation.
+                </p>
+              </div>
+              <div className="mt-4 pt-2 border-t border-outline-variant font-mono text-[10px] text-primary font-bold">
+                FOCUS: ONNX & RAG SYSTEMS
+              </div>
+            </article>
+
+            {/* Part 6 */}
+            <article className="p-5 border-2 border-primary bg-secondary-container flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between font-mono text-xs text-secondary font-bold pb-2 border-b border-secondary mb-3">
+                  <span>PART 06</span>
+                  <span>PRESENT</span>
+                </div>
+                <h3 className="font-headline text-lg font-bold uppercase text-primary mb-2">
+                  AI Product Engineer
+                </h3>
+                <p className="font-sans text-xs text-on-surface leading-relaxed">
+                  Unifying the loop: moving from product discovery and Figma systems through backend architecture, model routing, and production evaluation. Owning the space between idea and working intelligence.
+                </p>
+              </div>
+              <div className="mt-4 pt-2 border-t border-secondary font-mono text-[10px] text-secondary font-bold">
+                FOCUS: END-TO-END EXECUTION
+              </div>
+            </article>
+          </div>
+        </section>
+
+        {/* ========================================================================= */}
+        {/* SECTION 2: VERIFIED WORK EXPERIENCE                                       */}
+        {/* ========================================================================= */}
+        <section className="border-2 border-primary bg-surface p-6 sm:p-10 stamp-shadow" id="experience">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end pb-3 mb-8 border-b-2 border-primary gap-2">
+            <div>
+              <span className="font-mono text-xs font-bold text-tertiary-container uppercase tracking-widest block">
+                SECTION 02 // CHRONOLOGICAL EVIDENCE
+              </span>
+              <h2 className="font-headline text-3xl sm:text-4xl font-black text-primary tracking-tight uppercase mt-1">
+                Verified Work History
+              </h2>
+            </div>
+            <span className="font-mono text-xs text-on-surface-variant">SOURCE: RESUME & CMS RECORDS</span>
+          </div>
+
+          <div className="space-y-6">
+            {experiences.map((exp, idx) => (
               <div
-                key={step.index}
-                className="bg-surface-white p-6 border-2 border-primary shadow-editorial-sm flex flex-col justify-between"
+                key={exp.company + exp.startDate}
+                className="border-2 border-primary bg-surface-container-lowest p-6 stamp-shadow-sm"
               >
-                <div>
-                  <div className="flex items-center justify-between pb-3 mb-4 border-b border-hairline/50">
-                    <span className="font-mono text-xs text-primary font-medium">
-                      {step.index}
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-outline-variant pb-3 mb-4 gap-2 font-mono text-xs">
+                  <div>
+                    <span className="font-bold text-primary text-base sm:text-lg uppercase">
+                      {exp.role}
                     </span>
-                    <span className="font-mono text-xs bg-mint px-2.5 py-0.5 rounded text-secondary">
-                      {step.period}
+                    <span className="text-outline mx-2">@</span>
+                    <span className="font-bold text-secondary text-sm sm:text-base">
+                      {exp.company}
                     </span>
                   </div>
-                  <h3 className="font-serif text-xl font-medium text-primary mb-2">
-                    {step.title}
-                  </h3>
-                  <p className="text-sm text-on-surface-variant leading-relaxed mb-5">
-                    {step.summary}
-                  </p>
+                  <div className="text-on-surface-variant font-semibold">
+                    <span>{exp.startDate}</span>
+                    <span> — </span>
+                    <span className={exp.isCurrent ? "text-secondary font-bold" : ""}>
+                      {exp.isCurrent ? "PRESENT" : exp.endDate || "CONCLUDED"}
+                    </span>
+                    <span className="ml-2">({exp.location || "Remote"})</span>
+                  </div>
                 </div>
-                <div className="bg-paper border border-hairline/50 p-3 rounded-lg">
-                  <span className="font-mono text-[11px] text-muted-text uppercase tracking-wider block mb-0.5">
-                    Outcome
-                  </span>
-                  <p className="text-xs font-medium text-primary">{step.shift}</p>
-                </div>
+
+                <p className="font-sans text-sm text-on-surface mb-4 leading-relaxed">
+                  {exp.summary}
+                </p>
+
+                <ul className="space-y-1.5 font-sans text-xs text-on-surface-variant list-disc pl-5 mb-4 leading-relaxed">
+                  {exp.highlights.map((h, i) => (
+                    <li key={i}>{h}</li>
+                  ))}
+                </ul>
+
+                {exp.technologies && exp.technologies.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5 pt-3 border-t border-outline-variant">
+                    {exp.technologies.map((t) => (
+                      <span
+                        key={t}
+                        className="px-2 py-0.5 bg-surface-container border border-outline-variant font-mono text-[10px] font-bold text-primary"
+                      >
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
             ))}
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* 03 // WORK EXPERIENCE */}
-      <section className="w-full max-w-[1440px] mx-auto px-5 md:px-10 lg:px-16 py-14 lg:py-20">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 pb-4 border-b border-hairline">
-          <div>
-            <h2 className="font-serif text-3xl sm:text-4xl font-normal text-primary tracking-tight">
-              Where I’ve worked
-            </h2>
-          </div>
-          <p className="text-sm text-muted-text mt-2 md:mt-0 max-w-sm">
-            Product design, multi-tenant SaaS systems, and applied AI engineering engagements.
-          </p>
-        </div>
-
-        <div className="space-y-6">
-          {experiences.map((exp) => (
-            <article
-              key={`${exp.company}-${exp.role}`}
-              className="bg-surface-white p-6 sm:p-8 border-2 border-primary shadow-editorial-sm"
-            >
-              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-2 pb-4 mb-4 border-b border-hairline/50">
-                <div className="flex flex-wrap items-center gap-3">
-                  <h3 className="font-serif text-xl sm:text-2xl font-medium text-primary">
-                    {exp.role}
-                  </h3>
-                  <span className="font-mono text-xs bg-mint text-primary px-2.5 py-0.5 rounded-full font-medium">
-                    {exp.company}
-                  </span>
-                  {exp.location && (
-                    <span className="font-mono text-xs text-muted-text">{exp.location}</span>
-                  )}
-                </div>
-                <span className="font-mono text-xs text-muted-text">
-                  {exp.startDate} — {exp.isCurrent || !exp.endDate ? "Present" : exp.endDate}
-                </span>
-              </div>
-
-              <p className="text-base text-on-surface-variant mb-4 max-w-4xl leading-relaxed">
-                {exp.summary}
-              </p>
-
-              {exp.highlights && exp.highlights.length > 0 && (
-                <ul className="space-y-2 mb-5">
-                  {exp.highlights.map((h) => (
-                    <li key={h} className="flex items-start gap-2 text-sm text-on-surface-variant">
-                      <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 shrink-0" aria-hidden="true" />
-                      <span>{h}</span>
-                    </li>
-                  ))}
-                </ul>
-              )}
-
-              {exp.technologies && exp.technologies.length > 0 && (
-                <div className="flex flex-wrap gap-2 pt-2">
-                  {exp.technologies.map((tech) => (
-                    <span
-                      key={tech}
-                      className="font-mono text-xs bg-paper border border-hairline/60 px-2.5 py-0.5 rounded text-primary"
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </article>
-          ))}
-        </div>
-      </section>
-
-      {/* 04 // SKILLS & CAPABILITIES */}
-      {skills.length > 0 && (
-        <section className="w-full bg-mint/50 border-y border-hairline/70 py-14 lg:py-20">
-          <div className="max-w-[1440px] mx-auto px-5 md:px-10 lg:px-16">
-            <div className="mb-10">
-              <h2 className="font-serif text-3xl sm:text-4xl font-normal text-primary tracking-tight">
-                Technical &amp; Design Stack
+        {/* ========================================================================= */}
+        {/* SECTION 3: GROUPED TECHNICAL & PRODUCT SKILLS                             */}
+        {/* ========================================================================= */}
+        <section className="border-2 border-primary bg-surface p-6 sm:p-10 stamp-shadow" id="skills">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end pb-3 mb-8 border-b-2 border-primary gap-2">
+            <div>
+              <span className="font-mono text-xs font-bold text-tertiary-container uppercase tracking-widest block">
+                SECTION 03 // TAXONOMY OF CAPABILITIES
+              </span>
+              <h2 className="font-headline text-3xl sm:text-4xl font-black text-primary tracking-tight uppercase mt-1">
+                Grouped Skill Groups
               </h2>
             </div>
+            <span className="font-mono text-xs text-on-surface-variant">CATEGORIZED DOMAINS</span>
+          </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-              {skills.map((skill) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {skillCategories.map((cat) => {
+              const matchedSkills = skills.filter((s) => s.category === cat.key);
+              if (matchedSkills.length === 0) return null;
+
+              return (
                 <div
-                  key={skill.name}
-                  className="bg-surface-white p-6 border-2 border-primary shadow-editorial-sm flex flex-col justify-between"
+                  key={cat.key}
+                  className="border-2 border-primary bg-surface-container-lowest p-5 flex flex-col justify-between stamp-shadow-sm"
                 >
                   <div>
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="font-mono text-xs bg-sage text-primary px-2.5 py-0.5 rounded font-medium uppercase">
-                        {skill.category.replace(/_/g, " ")}
-                      </span>
-                      <span className="font-mono text-xs text-muted-text capitalize">
-                        {skill.proficiency}
+                    <h3 className="font-headline text-lg font-black uppercase text-primary pb-2 border-b border-primary mb-4">
+                      {cat.title}
+                    </h3>
+                    <div className="space-y-3">
+                      {matchedSkills.map((s) => (
+                        <div key={s.name} className="border-b border-outline-variant/50 pb-2">
+                          <div className="flex items-center justify-between font-mono text-xs">
+                            <span className="font-bold text-primary">{s.name}</span>
+                            <span className="text-[10px] text-outline uppercase font-semibold">
+                              {s.proficiency}
+                            </span>
+                          </div>
+                          {s.description && (
+                            <p className="font-sans text-[11px] text-on-surface-variant mt-1 leading-normal">
+                              {s.description}
+                            </p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* ========================================================================= */}
+        {/* SECTION 4: EDUCATION & CERTIFICATIONS (NO 'CLASS OF COMPLETED')           */}
+        {/* ========================================================================= */}
+        <section className="border-2 border-primary bg-surface p-6 sm:p-10 stamp-shadow" id="education">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end pb-3 mb-8 border-b-2 border-primary gap-2">
+            <div>
+              <span className="font-mono text-xs font-bold text-tertiary-container uppercase tracking-widest block">
+                SECTION 04 // ACADEMIC & PROFESSIONAL CREDENTIALS
+              </span>
+              <h2 className="font-headline text-3xl sm:text-4xl font-black text-primary tracking-tight uppercase mt-1">
+                Education & Certifications
+              </h2>
+            </div>
+            <span className="font-mono text-xs text-on-surface-variant">STRICT RECORD INTEGRITY</span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {educations.map((edu, idx) => {
+              const recordType = edu.recordType || (edu.degree.includes("Bachelor") ? "Degree" : "Certification");
+              const isOngoing = edu.status === "ongoing" || edu.graduationYear === "2026";
+              const label =
+                edu.completionLabel ||
+                (isOngoing ? `Expected ${edu.graduationYear || "2026"}` : `Completed ${edu.graduationYear || ""}`);
+
+              return (
+                <div
+                  key={edu.degree + idx}
+                  className="border-2 border-primary bg-surface-container-lowest p-6 flex flex-col justify-between stamp-shadow-sm"
+                >
+                  <div>
+                    <div className="flex items-center justify-between font-mono text-[10px] text-outline uppercase pb-2 border-b border-outline-variant mb-3">
+                      <span>TYPE: {recordType}</span>
+                      <span className={isOngoing ? "text-secondary font-bold" : "text-primary font-bold"}>
+                        {label}
                       </span>
                     </div>
-                    <h3 className="font-serif text-xl font-medium text-primary mb-2">
-                      {skill.name}
-                    </h3>
-                    {skill.description && (
-                      <p className="text-sm text-on-surface-variant leading-relaxed">
-                        {skill.description}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
 
-      {/* 05 // EDUCATION */}
-      {education.length > 0 && (
-        <section className="w-full max-w-[1440px] mx-auto px-5 md:px-10 lg:px-16 py-14 lg:py-16">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            <div className="lg:col-span-4">
-              <h2 className="font-serif text-3xl font-normal text-primary tracking-tight mb-2">
-                Education &amp; Credentials
-              </h2>
-              <p className="text-sm text-on-surface-variant leading-relaxed">
-                Computer science coursework paired with specialized NLP and deep learning credentials.
-              </p>
-            </div>
-
-            <div className="lg:col-span-8 space-y-4">
-              {education.map((edu) => (
-                <div
-                  key={`${edu.institution}-${edu.degree}`}
-                  className="bg-surface-white p-5 border-2 border-primary shadow-editorial-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4"
-                >
-                  <div>
-                    <span className="font-mono text-xs text-secondary uppercase tracking-wider block mb-1">
-                      {edu.institution}
-                    </span>
-                    <h3 className="font-serif text-xl font-medium text-primary">
+                    <h3 className="font-headline text-lg font-black uppercase text-primary mb-1">
                       {edu.degree}
-                      {edu.fieldOfStudy ? ` — ${edu.fieldOfStudy}` : ""}
                     </h3>
-                    {edu.highlights && edu.highlights[0] && (
-                      <p className="text-sm text-muted-text mt-1">{edu.highlights[0]}</p>
+
+                    <p className="font-mono text-xs font-bold text-secondary mb-3">
+                      {edu.institution}
+                    </p>
+
+                    <p className="font-sans text-xs text-on-surface-variant mb-4">
+                      Specialization: {edu.fieldOfStudy}
+                    </p>
+
+                    {edu.highlights && edu.highlights.length > 0 && (
+                      <ul className="space-y-1 font-sans text-xs text-on-surface list-disc pl-4">
+                        {edu.highlights.map((h, i) => (
+                          <li key={i}>{h}</li>
+                        ))}
+                      </ul>
                     )}
                   </div>
-                  <span className="font-mono text-xs bg-mint px-3 py-1 rounded text-primary font-medium shrink-0 self-start sm:self-center">
-                    {edu.completionLabel || edu.graduationYear || edu.status || "Completed"}
-                  </span>
+
+                  <div className="mt-4 pt-3 border-t border-outline-variant font-mono text-[10px] text-outline flex justify-between items-center">
+                    <span>RECORD STATUS: VERIFIED</span>
+                    {edu.credentialUrl && (
+                      <a
+                        href={edu.credentialUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary font-bold hover:underline"
+                      >
+                        CREDENTIAL ↗
+                      </a>
+                    )}
+                  </div>
                 </div>
-              ))}
+              );
+            })}
+          </div>
+        </section>
+
+        {/* ========================================================================= */}
+        {/* SECTION 5: CORE WORKING PRINCIPLES & OFF-SCREEN PERSPECTIVE               */}
+        {/* ========================================================================= */}
+        <section className="border-2 border-primary bg-surface-container-low p-6 sm:p-10 stamp-shadow">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div className="lg:col-span-7">
+              <span className="font-mono text-xs font-bold text-tertiary-container uppercase tracking-widest block mb-2">
+                SECTION 05 // WORKING PRINCIPLES
+              </span>
+              <h2 className="font-headline text-2xl sm:text-3xl font-black text-primary uppercase mb-6">
+                How I Build Software
+              </h2>
+              <div className="space-y-4 font-sans text-sm text-on-surface leading-relaxed">
+                <div className="flex items-start gap-3">
+                  <CheckCircle2 className="h-5 w-5 text-secondary shrink-0 mt-0.5" />
+                  <div>
+                    <strong className="text-primary font-bold">1. Grounded Intelligence Only:</strong>
+                    <p className="text-xs text-on-surface-variant mt-0.5">
+                      Factual AI systems must expose verifiable citations and deterministic guardrails. If context is missing, the model must clarify or refuse, never hallucinate from training weights.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <CheckCircle2 className="h-5 w-5 text-secondary shrink-0 mt-0.5" />
+                  <div>
+                    <strong className="text-primary font-bold">2. Latency & Cost Boundaries:</strong>
+                    <p className="text-xs text-on-surface-variant mt-0.5">
+                      Do not use a 500ms LLM call when a 3ms in-process ONNX classifier solves the problem. Respect latency budgets and cloud quotas with the same rigor applied to design systems.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <CheckCircle2 className="h-5 w-5 text-secondary shrink-0 mt-0.5" />
+                  <div>
+                    <strong className="text-primary font-bold">3. Full Spectrum Ownership:</strong>
+                    <p className="text-xs text-on-surface-variant mt-0.5">
+                      True product craftsmanship means moving freely between user research, Figma component tokens, TypeScript frontend state, Python backend graphs, and evaluation telemetry.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="lg:col-span-5 border-2 border-primary bg-surface p-6 flex flex-col justify-between font-mono text-xs">
+              <div>
+                <div className="font-bold text-primary uppercase mb-2">ACTIONS & CONTACT</div>
+                <p className="font-sans text-xs text-on-surface-variant mb-4">
+                  Open to AI Product Engineering, applied AI, and lead product design opportunities.
+                </p>
+                <div className="space-y-2">
+                  <Link
+                    href="/contact"
+                    className="block w-full py-2.5 bg-tertiary-container text-on-tertiary font-bold text-center stamp-shadow-sm hover:translate-x-[1px] hover:translate-y-[1px] transition-transform uppercase"
+                  >
+                    Initiate Inquiry (/contact)
+                  </Link>
+                  <Link
+                    href={siteSettings.resumePdfUrl || "/contact#resume"}
+                    className="block w-full py-2.5 border border-primary bg-surface text-primary font-bold text-center hover:bg-surface-container transition-colors uppercase"
+                  >
+                    Download Verified Résumé (PDF)
+                  </Link>
+                  <Link
+                    href="/travel"
+                    className="block w-full py-2.5 border border-outline-variant bg-surface text-on-surface hover:border-primary font-bold text-center transition-colors uppercase"
+                  >
+                    View Off-Screen Travel Journal →
+                  </Link>
+                </div>
+              </div>
+              <div className="pt-4 border-t border-outline-variant text-[10px] text-outline">
+                LOCATION: ISLAMABAD, PAKISTAN [REMOTE READY]
+              </div>
             </div>
           </div>
         </section>
-      )}
-
-      {/* 06 // OFF-SCREEN TRAVEL & CONTACT */}
-      <section className="max-w-[1440px] w-full mx-auto px-5 md:px-10 lg:px-16 pb-16 space-y-6">
-        <div className="bg-primary text-on-primary rounded-2xl p-8 sm:p-12 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center shadow-editorial">
-          <div className="lg:col-span-7 space-y-4">
-            <h2 className="font-serif text-3xl sm:text-4xl font-normal">
-              Karachi, Islamabad, and the road between.
-            </h2>
-            <p className="text-base text-on-primary-container leading-relaxed max-w-xl">
-              From Karachi to Islamabad—and north on the Karakoram Highway to Khunjerab Pass on a motorcycle. Traveling high-altitude routes teaches quiet preparation and system resilience.
-            </p>
-            <Link
-              href="/travel"
-              className="inline-flex items-center gap-2 border-b border-on-primary pb-1 font-mono text-sm text-on-primary hover:text-secondary-fixed transition-colors w-fit"
-            >
-              <span>Read the travel journal</span>
-              <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-            </Link>
-          </div>
-          <div className="lg:col-span-5 bg-charcoal-gutter rounded-xl overflow-hidden border border-white/10">
-            <div className="relative aspect-[16/10] w-full">
-              <VisualPlaceholder label="a Karakoram Highway photograph" />
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-surface-white border-2 border-primary p-8 sm:p-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-editorial-sm">
-          <div>
-            <h2 className="font-serif text-2xl sm:text-3xl font-normal text-primary">
-              Let’s build something useful.
-            </h2>
-            <p className="text-sm text-on-surface-variant mt-1">
-              Reach out directly for roles, architecture conversations, or product collaborations.
-            </p>
-          </div>
-          <Link
-            href="/contact"
-            className="inline-flex items-center gap-2 bg-primary-container text-on-primary px-6 py-3 rounded text-sm font-medium hover:bg-primary transition-colors shrink-0"
-          >
-            <span>Get in touch</span>
-            <ArrowRight className="h-4 w-4" aria-hidden="true" />
-          </Link>
-        </div>
-      </section>
+      </div>
     </div>
   );
 }

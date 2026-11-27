@@ -1,87 +1,126 @@
 import Link from "next/link";
-import { ArrowLeft, BookOpen, FolderGit2, ShieldCheck } from "lucide-react";
+import { ArrowLeft, Clock, Terminal, Shield, Cpu } from "lucide-react";
 import { ChatInterface } from "@/components/assistant/ChatInterface";
 
 export const metadata = {
-  title: "Talk to Mahad | Mirza Mahad Baig",
-  description: "Ask grounded questions about Mirza Mahad Baig’s projects, architecture decisions, and engineering experience.",
+  title: "Talk to Mahad — Grounded AI Assistant | AI Product Engineering",
+  description:
+    "Grounded conversational AI assistant with in-process ONNX routing, transparent citations, and live execution inspector.",
 };
 
 export default function ChatPage() {
+  const milestones = [
+    {
+      phase: "Phase 1–2",
+      title: "Portfolio Web Foundation & Sanity CMS",
+      status: "Completed",
+      detail: "Next.js 15, React 19, strict TypeScript, WCAG 2.1 AA accessibility, and managed structured content.",
+    },
+    {
+      phase: "Phases 3–7",
+      title: "FastAPI, PostgreSQL, Qdrant & ONNX Router",
+      status: "Completed",
+      detail: "Dual-persistence source of truth, derived 384-d vector embeddings, and sub-5ms ML intent classifier.",
+    },
+    {
+      phase: "Phases 8–10",
+      title: "LangGraph State Engine, LangSmith & LLMOps",
+      status: "Completed",
+      detail: "Deterministic state engine, SSE streaming, automated regression gate, and safe execution telemetry.",
+    },
+    {
+      phase: "Phases 11–13",
+      title: "Production Chat & Conversational Voice",
+      status: "Active Delivery",
+      detail: "Live multi-persona chat, inspectable telemetry, and ElevenLabs conversational voice when available.",
+    },
+  ];
+
   return (
-    <div className="w-full bg-paper min-h-screen">
-      {/* Top Editorial Header & Scope Disclosure */}
-      <section className="max-w-[1440px] mx-auto px-5 md:px-10 lg:px-16 pt-10 pb-6 space-y-6">
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4">
-          <div className="max-w-3xl space-y-2">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-sage text-primary font-mono text-xs font-medium">
-                <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" aria-hidden="true" />
-                Grounded Retrieval Assistant
-              </span>
-              <span className="font-mono text-xs text-muted-text">
-                ONNX Routing · LangGraph · Cited RAG
-              </span>
+    <div className="bg-[#fcf9f2] min-h-screen">
+      {/* Top Telemetry Header */}
+      <div className="border-b-2 border-[#11110f] bg-[#f3f0e9] py-1.5 px-4 font-mono text-[10px] uppercase tracking-wider text-[#11110f]/80">
+        <div className="mx-auto max-w-content flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="inline-block h-2 w-2 bg-[#416654]" />
+            <span>AI ASSISTANT TERMINAL // ACTIVE</span>
+          </div>
+          <div className="hidden sm:block">
+            <span>MODEL: ONNX-QUANTIZED // STREAM: SSE // ZERO-DOLLAR INFRA</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="mx-auto max-w-content px-4 py-10 sm:px-6 sm:py-14 space-y-10">
+        {/* Navigation & Header */}
+        <div>
+          <Link
+            href="/"
+            className="inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-wider text-[#11110f] hover:text-[#861933] transition-colors mb-6 font-bold"
+          >
+            <ArrowLeft className="h-3.5 w-3.5" />
+            <span>Back to Home</span>
+          </Link>
+
+          <header className="border-2 border-[#11110f] bg-white p-6 sm:p-8 stamp-shadow">
+            <div className="inline-flex items-center gap-2 border border-[#11110f] bg-[#fcf9f2] px-2.5 py-1 text-xs font-mono font-bold uppercase tracking-wider text-[#11110f] mb-4">
+              <span className="h-2 w-2 bg-[#416654]" />
+              <span>Interactive Production Assistant</span>
             </div>
-            <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal text-primary tracking-tight">
-              Talk to the portfolio.
+
+            <h1 className="font-display text-3xl font-black uppercase tracking-tight sm:text-5xl text-[#11110f]">
+              Talk to Mahad Assistant
             </h1>
-            <p className="text-base sm:text-lg text-on-surface-variant max-w-2xl leading-relaxed">
-              Ask grounded questions about Mahad’s projects, technical architecture decisions, experience, and product design work. Answers depend on the connected assistant service being available.
+
+            <p className="mt-4 text-base text-[#11110f]/85 font-sans leading-relaxed max-w-3xl">
+              Ask questions about Mahad&apos;s engineering projects, architectural decisions, and career experience.
+              Every answer is routed in-process via ONNX, strictly grounded in verifiable records, and inspected in real time.
             </p>
-          </div>
 
-          <div className="flex flex-wrap items-center gap-2.5">
-            <Link
-              href="/work"
-              className="inline-flex items-center gap-2 rounded-lg border border-hairline bg-surface-white hover:bg-mint px-4 py-2 text-sm font-medium text-primary transition-colors shadow-editorial-sm"
-            >
-              <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-              <span>Work Archive</span>
-            </Link>
-            <Link
-              href="/about"
-              className="inline-flex items-center gap-2 rounded-lg border border-hairline bg-surface-white hover:bg-mint px-4 py-2 text-sm font-medium text-on-surface-variant hover:text-primary transition-colors shadow-editorial-sm"
-            >
-              <BookOpen className="h-4 w-4" aria-hidden="true" />
-              <span>Background</span>
-            </Link>
-            <Link
-              href="/writing"
-              className="inline-flex items-center gap-2 rounded-lg border border-hairline bg-surface-white hover:bg-mint px-4 py-2 text-sm font-medium text-on-surface-variant hover:text-primary transition-colors shadow-editorial-sm"
-            >
-              <FolderGit2 className="h-4 w-4" aria-hidden="true" />
-              <span>Writing</span>
-            </Link>
-          </div>
+            <div className="mt-5 pt-4 border-t border-[#11110f]/15 flex flex-wrap gap-4 font-mono text-[11px] uppercase tracking-wider text-[#11110f]/75">
+              <span>● English &amp; Roman Urdu</span>
+              <span>● Verifiable Citations</span>
+              <span>● Inspectable Telemetry</span>
+              <span>● Read-Only Assistant</span>
+            </div>
+          </header>
         </div>
 
-        {/* Explicit Non-Human Disclosure Banner */}
-        <div className="w-full bg-mint/70 border-2 border-primary p-4 sm:p-5">
-          <div className="flex flex-col sm:flex-row items-start gap-3">
-            <div className="p-2 rounded-lg bg-surface-white border border-hairline text-primary shrink-0">
-              <ShieldCheck className="h-5 w-5" aria-hidden="true" />
-            </div>
-            <div className="space-y-1">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="font-mono text-xs font-medium text-primary uppercase tracking-wider">
-                  AI Portfolio Assistant
-                </span>
-              </div>
-              <p className="text-sm text-on-surface-variant leading-relaxed">
-                This is an automated AI assistant grounded on Mahad’s published portfolio records—you are not speaking directly with Mahad. Factual answers cite retrieved chunks; unsupported questions clarify or refuse rather than guessing.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Main Chat Panel Container */}
-      <section className="max-w-[1440px] mx-auto px-5 md:px-10 lg:px-16 pb-16">
-        <div className="border-2 border-primary bg-surface-white p-4 sm:p-6 shadow-editorial">
+        {/* Main Interactive Chat Interface */}
+        <section aria-label="Conversational Assistant">
           <ChatInterface />
-        </div>
-      </section>
+        </section>
+
+        {/* Architecture & Delivery Roadmap */}
+        <section className="border-2 border-[#11110f] bg-white p-6 sm:p-8 stamp-shadow">
+          <div className="flex items-center gap-2 mb-2">
+            <Clock className="h-4 w-4 text-[#11110f]" />
+            <h2 className="font-mono text-base font-bold uppercase tracking-wider text-[#11110f]">
+              Engineering Delivery Roadmap
+            </h2>
+          </div>
+          <p className="font-sans text-xs text-[#11110f]/75 mb-6 max-w-prose leading-relaxed">
+            The assistant is architected milestone-by-milestone under strict zero-dollar operating cost budgets.
+          </p>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            {milestones.map((m, idx) => (
+              <div key={idx} className="border border-[#11110f] bg-[#fcf9f2] p-4 text-xs">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="font-mono text-[10px] font-bold text-[#861933] uppercase tracking-wider">
+                    {m.phase}
+                  </span>
+                  <span className="border border-[#11110f] bg-white px-2 py-0.5 font-mono text-[10px] font-bold uppercase text-[#11110f]">
+                    {m.status}
+                  </span>
+                </div>
+                <h3 className="font-mono font-bold text-sm uppercase text-[#11110f]">{m.title}</h3>
+                <p className="mt-2 font-sans text-xs text-[#11110f]/80 leading-relaxed">{m.detail}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      </div>
     </div>
   );
 }

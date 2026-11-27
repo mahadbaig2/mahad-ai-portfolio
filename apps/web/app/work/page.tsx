@@ -1,13 +1,13 @@
-import Link from "next/link";
-import type { Metadata } from "next";
-import { ArrowUpRight } from "lucide-react";
+import React from "react";
+import { Metadata } from "next";
 import { getProject, getProjects, type CmsProject } from "@/lib/sanity/loadData";
 import { PROJECTS } from "@/lib/data";
 import { WorkLibrary } from "@/components/work/WorkLibrary";
 
 export const metadata: Metadata = {
-  title: "Work | Mirza Mahad Baig",
-  description: "Products, interfaces, and AI systems by Mirza Mahad Baig.",
+  title: "Selected Work & Technical Archive | Mirza Mahad Baig",
+  description:
+    "AI products, enterprise SaaS systems, full-stack architectures, and product-design case studies designed and engineered by Mirza Mahad Baig.",
 };
 
 const PRIORITY_SLUGS = [
@@ -46,36 +46,56 @@ export default async function WorkPage() {
   const projects = Array.from(bySlug.values());
 
   return (
-    <div className="flex flex-col w-full bg-paper">
-      {/* Page heading */}
-      <section className="w-full pt-10 pb-10 lg:pb-14">
-        <div className="max-w-[1440px] mx-auto px-5 md:px-10 lg:px-16">
-          <h1 className="font-serif text-4xl sm:text-5xl lg:text-[3.5rem] font-normal text-primary max-w-4xl tracking-tight leading-[1.08]">
-            Work, in many forms.
+    <div className="w-full max-w-[1440px] mx-auto px-6 sm:px-8 py-10 sm:py-16">
+      {/* Top Metadata Strip */}
+      <div className="flex flex-wrap items-center justify-between border-b-2 border-primary pb-3 mb-8 gap-3 font-mono text-xs">
+        <div className="flex items-center gap-2">
+          <span className="bg-primary text-on-primary px-2 py-0.5 font-bold">
+            SELECTED WORK // 2019–NOW
+          </span>
+          <span className="text-on-surface-variant border border-outline-variant px-2 py-0.5 hidden sm:inline-block">
+            [DOC: MMB-WRK-2025 // 12-COL MONOGRAPH]
+          </span>
+        </div>
+        <div className="text-on-surface-variant flex items-center gap-3">
+          <span>SYS.SPEC: VERIFIED ARCHIVAL RECORDS</span>
+          <span className="text-outline">·</span>
+          <span className="inline-flex items-center gap-1.5 text-secondary font-bold">
+            <span className="w-2 h-2 rounded-full bg-secondary inline-block animate-pulse" />
+            SYSTEM VERIFIED
+          </span>
+        </div>
+      </div>
+
+      {/* Editorial Hero Title & Proposition */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 pb-10 border-b-2 border-outline-variant mb-6">
+        <div className="lg:col-span-8">
+          <h1 className="font-headline text-3xl sm:text-5xl lg:text-6xl font-black text-primary uppercase tracking-tight leading-tight mb-4">
+            Work That Moves From Interface to Intelligence.
           </h1>
+          <p className="font-sans text-base sm:text-lg text-on-surface-variant max-w-2xl leading-relaxed">
+            A verified collection of AI products, full-stack applications, enterprise SaaS platforms, machine-learning projects, automation workflows, and product-design case studies.
+          </p>
         </div>
-      </section>
-
-      {/* Filterable Work Archive */}
-      <WorkLibrary initialProjects={projects} />
-
-      {/* Deep Forest Bottom CTA Band */}
-      <section className="max-w-[1440px] w-full mx-auto px-5 md:px-10 lg:px-16 pb-16">
-        <div className="bg-primary text-on-primary rounded-2xl p-8 sm:p-12 flex flex-col md:flex-row items-start md:items-end justify-between gap-6 shadow-editorial">
-          <div>
-            <h2 className="font-serif text-3xl sm:text-4xl font-normal">
-              Want the full picture behind these builds?
-            </h2>
+        <div className="lg:col-span-4 flex flex-col justify-between">
+          <div className="p-4 bg-surface-container-low border-2 border-primary stamp-shadow-sm">
+            <div className="flex items-center justify-between border-b border-outline-variant pb-1.5 mb-2 font-mono text-[11px]">
+              <span className="font-bold text-primary">AUDIT MANDATE</span>
+              <span className="text-outline">VERIFIED 1.0</span>
+            </div>
+            <p className="font-sans text-xs text-on-surface leading-normal">
+              Each project identifies my role, what was actually completed, and the current maturity of the work. No theoretical mockups represented as live software.
+            </p>
           </div>
-          <Link
-            href="/about"
-            className="inline-flex items-center gap-2 border-b border-on-primary pb-1 font-mono text-sm text-on-primary hover:text-secondary-fixed transition-colors shrink-0"
-          >
-            <span>About my approach</span>
-            <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-          </Link>
+          <div className="mt-4 flex items-center justify-between font-mono text-[11px] text-on-surface-variant border-t border-dashed border-outline-variant pt-2">
+            <span>PORTFOLIO_LATENCY: OPTIMIZED</span>
+            <span>COORDINATES: 33.6844° N, 73.0479° E</span>
+          </div>
         </div>
-      </section>
+      </div>
+
+      {/* Interactive Work Library */}
+      <WorkLibrary initialProjects={projects} />
     </div>
   );
 }

@@ -1,43 +1,42 @@
-import React from "react";
-import { PortableText as BasePortableText, type PortableTextComponents } from "@portabletext/react";
-import { VisualPlaceholder } from "@/components/VisualPlaceholder";
+import React from 'react';
+import { PortableText as BasePortableText, type PortableTextComponents } from '@portabletext/react';
+import Image from 'next/image';
+import { urlForImage } from '@/lib/sanity/image';
 
 const components: PortableTextComponents = {
   block: {
     normal: ({ children }) => (
-      <p className="text-base md:text-[17px] leading-[1.7] text-on-surface-variant mb-4">
-        {children}
-      </p>
+      <p className="text-base leading-relaxed text-neutral-700 mb-4">{children}</p>
     ),
     h2: ({ children }) => (
-      <h2 className="font-serif text-2xl md:text-3xl font-normal text-primary mt-9 mb-4 tracking-tight border-b border-hairline/70 pb-2">
+      <h2 className="text-xl font-semibold text-neutral-900 mt-8 mb-4 tracking-tight border-b border-neutral-100 pb-2">
         {children}
       </h2>
     ),
     h3: ({ children }) => (
-      <h3 className="font-serif text-xl font-medium text-primary mt-6 mb-3 tracking-tight">
+      <h3 className="text-lg font-medium text-neutral-900 mt-6 mb-3 tracking-tight">
         {children}
       </h3>
     ),
     h4: ({ children }) => (
-      <h4 className="font-serif text-lg font-medium text-primary mt-4 mb-2">
+      <h4 className="text-base font-medium text-neutral-900 mt-4 mb-2">
         {children}
       </h4>
     ),
     blockquote: ({ children }) => (
-      <blockquote className="border-l-2 border-primary-container bg-mint/50 rounded-r-lg px-5 py-3 my-5 font-serif text-lg italic text-primary">
+      <blockquote className="border-l-2 border-neutral-300 pl-4 my-4 italic text-neutral-600">
         {children}
       </blockquote>
     ),
   },
   list: {
     bullet: ({ children }) => (
-      <ul className="list-disc list-outside pl-5 mb-4 space-y-2 text-on-surface-variant text-base">
+      <ul className="list-disc list-outside pl-5 mb-4 space-y-1.5 text-neutral-700 text-base">
         {children}
       </ul>
     ),
     number: ({ children }) => (
-      <ol className="list-decimal list-outside pl-5 mb-4 space-y-2 text-on-surface-variant text-base">
+      <ol className="list-decimal list-outside pl-5 mb-4 space-y-1.5 text-neutral-700 text-base">
         {children}
       </ol>
     ),
@@ -48,23 +47,23 @@ const components: PortableTextComponents = {
   },
   marks: {
     strong: ({ children }) => (
-      <strong className="font-semibold text-on-surface">{children}</strong>
+      <strong className="font-semibold text-neutral-900">{children}</strong>
     ),
-    em: ({ children }) => <em className="italic text-primary">{children}</em>,
+    em: ({ children }) => <em className="italic text-neutral-800">{children}</em>,
     code: ({ children }) => (
-      <code className="font-mono text-xs bg-mint text-primary px-1.5 py-0.5 rounded border border-hairline">
+      <code className="font-mono text-xs bg-neutral-100 text-neutral-900 px-1.5 py-0.5 rounded border border-neutral-200">
         {children}
       </code>
     ),
     link: ({ value, children }) => {
-      const href = value?.href || "#";
-      const isExternal = href.startsWith("http") || href.startsWith("mailto");
+      const href = value?.href || '#';
+      const isExternal = href.startsWith('http') || href.startsWith('mailto');
       return (
         <a
           href={href}
-          target={isExternal ? "_blank" : undefined}
-          rel={isExternal ? "noopener noreferrer" : undefined}
-          className="text-primary font-medium underline underline-offset-4 decoration-jade hover:decoration-primary transition-colors"
+          target={isExternal ? '_blank' : undefined}
+          rel={isExternal ? 'noopener noreferrer' : undefined}
+          className="text-neutral-900 underline underline-offset-4 decoration-neutral-300 hover:decoration-neutral-900 transition-colors"
         >
           {children}
         </a>
@@ -76,13 +75,23 @@ const components: PortableTextComponents = {
       if (!value?.asset?._ref) {
         return null;
       }
+      const imageUrl = urlForImage(value)?.width(1200).url();
+      if (!imageUrl) {
+        return null;
+      }
       return (
         <figure className="my-6">
-          <div className="relative aspect-video w-full overflow-hidden rounded-xl border border-hairline bg-surface-white shadow-editorial-sm">
-            <VisualPlaceholder label={value.alt || "article imagery"} />
+          <div className="relative aspect-video w-full overflow-hidden rounded border border-neutral-200 bg-neutral-50">
+            <Image
+              src={imageUrl}
+              alt={value.alt || 'Content image'}
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 800px"
+            />
           </div>
           {value.caption && (
-            <figcaption className="text-center font-mono text-xs text-muted-text mt-2">
+            <figcaption className="text-center text-xs text-neutral-500 mt-2">
               {value.caption}
             </figcaption>
           )}
@@ -91,27 +100,29 @@ const components: PortableTextComponents = {
     },
     codeBlock: ({ value }) => {
       return (
-        <div className="my-6 overflow-hidden rounded-xl border border-charcoal-gutter bg-charcoal-gutter text-surface-white shadow-editorial-sm">
+        <div className="my-6 overflow-hidden rounded border border-neutral-200 bg-neutral-900 text-neutral-100">
           {(value.filename || value.language) && (
-            <div className="flex items-center justify-between border-b border-white/10 px-4 py-2 text-xs text-on-primary-container font-mono">
-              <span>{value.filename || ""}</span>
-              <span className="uppercase text-[11px] tracking-wider text-secondary-fixed">
-                {value.language || "code"}
+            <div className="flex items-center justify-between border-b border-neutral-800 px-4 py-1.5 text-xs text-neutral-400 font-mono">
+              <span>{value.filename || ''}</span>
+              <span className="uppercase text-[10px] tracking-wider text-neutral-500">
+                {value.language || 'code'}
               </span>
             </div>
           )}
-          <pre className="overflow-x-auto p-5 font-mono text-xs leading-relaxed text-inverse-on-surface">
+          <pre className="overflow-x-auto p-4 font-mono text-xs leading-relaxed">
             <code>{value.code}</code>
           </pre>
         </div>
       );
     },
     callout: ({ value }) => {
-      const tone = value?.tone || "info";
+      const tone = value?.tone || 'info';
       const borderClass =
-        tone === "warning" ? "border-warning bg-warning/10" : "border-primary-container bg-mint";
+        tone === 'warning' ? 'border-neutral-700' : 'border-neutral-400';
       return (
-        <div className={`my-5 border-l-2 ${borderClass} px-4 py-3 text-sm text-on-surface rounded-r-lg`}>
+        <div
+          className={`my-4 border-l-2 ${borderClass} bg-neutral-50 px-4 py-3 text-sm text-neutral-800 rounded-r`}
+        >
           <p className="leading-relaxed">{value.text}</p>
         </div>
       );
@@ -120,14 +131,14 @@ const components: PortableTextComponents = {
 };
 
 interface PortableTextProps {
-  value: Parameters<typeof BasePortableText>[0]["value"];
+  value: Parameters<typeof BasePortableText>[0]['value'];
   className?: string;
 }
 
-export function PortableText({ value, className = "" }: PortableTextProps) {
+export function PortableText({ value, className = '' }: PortableTextProps) {
   if (!value) return null;
   return (
-    <div className={`max-w-none ${className}`}>
+    <div className={`prose-neutral max-w-none ${className}`}>
       <BasePortableText value={value} components={components} />
     </div>
   );

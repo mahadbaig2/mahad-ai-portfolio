@@ -1,20 +1,18 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { VisualPlaceholder } from "@/components/VisualPlaceholder";
-import { ArrowLeft, ArrowUpRight, Calendar, Clock } from "lucide-react";
+import { Metadata } from "next";
+import { ArrowLeft, ArrowUpRight, Terminal, BookOpen, Clock, Calendar } from "lucide-react";
 import { getArticles, getArticle } from "@/lib/sanity/loadData";
 import { PortableText } from "@/components/PortableText";
 import { ARTICLES } from "@/lib/data";
-import { urlForImage } from "@/lib/sanity/image";
 
 export async function generateStaticParams() {
   const articles = await getArticles();
-  return [
-    ...new Set([
-      ...articles.map((article) => article.slug),
-      ...ARTICLES.map((article) => article.slug),
-    ]),
-  ].map((slug) => ({ slug }));
+  const slugs = new Set(articles.map((a) => a.slug));
+  ARTICLES.forEach((a) => slugs.add(a.slug));
+  return Array.from(slugs).map((slug) => ({
+    slug,
+  }));
 }
 
 export async function generateMetadata({
@@ -24,9 +22,12 @@ export async function generateMetadata({
 }) {
   const { slug } = await params;
   const article = await getArticle(slug);
-  return article
-    ? { title: `${article.title} | Mirza Mahad Baig`, description: article.summary }
-    : { title: "Article not found | Mirza Mahad Baig" };
+  if (!article) return { title: "Article Not Found | Mirza Mahad Baig" };
+
+  return {
+    title: `${article.title} // Writing | Mirza Mahad Baig`,
+    description: article.summary,
+  };
 }
 
 export default async function WritingArticlePage({
@@ -36,149 +37,138 @@ export default async function WritingArticlePage({
 }) {
   const { slug } = await params;
   const article = await getArticle(slug);
-  if (!article) notFound();
 
-  const heroUrl = article.heroImage
-    ? urlForImage(article.heroImage)?.width(1200).url()
-    : null;
+  if (!article) {
+    notFound();
+  }
 
   return (
-    <div className="w-full bg-paper min-h-screen">
-      <article className="max-w-[1440px] mx-auto px-5 md:px-10 lg:px-16 py-10 space-y-10">
-        {/* Top Article Hero Card */}
-        <header className="space-y-6">
-          <div className="flex flex-wrap items-center gap-3 font-mono text-xs text-muted-text">
-            <Link
-              href="/writing"
-              className="inline-flex items-center gap-1.5 text-primary font-medium hover:text-primary-container transition-colors"
-            >
-              <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
-              <span>All writing</span>
-            </Link>
-            <span aria-hidden="true">/</span>
-            <span>{article.articleType || "Engineering Essay"}</span>
+    <div className="w-full bg-background text-on-surface">
+      {/* Top Anchor Bar */}
+      <div className="sticky top-16 z-40 w-full bg-surface/95 border-b-[1.5px] border-primary px-4 sm:px-8 py-2.5 flex items-center justify-between font-mono text-xs backdrop-blur-sm">
+        <Link
+          href="/writing"
+          className="flex items-center gap-1.5 font-bold uppercase tracking-wider text-primary hover:text-tertiary-container transition-colors"
+        >
+          <ArrowLeft className="h-3.5 w-3.5" />
+          <span>WRITING MONOGRAPHS</span>
+        </Link>
+        <div className="flex items-center gap-3 text-on-surface-variant font-semibold">
+          <span>{article.readingTime}</span>
+          <span>·</span>
+          <span>{article.publishedAt}</span>
+        </div>
+      </div>
+
+      <article className="max-w-[1000px] mx-auto px-6 sm:px-8 py-10 sm:py-16 space-y-10">
+        {/* Header Block */}
+        <header className="border-2 border-primary bg-surface-container-lowest p-6 sm:p-10 stamp-shadow">
+          <div className="flex items-center gap-2 font-mono text-xs text-outline mb-4">
+            <span className="px-2 py-0.5 bg-primary text-on-primary font-bold uppercase">
+              {article.articleType?.replace(/_/g, " ") || "SYSTEM BREAKDOWN"}
+            </span>
+            <span>·</span>
+            <span>PUBLISHED: {article.publishedAt}</span>
           </div>
 
-          {article.topics && article.topics.length > 0 && (
-            <div className="flex flex-wrap items-center gap-2">
-              {article.topics.map((topic) => (
+          <h1 className="font-headline text-3xl sm:text-5xl font-black uppercase text-primary leading-tight tracking-tight mb-6">
+            {article.title}
+          </h1>
+
+          <div className="pl-4 border-l-4 border-tertiary-container bg-surface-container-low py-3 pr-4 font-sans text-base sm:text-lg text-on-surface leading-relaxed mb-6">
+            <span className="font-mono font-bold text-xs block uppercase tracking-wider text-tertiary-container mb-1">
+              THESIS ABSTRACT:
+            </span>
+            {article.summary}
+          </div>
+
+          <div className="flex flex-wrap items-center justify-between border-t border-outline-variant pt-4 gap-4 font-mono text-xs">
+            <div className="flex flex-wrap gap-1.5">
+              {article.topics.map((t) => (
                 <span
-                  key={topic}
-                  className="px-2.5 py-1 rounded bg-mint border border-hairline/60 font-mono text-xs text-primary"
+                  key={t}
+                  className="px-2 py-0.5 bg-surface-container border border-outline-variant font-bold text-primary"
                 >
-                  {topic}
+                  #{t}
                 </span>
               ))}
             </div>
-          )}
 
-          <div className="max-w-4xl space-y-4">
-            <h1 className="font-serif text-3xl sm:text-5xl lg:text-[3.5rem] font-normal text-primary tracking-tight leading-[1.08]">
-              {article.title}
-            </h1>
-            {article.summary && (
-              <p className="text-lg sm:text-xl text-on-surface-variant leading-relaxed max-w-3xl">
-                {article.summary}
-              </p>
-            )}
-          </div>
-
-          {/* Author & Metadata Bar */}
-          <div className="bg-surface-container-low border-2 border-primary px-5 py-4 flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-xs text-muted-text">
-            <span className="font-sans text-sm font-semibold text-primary">
-              Mirza Mahad Baig
-            </span>
-            <span className="hidden sm:inline text-hairline" aria-hidden="true">|</span>
-            <span className="inline-flex items-center gap-1.5">
-              <Calendar className="h-3.5 w-3.5" aria-hidden="true" />
-              <span>{article.publishedAt}</span>
-            </span>
-            {article.readingTime && (
-              <>
-                <span className="hidden sm:inline text-hairline" aria-hidden="true">|</span>
-                <span className="inline-flex items-center gap-1.5">
-                  <Clock className="h-3.5 w-3.5" aria-hidden="true" />
-                  <span>{article.readingTime}</span>
-                </span>
-              </>
+            {article.canonicalUrl && (
+              <a
+                href={article.canonicalUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1 text-primary hover:text-tertiary-container font-semibold"
+              >
+                <span>Read on Medium / Canonical Source</span>
+                <ArrowUpRight className="h-3.5 w-3.5" />
+              </a>
             )}
           </div>
         </header>
 
-        {heroUrl && (
-          <figure className="bg-surface-white border-2 border-primary p-3 shadow-editorial-sm">
-            <div className="relative aspect-[16/9] max-h-[520px] w-full overflow-hidden rounded-xl bg-surface-container">
-              <VisualPlaceholder label={`${article.title} article imagery`} />
+        {/* Article Body Content */}
+        <section className="border-2 border-primary bg-surface p-6 sm:p-12 stamp-shadow font-sans text-base leading-relaxed space-y-6">
+          {article.body ? (
+            <PortableText value={article.body} />
+          ) : article.content ? (
+            <div className="space-y-6">
+              {article.content.map((paragraph, index) => (
+                <p key={index} className="text-on-surface text-base sm:text-lg leading-relaxed">
+                  {paragraph}
+                </p>
+              ))}
             </div>
-          </figure>
+          ) : (
+            <p className="text-on-surface-variant italic font-mono text-xs">
+              Content body currently undergoing canonical editorial review.
+            </p>
+          )}
+        </section>
+
+        {/* Sources & Citations if available */}
+        {article.sources && article.sources.length > 0 && (
+          <section className="border-2 border-primary bg-surface-container-low p-6 font-mono text-xs stamp-shadow-sm">
+            <span className="font-bold text-primary uppercase block mb-3">
+              PRIMARY SOURCES & ARCHITECTURAL CITATIONS:
+            </span>
+            <ul className="space-y-2">
+              {article.sources.map((source, i) => (
+                <li key={i} className="flex items-center gap-2">
+                  <span className="text-secondary font-bold">[{i + 1}]</span>
+                  <a
+                    href={source.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary hover:underline font-semibold"
+                  >
+                    {source.title} ↗
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
         )}
 
-        {/* Long-form Reading Canvas (68ch Measure) */}
-        <div className="bg-surface-white border-2 border-primary shadow-editorial-sm px-6 py-10 sm:px-12 lg:px-20 lg:py-14">
-          <div className="max-w-prose mx-auto space-y-6">
-            {article.body ? (
-              <PortableText value={article.body} />
-            ) : article.content?.length ? (
-              <div className="space-y-5 text-base sm:text-[17px] leading-[1.75] text-on-surface-variant">
-                {article.content.map((paragraph, index) => (
-                  <p key={index}>{paragraph}</p>
-                ))}
-              </div>
-            ) : (
-              <p className="text-base text-muted-text">
-                The full article is being prepared for publication.
-              </p>
-            )}
-
-            {article.sources?.length ? (
-              <section className="border-t border-hairline pt-8 mt-10">
-                <h2 className="font-serif text-2xl font-normal text-primary mb-4">
-                  Sources &amp; References
-                </h2>
-                <ul className="space-y-2.5 text-sm">
-                  {article.sources.map((source) => (
-                    <li key={source.url}>
-                      <a
-                        href={source.url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex items-center gap-1.5 text-primary font-medium underline underline-offset-4 decoration-jade hover:text-primary-container"
-                      >
-                        <span>{source.title}</span>
-                        <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </section>
-            ) : null}
-
-            {article.canonicalUrl && (
-              <div className="pt-4">
-                <a
-                  className="inline-flex items-center gap-1.5 font-mono text-sm font-medium text-primary border-b border-jade pb-1 hover:text-primary-container transition-colors"
-                  href={article.canonicalUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <span>Read original publication</span>
-                  <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-                </a>
-              </div>
-            )}
+        {/* Assistant Ask Action Callout */}
+        <section className="border-2 border-primary bg-secondary-container p-6 sm:p-8 stamp-shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 font-mono text-xs">
+          <div>
+            <div className="flex items-center gap-2 text-primary font-bold uppercase mb-1">
+              <Terminal className="h-4 w-4 text-secondary" />
+              <span>EXPLORE VIA CONVERSATIONAL ASSISTANT</span>
+            </div>
+            <p className="font-sans text-xs text-on-secondary-container">
+              Have a question about the trade-offs or implementation details in this article?
+            </p>
           </div>
-        </div>
-
-        {/* Next Reading Band */}
-        <div className="bg-primary text-on-primary rounded-2xl p-8 sm:p-12 text-center shadow-editorial">
           <Link
-            href="/writing"
-            className="inline-flex items-center gap-3 font-serif text-3xl sm:text-4xl font-normal text-on-primary hover:text-secondary-fixed transition-colors"
+            href={`/chat?q=Tell me more about the insights in the article: ${article.title}`}
+            className="px-5 py-2.5 bg-primary text-on-primary font-bold uppercase tracking-wider stamp-shadow-sm hover:translate-x-[1px] hover:translate-y-[1px] transition-transform shrink-0"
           >
-            <span>Explore more writing</span>
-            <ArrowUpRight className="h-7 w-7" aria-hidden="true" />
+            Ask Assistant →
           </Link>
-        </div>
+        </section>
       </article>
     </div>
   );

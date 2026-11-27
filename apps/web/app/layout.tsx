@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { AnnouncementBar } from "@/components/AnnouncementBar";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { AssistantWidgetProvider } from "@/components/assistant/AssistantWidgetContext";
@@ -61,9 +62,10 @@ export default function RootLayout({
     >
       <body
         suppressHydrationWarning
-        className="min-h-screen bg-paper font-sans text-on-surface antialiased selection:bg-sage selection:text-primary"
+        className="min-h-screen bg-background font-sans text-on-surface antialiased selection:bg-tertiary-container selection:text-on-tertiary"
       >
         <AssistantWidgetProvider>
+          <AnnouncementBar />
           <Header />
           <main className="min-h-[calc(100vh-160px)]">{children}</main>
           <Footer />

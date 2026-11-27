@@ -28,7 +28,7 @@ describe("Footer Component", () => {
     expect(screen.getAllByText(/Mirza Mahad Baig/i).length).toBeGreaterThan(0);
     expect(screen.getByText("GitHub")).toBeDefined();
     expect(screen.getByText("LinkedIn")).toBeDefined();
-    expect(screen.getByText("Travel")).toBeDefined();
+    expect(screen.getByRole("link", { name: "Off-Screen" }).getAttribute("href")).toBe("/travel");
   });
 });
 

@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from "react";
 import Link from "next/link";
-import { ArrowRight, ArrowUpRight, FolderGit2 } from "lucide-react";
+import { ArrowUpRight, Github, ExternalLink, Layers, Terminal } from "lucide-react";
 import { type CmsProject } from "@/lib/sanity/loadData";
 
 interface WorkLibraryProps {
@@ -10,13 +10,13 @@ interface WorkLibraryProps {
 }
 
 const CATEGORIES = [
-  { label: "All", value: "all" },
-  { label: "AI Products", value: "ai_product" },
-  { label: "Full Stack", value: "full_stack" },
-  { label: "Product Design & UI/UX", value: "product_design" },
-  { label: "Machine Learning", value: "machine_learning" },
-  { label: "Automation", value: "automation" },
-  { label: "Research", value: "research" },
+  { label: "ALL", value: "all" },
+  { label: "AI PRODUCTS", value: "ai_product" },
+  { label: "FULL STACK", value: "full_stack" },
+  { label: "PRODUCT DESIGN & UIUX", value: "product_design" },
+  { label: "MACHINE LEARNING", value: "machine_learning" },
+  { label: "AUTOMATION", value: "automation" },
+  { label: "RESEARCH", value: "research" },
 ];
 
 function matchesProjectCategory(p: CmsProject, catValue: string): boolean {
@@ -49,252 +49,215 @@ function matchesProjectCategory(p: CmsProject, catValue: string): boolean {
 export function WorkLibrary({ initialProjects }: WorkLibraryProps) {
   const [selectedCategory, setSelectedCategory] = useState("all");
 
-  const filteredProjects = useMemo(() => {
-    return initialProjects.filter((p) => matchesProjectCategory(p, selectedCategory));
-  }, [initialProjects, selectedCategory]);
-
-  const [featuredProject, ...gridProjects] = filteredProjects;
+  const filteredProjects = useMemo(
+    () => initialProjects.filter((project) => matchesProjectCategory(project, selectedCategory)),
+    [initialProjects, selectedCategory],
+  );
 
   return (
     <div className="w-full">
-      {/* Sticky Filter & Classification Bar */}
-      <section className="w-full bg-surface-white border-y border-hairline/80 py-4 sticky top-16 z-30 shadow-editorial-sm">
-        <div className="max-w-[1440px] mx-auto px-5 md:px-10 lg:px-16 flex flex-col md:flex-row md:items-center justify-between gap-3">
-          <div className="flex flex-wrap items-center gap-2" role="group" aria-label="Filter projects by discipline">
-            {CATEGORIES.map((cat) => {
-              const count = initialProjects.filter((p) => matchesProjectCategory(p, cat.value)).length;
-              const isActive = selectedCategory === cat.value;
-              return (
-                <button
-                  key={cat.value}
-                  type="button"
-                  onClick={() => setSelectedCategory(cat.value)}
-                  aria-pressed={isActive}
-                  className={`px-3.5 py-1.5 rounded-full font-mono text-xs transition-colors ${
-                    isActive
-                      ? "bg-primary-container text-on-primary font-medium"
-                      : "bg-paper text-on-surface-variant hover:bg-mint hover:text-primary border border-hairline/70"
-                  }`}
-                >
-                  {cat.label} ({count})
-                </button>
-              );
-            })}
-          </div>
-
-          <div className="flex items-center gap-2 font-mono text-xs text-muted-text shrink-0">
-            <span className="w-2 h-2 rounded-full bg-primary" aria-hidden="true" />
-            <span>Showing {filteredProjects.length} projects</span>
+      {/* Category Filter Controls */}
+      <section className="py-6 border-b-2 border-primary mb-10">
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="flex flex-wrap items-center gap-2" role="group" aria-label="Filter projects by discipline">
+              {CATEGORIES.map((cat) => {
+                const count = initialProjects.filter((project) => matchesProjectCategory(project, cat.value)).length;
+                const isActive = selectedCategory === cat.value;
+                return (
+                  <button
+                    key={cat.value}
+                    type="button"
+                    aria-pressed={isActive}
+                    onClick={() => setSelectedCategory(cat.value)}
+                    className={`px-3 py-1.5 font-mono text-xs uppercase tracking-wider border transition-colors ${
+                      isActive
+                        ? "bg-tertiary-container text-on-tertiary border-primary font-bold stamp-shadow-sm"
+                        : "bg-surface hover:bg-surface-container text-on-surface border-outline-variant hover:border-primary"
+                    }`}
+                  >
+                    {cat.label} [{count}]
+                  </button>
+                );
+              })}
+            </div>
+            <div className="font-mono text-xs font-bold text-secondary flex items-center gap-1.5 bg-secondary-container px-3 py-1 border border-secondary">
+              <span className="w-1.5 h-1.5 bg-secondary rounded-full animate-pulse" />
+              <span>DISPLAYING {filteredProjects.length} VERIFIED SPECIMENS</span>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Main Archive Body */}
-      <div className="max-w-[1440px] mx-auto px-5 md:px-10 lg:px-16 py-12 lg:py-16 space-y-12">
-        {filteredProjects.length === 0 ? (
-          <div className="bg-surface-white border-2 border-primary p-12 text-center font-mono text-sm text-muted-text">
-            No projects match the selected discipline filter.
-          </div>
-        ) : (
-          <>
-            {/* Featured Specimen 01 */}
-            {featuredProject && (
-              <article className="bg-surface-white border-2 border-primary shadow-editorial overflow-hidden grid grid-cols-1 lg:grid-cols-12">
-                <div className="lg:col-span-7 p-6 sm:p-10 flex flex-col justify-between space-y-6">
-                  <div className="space-y-4">
-                    <div className="flex flex-wrap items-center gap-2.5">
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sage text-primary font-mono text-xs font-medium">
-                        <span className="w-1.5 h-1.5 rounded-full bg-primary" aria-hidden="true" />
-                        <span>{featuredProject.maturityStatus || "Featured Specimen"}</span>
-                      </span>
-                      {featuredProject.year && (
-                        <span className="font-mono text-xs text-muted-text">{featuredProject.year}</span>
-                      )}
-                    </div>
+      {/* Projects List */}
+      {filteredProjects.length === 0 ? (
+        <div className="border-2 border-primary bg-surface p-12 text-center font-mono text-xs text-on-surface-variant">
+          NO SPECIMENS FOUND FOR THE SELECTED TAXONOMY FILTER.
+        </div>
+      ) : (
+        <div className="space-y-10">
+          {filteredProjects.map((project, idx) => {
+            const specimenId = String(idx + 1).padStart(2, "0");
+            const maturity = project.maturityStatus || "ACTIVE PRODUCT";
+            const isProduction =
+              maturity.toLowerCase().includes("production") || maturity.toLowerCase().includes("active");
 
-                    <h2 className="font-serif text-3xl sm:text-4xl font-normal text-primary tracking-tight">
-                      <Link href={`/work/${featuredProject.slug}`} className="hover:text-primary-container transition-colors">
-                        {featuredProject.title}
-                      </Link>
-                    </h2>
+            return (
+              <article
+                key={project.slug}
+                className="bg-surface-container-lowest border-2 border-primary stamp-shadow hover:translate-x-[2px] hover:translate-y-[2px] transition-transform"
+              >
+                {/* Specimen Header Bar */}
+                <div className="bg-surface-container-high px-6 py-2.5 border-b-2 border-primary flex flex-wrap items-center justify-between text-on-surface font-mono text-xs">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <span className="font-bold text-primary">
+                      SPECIMEN ID: {specimenId} {`//`} {project.slug.toUpperCase()}
+                    </span>
+                    <span className="text-outline">/</span>
+                    <span className="bg-surface px-1.5 border border-outline-variant">
+                      YEAR: {project.year}
+                    </span>
+                    <span className="text-outline">/</span>
+                    <span className="text-primary font-semibold">
+                      ROLE: {project.role.toUpperCase()}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span
+                      className={`px-2 py-0.5 border font-mono text-[10px] font-bold flex items-center gap-1 uppercase ${
+                        isProduction
+                          ? "bg-secondary-container text-on-secondary-container border-secondary"
+                          : "bg-surface-container text-on-surface-variant border-outline-variant"
+                      }`}
+                    >
+                      <span
+                        className={`w-1.5 h-1.5 rounded-full ${
+                          isProduction ? "bg-secondary animate-pulse" : "bg-outline"
+                        }`}
+                      />
+                      <span>[{maturity.replace(/_/g, " ")}]</span>
+                    </span>
+                  </div>
+                </div>
 
-                    {featuredProject.role && (
-                      <div className="bg-mint/70 px-4 py-2.5 rounded-lg border border-hairline/60">
-                        <span className="font-mono text-[11px] text-muted-text block uppercase tracking-wider">
-                          Role &amp; Scope
-                        </span>
-                        <span className="text-sm text-primary font-medium">{featuredProject.role}</span>
+                {/* Main Card Grid */}
+                <div className="grid grid-cols-1 lg:grid-cols-12">
+                  {/* Left Column (8 cols): Title, Outcome, Narrative */}
+                  <div className="lg:col-span-8 p-6 sm:p-8 border-b lg:border-b-0 lg:border-r-2 border-primary flex flex-col justify-between">
+                    <div>
+                      <div className="flex items-center gap-2 mb-2 font-mono text-[10px] text-outline uppercase tracking-wider">
+                        <span>CATEGORY: {project.category?.replace(/_/g, " ") || "AI Product"}</span>
+                        {project.clientOrOrg && (
+                          <>
+                            <span>·</span>
+                            <span>ORG: {project.clientOrOrg}</span>
+                          </>
+                        )}
                       </div>
-                    )}
 
-                    <p className="text-base text-on-surface-variant leading-relaxed">
-                      {featuredProject.summary}
-                    </p>
+                      <h2 className="font-headline text-2xl sm:text-3xl font-black uppercase text-primary leading-tight mb-2">
+                        <Link href={`/work/${project.slug}`} className="hover:underline">
+                          {project.title}
+                        </Link>
+                      </h2>
 
-                    {(featuredProject.technologies || []).length > 0 && (
-                      <div className="flex flex-wrap gap-2 pt-1">
-                        {(featuredProject.technologies || []).slice(0, 6).map((tech) => (
+                      {project.shortOutcome && (
+                        <p className="font-mono text-xs font-bold text-tertiary-container mb-4">
+                          ↳ {project.shortOutcome}
+                        </p>
+                      )}
+
+                      <p className="font-sans text-sm text-on-surface leading-relaxed mb-6">
+                        {project.summary}
+                      </p>
+
+                      {/* Technology Chips */}
+                      <div className="flex flex-wrap gap-1.5 mb-6">
+                        {project.technologies.map((tech) => (
                           <span
                             key={tech}
-                            className="px-2.5 py-1 bg-surface-container-high text-on-surface font-mono text-xs rounded"
+                            className="px-2 py-0.5 bg-surface-container border border-outline-variant font-mono text-[10px] font-bold text-primary"
                           >
                             {tech}
                           </span>
                         ))}
                       </div>
-                    )}
-                  </div>
-
-                  <div className="flex flex-wrap items-center gap-4 pt-2">
-                    <Link
-                      href={`/work/${featuredProject.slug}`}
-                      className="inline-flex items-center gap-2 bg-primary-container text-on-primary hover:bg-primary transition-colors px-5 py-2.5 rounded text-sm font-medium shadow-editorial-sm"
-                    >
-                      <span>View Case Study</span>
-                      <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                    </Link>
-
-                    {featuredProject.githubUrl && (
-                      <a
-                        href={featuredProject.githubUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 text-sm text-on-surface-variant hover:text-primary underline underline-offset-4 decoration-hairline transition-colors"
-                      >
-                        <FolderGit2 className="h-4 w-4" aria-hidden="true" />
-                        <span>Repository</span>
-                        <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
-                      </a>
-                    )}
-                  </div>
-                </div>
-
-                {/* Visual Diagram Specimen Plate */}
-                <div className="lg:col-span-5 bg-charcoal-gutter p-6 sm:p-8 flex flex-col justify-between text-surface-white">
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between pb-3 border-b border-white/10 font-mono text-xs">
-                      <span className="text-secondary-fixed">{featuredProject.slug}</span>
-                      <span className="text-on-primary-container">Specimen 01</span>
                     </div>
 
-                    <div className="space-y-3">
-                      {featuredProject.tagline && (
-                        <div className="bg-inverse-surface p-3.5 rounded-lg border border-white/10">
-                          <span className="font-mono text-[11px] text-secondary-fixed block mb-1">
-                            Thesis
-                          </span>
-                          <p className="text-sm text-surface-white leading-relaxed">
-                            {featuredProject.tagline}
-                          </p>
-                        </div>
-                      )}
-
-                      {featuredProject.architecture && (
-                        <div className="bg-inverse-surface p-3.5 rounded-lg border border-white/10">
-                          <span className="font-mono text-[11px] text-secondary-fixed block mb-1">
-                            System Shape
-                          </span>
-                          <p className="text-xs text-inverse-on-surface/90 leading-relaxed">
-                            {featuredProject.architecture}
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  <p className="pt-4 font-mono text-xs text-on-primary-container">
-                    Open case study to inspect decisions, constraints, and status.
-                  </p>
-                </div>
-              </article>
-            )}
-
-            {/* Remaining Projects Bento Grid */}
-            {gridProjects.length > 0 && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
-                {gridProjects.map((project, idx) => (
-                  <article
-                    key={project.slug}
-                    className="bg-surface-white border-2 border-primary shadow-editorial-sm p-6 sm:p-7 flex flex-col justify-between hover:shadow-editorial transition-all group"
-                  >
-                    <div className="space-y-4">
-                      <div className="flex flex-wrap items-center justify-between gap-2">
-                        <span className="px-2.5 py-0.5 rounded-full bg-sage text-primary font-mono text-xs font-medium">
-                          {project.maturityStatus || project.category || "Project"}
-                        </span>
-                        <span className="font-mono text-xs text-muted-text">
-                          {project.year || `Specimen ${String(idx + 2).padStart(2, "0")}`}
-                        </span>
-                      </div>
-
-                      <div>
-                        <h3 className="font-serif text-2xl font-normal text-primary group-hover:text-primary-container transition-colors">
-                          <Link href={`/work/${project.slug}`}>{project.title}</Link>
-                        </h3>
-                        {project.tagline && (
-                          <p className="text-sm text-secondary font-medium mt-1">
-                            {project.tagline}
-                          </p>
-                        )}
-                      </div>
-
-                      {project.role && (
-                        <div className="bg-paper border border-hairline/60 px-3.5 py-2 rounded-lg">
-                          <span className="font-mono text-[11px] text-muted-text block uppercase">
-                            Scope
-                          </span>
-                          <span className="text-sm text-primary font-medium">{project.role}</span>
-                        </div>
-                      )}
-
-                      <p className="text-sm text-on-surface-variant leading-relaxed">
-                        {project.summary}
-                      </p>
-
-                      {(project.technologies || []).length > 0 && (
-                        <div className="flex flex-wrap gap-1.5 pt-1">
-                          {(project.technologies || []).slice(0, 5).map((tech) => (
-                            <span
-                              key={tech}
-                              className="px-2.5 py-0.5 bg-paper border border-hairline/60 text-muted-text font-mono text-xs rounded"
-                            >
-                              {tech}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="pt-5 mt-5 border-t border-hairline/60 flex items-center justify-between gap-4">
+                    {/* Actions Strip */}
+                    <div className="flex flex-wrap items-center gap-4 pt-4 border-t border-outline-variant font-mono text-xs">
                       <Link
                         href={`/work/${project.slug}`}
-                        className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:text-primary-container transition-colors"
+                        className="px-4 py-2 bg-tertiary-container text-on-tertiary font-bold flex items-center gap-1.5 stamp-shadow-sm hover:translate-x-[1px] hover:translate-y-[1px] transition-transform"
                       >
-                        <span>Inspect Case Study</span>
-                        <ArrowRight
-                          className="h-4 w-4 group-hover:translate-x-0.5 transition-transform"
-                          aria-hidden="true"
-                        />
+                        <span>Read Case Study</span>
+                        <ArrowUpRight className="h-3.5 w-3.5" />
                       </Link>
+
+                      {project.liveUrl && (
+                        <a
+                          href={project.liveUrl}
+                          target={project.liveUrl.startsWith("http") ? "_blank" : undefined}
+                          rel={project.liveUrl.startsWith("http") ? "noopener noreferrer" : undefined}
+                          className="px-4 py-2 border border-primary bg-surface text-primary font-bold hover:bg-surface-container transition-colors flex items-center gap-1.5"
+                        >
+                          <span>Live System</span>
+                          <ExternalLink className="h-3.5 w-3.5" />
+                        </a>
+                      )}
+
                       {project.githubUrl && (
                         <a
                           href={project.githubUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="font-mono text-xs text-muted-text hover:text-primary inline-flex items-center gap-1"
+                          className="px-4 py-2 border border-outline-variant bg-surface text-on-surface hover:text-primary hover:border-primary transition-colors flex items-center gap-1.5"
                         >
-                          <span>Source</span>
-                          <ArrowUpRight className="h-3 w-3" aria-hidden="true" />
+                          <Github className="h-3.5 w-3.5" />
+                          <span>Repository</span>
                         </a>
                       )}
                     </div>
-                  </article>
-                ))}
-              </div>
-            )}
-          </>
-        )}
-      </div>
+                  </div>
+
+                  {/* Right Column (4 cols): Metrics & Evidence Box */}
+                  <div className="lg:col-span-4 p-6 sm:p-8 bg-surface-container-low flex flex-col justify-between">
+                    <div>
+                      <div className="font-mono text-[11px] font-bold uppercase text-primary border-b border-outline-variant pb-2 mb-4">
+                        EMPIRICAL METRICS & EVIDENCE
+                      </div>
+
+                      {project.metrics && project.metrics.length > 0 ? (
+                        <div className="space-y-4">
+                          {project.metrics.map((m) => (
+                            <div key={m.label} className="border border-primary bg-surface p-3 stamp-shadow-sm">
+                              <div className="font-mono text-[10px] text-outline uppercase">{m.label}</div>
+                              <div className="font-headline text-2xl font-black text-primary my-0.5">
+                                {m.value}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="border border-outline-variant bg-surface p-4 font-mono text-[11px] text-on-surface-variant">
+                          Verified structural deliverable. Detailed metrics documented in full case study.
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="mt-6 pt-4 border-t border-outline-variant font-mono text-[10px] text-outline flex items-center justify-between">
+                      <span>DOC: VERIFIED SANITY RECORD</span>
+                      <Link href={`/work/${project.slug}`} className="text-primary font-bold hover:underline">
+                        EXPLORE →
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

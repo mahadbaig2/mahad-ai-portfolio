@@ -1,295 +1,298 @@
+import React from "react";
 import Link from "next/link";
-import { VisualPlaceholder } from "@/components/VisualPlaceholder";
-import type { Metadata } from "next";
-import { ArrowRight, ArrowUpRight, AudioLines, BookOpen, Code2, FileText, Mail } from "lucide-react";
+import { Metadata } from "next";
+import {
+  Github,
+  Linkedin,
+  BookOpen,
+  Mail,
+  FileText,
+  Terminal,
+  ArrowUpRight,
+  Download,
+  MapPin,
+  CheckCircle2,
+} from "lucide-react";
 import { getSiteSettings } from "@/lib/sanity/loadData";
 
 export const metadata: Metadata = {
-  title: "Contact | Mirza Mahad Baig",
-  description: "Direct contact channels, résumé links, and collaboration guidance for Mirza Mahad Baig.",
+  title: "Contact & Dispatch // Mirza Mahad Baig // AI Product Engineer",
+  description:
+    "Direct contact links, professional profiles, verified résumé, and recruiter inquiries for Mirza Mahad Baig.",
 };
 
 export default async function ContactPage() {
-  const settings = await getSiteSettings();
+  const siteSettings = await getSiteSettings();
+
+  const channels = [
+    {
+      name: "ELECTRONIC MAIL",
+      label: "PRIMARY INQUIRY",
+      value: siteSettings.email,
+      href: `mailto:${siteSettings.email}`,
+      description: "Direct transmission for confidential product specs, advisory briefs, and engineering inquiries.",
+      icon: Mail,
+      action: "SEND EMAIL",
+    },
+    {
+      name: "LINKEDIN NETWORK",
+      label: "PROFESSIONAL PROFILE",
+      value: "linkedin.com/in/mahadbaig",
+      href: siteSettings.linkedinUrl,
+      description: "Professional background, direct messaging, verified work recommendations, and updates.",
+      icon: Linkedin,
+      action: "CONNECT ON LINKEDIN",
+    },
+    {
+      name: "GITHUB ARCHIVE",
+      label: "SOURCE REPOSITORIES",
+      value: "github.com/mahadbaig2",
+      href: siteSettings.githubUrl,
+      description: "Open-source RAG pipelines, FastAPI backends, LangGraph agents, and Next.js frontend code.",
+      icon: Github,
+      action: "INSPECT REPOSITORIES",
+    },
+    {
+      name: "MEDIUM PUBLICATIONS",
+      label: "TECHNICAL MONOGRAPHS",
+      value: "medium.com/@mirza.mahad",
+      href: siteSettings.mediumUrl,
+      description: "In-depth system breakdowns, architectural trade-offs, and product design methodologies.",
+      icon: BookOpen,
+      action: "READ ARTICLES",
+    },
+  ];
 
   return (
-    <div className="flex flex-col w-full bg-paper min-h-screen">
-      {/* Top Section: Header & Quick Summary Grid */}
-      <section className="max-w-[1440px] mx-auto w-full px-5 md:px-10 lg:px-16 pt-12 pb-10 space-y-10">
-        <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-8">
-          <div className="max-w-3xl space-y-4">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-mint border border-hairline/60 font-mono text-xs text-primary">
-              <span className="w-2 h-2 rounded-full bg-primary animate-pulse" aria-hidden="true" />
-              <span>Direct Contact &amp; Collaboration</span>
+    <div className="w-full bg-background text-on-surface">
+      {/* Top System Marginalia Bar */}
+      <div className="w-full bg-surface-container border-b-[1.5px] border-primary px-6 py-2 flex flex-wrap justify-between items-center font-mono text-xs text-on-surface-variant overflow-x-auto gap-4">
+        <div className="flex items-center gap-3">
+          <span className="inline-block w-2 h-2 rounded-full bg-secondary animate-pulse" />
+          <span className="font-bold text-primary">SYS_STATUS: ACTIVE</span>
+          <span className="text-outline">·</span>
+          <span>LOCATION: ISLAMABAD, PK [33.6844° N, 73.0479° E]</span>
+        </div>
+        <div className="flex items-center gap-3 text-primary font-semibold">
+          <span>ENGAGEMENT: OPEN TO AI PRODUCT ROLES</span>
+          <span className="text-outline">·</span>
+          <span>RESPONSE: &lt; 24H SLA</span>
+        </div>
+      </div>
+
+      <div className="max-w-[1440px] mx-auto px-6 sm:px-8 py-10 sm:py-16 space-y-16">
+        {/* ========================================================================= */}
+        {/* HERO SECTION: INQUIRY DISPATCH                                            */}
+        {/* ========================================================================= */}
+        <section className="border-2 border-primary bg-surface-container-lowest p-6 sm:p-10 stamp-shadow">
+          <div className="flex flex-wrap justify-between items-center border-b border-outline-variant pb-4 mb-6 gap-2 font-mono text-xs text-on-surface-variant">
+            <div className="flex items-center gap-2">
+              <span className="px-2 py-0.5 bg-primary text-on-primary font-bold uppercase">
+                DISPATCH REF
+              </span>
+              <span className="text-primary font-semibold">
+                DOSSIER // 007 — DIRECT DISPATCH & INQUIRY CHANNELS
+              </span>
             </div>
-            <h1 className="font-serif text-4xl sm:text-5xl lg:text-[3.75rem] font-normal text-primary tracking-tight leading-[1.06]">
-              Let’s talk about a <span className="italic text-secondary">real problem</span>.
+            <div>STATUS: DIRECT TRANSMISSION OPEN</div>
+          </div>
+
+          <div className="max-w-4xl mb-8">
+            <h1 className="font-headline text-3xl sm:text-5xl lg:text-6xl font-black uppercase tracking-tight text-primary leading-tight mb-4">
+              Let&apos;s Talk About a Real Problem.
             </h1>
-            <p className="text-lg text-on-surface-variant max-w-2xl leading-relaxed">
-              Good work starts with a clear conversation. Reach out directly for AI Product Engineering roles, senior product design collaborations, or technical discussions about anything in this portfolio.
+            <p className="font-sans text-base sm:text-lg text-on-surface leading-relaxed max-w-3xl">
+              I’m open to AI Product Engineering, Applied AI, and technical product design opportunities where product judgment, user experience, and implementation depth both matter.
             </p>
           </div>
 
-          <div className="hidden lg:block max-w-xs bg-surface-white p-4 border-2 border-primary shadow-editorial-sm space-y-2">
-            <div className="font-serif text-lg font-medium text-primary">
-              {settings.authorName}
-            </div>
-            <div className="font-mono text-xs text-muted-text">{settings.location}</div>
-            <p className="text-xs text-on-surface-variant leading-relaxed">
-              Direct email and verified public links below—no third-party forms or intermediary queues required.
-            </p>
-          </div>
-        </div>
-
-        {/* Four-Cell Information Band */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-5 bg-surface-white border-2 border-primary shadow-editorial-sm">
-          <div className="p-3.5 rounded-xl bg-surface-container-low/70 space-y-1">
-            <div className="font-mono text-[11px] text-muted-text uppercase tracking-wider">
-              Location
-            </div>
-            <div className="text-base font-medium text-primary">{settings.location}</div>
-            <div className="font-mono text-xs text-muted-text">Remote-ready worldwide</div>
-          </div>
-
-          <div className="p-3.5 rounded-xl bg-surface-container-low/70 space-y-1">
-            <div className="font-mono text-[11px] text-muted-text uppercase tracking-wider">
-              Target Roles
-            </div>
-            <div className="text-base font-medium text-primary">
-              {settings.roleInterests?.[0] || "AI Product Engineer"}
-            </div>
-            <div className="font-mono text-xs text-muted-text">Product Design to AI Stack</div>
-          </div>
-
-          <div className="p-3.5 rounded-xl bg-surface-container-low/70 space-y-1">
-            <div className="font-mono text-[11px] text-muted-text uppercase tracking-wider">
-              Core Stack
-            </div>
-            <div className="text-base font-medium text-primary">
-              Next.js · FastAPI · RAG
-            </div>
-            <div className="font-mono text-xs text-muted-text">Design Systems, ONNX, LangGraph</div>
-          </div>
-
-          <div className="p-3.5 rounded-xl bg-surface-container-low/70 space-y-1">
-            <div className="font-mono text-[11px] text-muted-text uppercase tracking-wider">
-              Direct Email
-            </div>
-            <div className="text-base font-medium text-primary break-all select-all">
-              {settings.email}
-            </div>
-            <div className="font-mono text-xs text-muted-text">Preferred first contact</div>
-          </div>
-        </div>
-      </section>
-
-      {/* Primary Contact & Verified Channels Band */}
-      <section className="w-full bg-surface-container-low border-y border-hairline/70 py-14">
-        <div className="max-w-[1440px] mx-auto px-5 md:px-10 lg:px-16 space-y-8">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-3">
-            <div>
-              <h2 className="font-serif text-3xl sm:text-4xl font-normal text-primary mt-1">
-                Direct ways to connect
-              </h2>
-            </div>
-            <p className="text-sm text-muted-text max-w-md">
-              Choose the channel that works best for sharing context, viewing code, or reviewing experience.
-            </p>
-          </div>
-
-          {/* Primary Cards: Email + LinkedIn */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-surface-white p-7 sm:p-8 border-2 border-primary shadow-editorial-sm flex flex-col justify-between">
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <span className="inline-flex items-center gap-1.5 font-mono text-xs bg-sage text-primary px-3 py-1 rounded-full font-medium">
-                    <Mail className="h-3.5 w-3.5" aria-hidden="true" />
-                    <span>Direct Email</span>
-                  </span>
-                </div>
-                <h3 className="font-serif text-2xl font-normal text-primary mb-2">
-                  Tell me what you’re working on
-                </h3>
-                <p className="text-sm sm:text-base text-on-surface-variant mb-5 leading-relaxed">
-                  Best for role conversations, founding engineering opportunities, product architecture discussions, and direct briefs.
-                </p>
-                <div className="bg-paper p-3.5 rounded-lg border border-hairline/70 font-mono text-sm text-primary select-all break-all">
-                  {settings.email}
-                </div>
-              </div>
-              <div className="pt-6 mt-5 border-t border-hairline/60">
-                <a
-                  href={`mailto:${settings.email}`}
-                  className="inline-flex items-center gap-2 bg-primary-container text-on-primary hover:bg-primary px-5 py-2.5 rounded text-sm font-medium transition-colors"
-                >
-                  <span>Email {settings.email}</span>
-                  <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-                </a>
+          {/* Quick Status Meta Strip: 4-Column Technical Bar */}
+          <div className="grid grid-cols-1 md:grid-cols-4 border-2 border-primary divide-y md:divide-y-0 md:divide-x-2 divide-primary bg-surface font-mono text-xs">
+            <div className="p-4 flex flex-col justify-between">
+              <span className="text-outline mb-1 font-bold uppercase">COORDINATES</span>
+              <div className="font-bold text-primary flex items-center gap-1">
+                <MapPin className="h-3.5 w-3.5 text-primary shrink-0" />
+                <span>Islamabad, Pakistan [PK]</span>
               </div>
             </div>
 
-            <div className="bg-surface-white p-7 sm:p-8 border-2 border-primary shadow-editorial-sm flex flex-col justify-between">
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <span className="inline-flex items-center gap-1.5 font-mono text-xs bg-mint text-primary px-3 py-1 rounded-full font-medium">
-                    <span>Professional Profile</span>
-                  </span>
-                </div>
-                <h3 className="font-serif text-2xl font-normal text-primary mb-2">
-                  LinkedIn
-                </h3>
-                <p className="text-sm sm:text-base text-on-surface-variant mb-5 leading-relaxed">
-                  View chronological work history, role tenure, and connect directly for recruiting outreach.
-                </p>
-                <div className="bg-paper p-3.5 rounded-lg border border-hairline/70 font-mono text-xs sm:text-sm text-primary break-all">
-                  {settings.linkedinUrl}
-                </div>
-              </div>
-              <div className="pt-6 mt-5 border-t border-hairline/60">
-                <a
-                  href={settings.linkedinUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center gap-2 bg-primary-container text-on-primary hover:bg-primary px-5 py-2.5 rounded text-sm font-medium transition-colors"
-                >
-                  <span>Open LinkedIn</span>
-                  <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-                </a>
+            <div className="p-4 flex flex-col justify-between">
+              <span className="text-outline mb-1 font-bold uppercase">ENGAGEMENT WINDOW</span>
+              <div className="font-bold text-secondary flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-secondary shrink-0" />
+                <span>Open: AI Product Engineering</span>
               </div>
             </div>
-          </div>
 
-          {/* Secondary Cards: GitHub, Writing/Medium, Résumé / Photo */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-surface-white p-6 border-2 border-primary shadow-editorial-sm flex flex-col justify-between space-y-4">
-              <div className="space-y-2.5">
-                <div className="flex items-center justify-between font-mono text-xs text-muted-text uppercase">
-                  <span>Repositories</span>
-                  <Code2 className="h-4 w-4 text-secondary" aria-hidden="true" />
-                </div>
-                <h3 className="font-serif text-xl font-medium text-primary">GitHub</h3>
-                <p className="text-sm text-on-surface-variant leading-relaxed">
-                  Inspect source code for Talk to Mahad, evaluation harnesses, pipelines, and full-stack projects.
-                </p>
+            <div className="p-4 flex flex-col justify-between">
+              <span className="text-outline mb-1 font-bold uppercase">CORE OPERATING DOMAINS</span>
+              <div className="font-semibold text-primary truncate">
+                AI Prod Eng, Applied AI, UX Systems
               </div>
+            </div>
+
+            <div className="p-4 flex flex-col justify-between bg-surface-container-low">
+              <span className="text-outline mb-1 font-bold uppercase">PRIMARY INBOX</span>
               <a
-                href={settings.githubUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:text-primary-container pt-3 border-t border-hairline/50"
+                href={`mailto:${siteSettings.email}`}
+                className="font-bold text-primary hover:underline truncate"
               >
-                <span>Open GitHub</span>
-                <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+                {siteSettings.email}
               </a>
             </div>
+          </div>
+        </section>
 
-            <div className="bg-surface-white p-6 border-2 border-primary shadow-editorial-sm flex flex-col justify-between space-y-4">
-              <div className="space-y-2.5">
-                <div className="flex items-center justify-between font-mono text-xs text-muted-text uppercase">
-                  <span>Publications</span>
-                  <BookOpen className="h-4 w-4 text-secondary" aria-hidden="true" />
-                </div>
-                <h3 className="font-serif text-xl font-medium text-primary">Writing &amp; Medium</h3>
-                <p className="text-sm text-on-surface-variant leading-relaxed">
-                  Read architecture notes and essays on product design, ONNX routing, and observability.
-                </p>
-              </div>
-              <div className="pt-3 border-t border-hairline/50 flex flex-wrap gap-4">
-                <Link
-                  href="/writing"
-                  className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:text-primary-container"
+        {/* ========================================================================= */}
+        {/* SECTION 1: VERIFIED TRANSMISSION CHANNELS (BENTO GRID)                     */}
+        {/* ========================================================================= */}
+        <section className="space-y-6">
+          <div className="flex items-center justify-between border-b-2 border-primary pb-3 font-mono text-xs">
+            <span className="font-bold text-primary uppercase">01 // VERIFIED TRANSMISSION CHANNELS</span>
+            <span className="text-on-surface-variant">[SLA: &lt; 24H DIRECT ASYNC]</span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {channels.map((ch) => {
+              const Icon = ch.icon;
+              return (
+                <div
+                  key={ch.name}
+                  className="border-2 border-primary bg-surface-container-lowest p-6 sm:p-8 flex flex-col justify-between stamp-shadow hover:translate-x-[2px] hover:translate-y-[2px] transition-transform"
                 >
-                  <span>Writing Index</span>
-                  <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-                </Link>
-                {settings.mediumUrl && (
+                  <div>
+                    <div className="flex justify-between items-start border-b border-outline-variant pb-3 mb-4 font-mono text-xs">
+                      <div className="flex items-center gap-2 font-bold text-primary">
+                        <Icon className="h-4 w-4" />
+                        <span>{ch.name}</span>
+                      </div>
+                      <span className="px-2 py-0.5 bg-surface-container border border-outline-variant text-[10px] text-outline uppercase font-semibold">
+                        {ch.label}
+                      </span>
+                    </div>
+
+                    <p className="font-sans text-sm text-on-surface-variant mb-4 leading-relaxed">
+                      {ch.description}
+                    </p>
+
+                    <div className="p-3 bg-surface-container border border-outline-variant font-mono text-xs text-primary font-bold mb-6">
+                      {ch.value}
+                    </div>
+                  </div>
+
                   <a
-                    href={settings.mediumUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-1 text-sm font-medium text-secondary hover:text-primary"
+                    href={ch.href}
+                    target={ch.href.startsWith("http") ? "_blank" : undefined}
+                    rel={ch.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                    className="px-5 py-2.5 bg-primary text-on-primary font-mono text-xs font-bold uppercase flex items-center justify-between hover:bg-tertiary-container transition-colors tracking-wider stamp-shadow-sm"
                   >
-                    <span>Medium</span>
-                    <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
+                    <span>{ch.action}</span>
+                    <ArrowUpRight className="h-4 w-4" />
                   </a>
-                )}
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* ========================================================================= */}
+        {/* SECTION 2: VERIFIED RÉSUMÉ DOSSIER                                        */}
+        {/* ========================================================================= */}
+        <section className="border-2 border-primary bg-surface p-6 sm:p-10 stamp-shadow" id="resume">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+            <div className="max-w-2xl">
+              <div className="font-mono text-xs font-bold text-tertiary-container uppercase mb-2">
+                02 // VERIFIED RÉSUMÉ DOSSIER
               </div>
+              <h2 className="font-headline text-2xl sm:text-3xl font-black uppercase text-primary mb-2">
+                Mirza Mahad Baig — AI Product Engineering Résumé
+              </h2>
+              <p className="font-sans text-sm text-on-surface-variant leading-relaxed">
+                Comprehensive one-page technical curriculum vitae detailing ~6 years of product design, multi-tenant SaaS architecture (500+ Busyfile screens), RAG retrieval pipelines, and full-stack implementations.
+              </p>
             </div>
 
-            <div id="resume" className="scroll-mt-20 bg-surface-white p-6 border-2 border-primary shadow-editorial-sm flex flex-col justify-between space-y-4">
-              <div className="space-y-2.5">
-                <div className="flex items-center justify-between font-mono text-xs text-muted-text uppercase">
-                  <span>Credentials &amp; Context</span>
-                  <FileText className="h-4 w-4 text-secondary" aria-hidden="true" />
-                </div>
-                <h3 className="font-serif text-xl font-medium text-primary">
-                  {settings.resumePdfUrl ? "Résumé PDF" : "Background & Assistant"}
-                </h3>
-                <p className="text-sm text-on-surface-variant leading-relaxed">
-                  Review full experience, education, or ask the portfolio assistant specific diligence questions.
+            <div className="shrink-0 flex flex-col sm:flex-row gap-3 font-mono text-xs">
+              {siteSettings.resumePdfUrl ? (
+                <a
+                  href={siteSettings.resumePdfUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-6 py-3 bg-tertiary-container text-on-tertiary font-bold uppercase flex items-center gap-2 stamp-shadow-sm hover:translate-x-[1px] hover:translate-y-[1px] transition-transform"
+                >
+                  <Download className="h-4 w-4" />
+                  <span>Download Résumé (PDF)</span>
+                </a>
+              ) : (
+                <a
+                  href={`mailto:${siteSettings.email}?subject=Resume%20Request%20-%20Mirza%20Mahad%20Baig`}
+                  className="px-6 py-3 bg-primary text-on-primary font-bold uppercase flex items-center gap-2 stamp-shadow-sm hover:translate-x-[1px] hover:translate-y-[1px] transition-transform"
+                >
+                  <Mail className="h-4 w-4" />
+                  <span>Request Résumé via Email</span>
+                </a>
+              )}
+            </div>
+          </div>
+        </section>
+
+        {/* ========================================================================= */}
+        {/* SECTION 3: RECRUITER ASSISTANT INQUIRY PROMPTS                            */}
+        {/* ========================================================================= */}
+        <section className="border-2 border-primary bg-surface-container-low p-6 sm:p-10 stamp-shadow">
+          <div className="font-mono text-xs font-bold text-secondary uppercase mb-2 flex items-center gap-2">
+            <Terminal className="h-4 w-4 text-secondary" />
+            <span>03 // ASSISTANT SCREENING PROMPTS FOR RECRUITERS & FOUNDERS</span>
+          </div>
+          <h2 className="font-headline text-2xl sm:text-3xl font-black uppercase text-primary mb-4">
+            Screen My Background Interactively
+          </h2>
+          <p className="font-sans text-sm text-on-surface-variant mb-6 max-w-3xl leading-relaxed">
+            Short on time? You can question my grounded AI assistant directly. It answers using strictly indexed Sanity documents with precise citation references:
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono text-xs">
+            <Link
+              href="/chat?q=Summarize Mahad's 6 years of product design and UI/UX experience."
+              className="p-4 border-2 border-primary bg-surface hover:bg-surface-container transition-colors flex flex-col justify-between stamp-shadow-sm"
+            >
+              <div>
+                <span className="font-bold text-primary block mb-2">FOR DESIGN LEADERS:</span>
+                <p className="font-sans text-xs text-on-surface-variant">
+                  &quot;Summarize Mahad&apos;s product design and UI/UX experience across complex SaaS.&quot;
                 </p>
               </div>
-              <div className="pt-3 border-t border-hairline/50 flex flex-wrap gap-4">
-                {settings.resumePdfUrl ? (
-                  <a
-                    href={settings.resumePdfUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:text-primary-container"
-                  >
-                    <span>Open Résumé</span>
-                    <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
-                  </a>
-                ) : (
-                  <Link
-                    href="/about"
-                    className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:text-primary-container"
-                  >
-                    <span>About &amp; Track Record</span>
-                    <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-                  </Link>
-                )}
+              <span className="text-secondary font-bold pt-3 block">Ask Assistant →</span>
+            </Link>
+
+            <Link
+              href="/chat?q=What are Mahad's technical skills in RAG, LangGraph, and ML query routing?"
+              className="p-4 border-2 border-primary bg-surface hover:bg-surface-container transition-colors flex flex-col justify-between stamp-shadow-sm"
+            >
+              <div>
+                <span className="font-bold text-primary block mb-2">FOR AI & ENG MANAGERS:</span>
+                <p className="font-sans text-xs text-on-surface-variant">
+                  &quot;What are Mahad&apos;s technical skills in RAG, LangGraph, and ML query routing?&quot;
+                </p>
               </div>
-            </div>
-          </div>
-        </div>
-      </section>
+              <span className="text-secondary font-bold pt-3 block">Ask Assistant →</span>
+            </Link>
 
-      {/* Bottom Fast-Signal / Photo Split */}
-      <section className="max-w-[1440px] mx-auto w-full px-5 md:px-10 lg:px-16 py-14">
-        <div className="bg-primary text-on-primary rounded-2xl p-8 sm:p-12 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center shadow-editorial">
-          <div className="lg:col-span-7 space-y-4">
-            <h2 className="font-serif text-3xl sm:text-4xl font-normal">
-              Evaluating fit? Inspect the work or ask the assistant directly.
-            </h2>
-            <p className="text-base text-on-primary-container leading-relaxed max-w-xl">
-              Skip introductory back-and-forth by jumping straight to case studies or querying the grounded AI portfolio assistant.
-            </p>
-            <div className="flex flex-wrap gap-3 pt-2">
-              <Link
-                href="/work"
-                className="inline-flex items-center gap-2 bg-secondary-fixed text-on-secondary-fixed px-5 py-2.5 rounded text-sm font-semibold hover:bg-surface-white transition-colors"
-              >
-                <span>Browse Work Archive</span>
-                <ArrowRight className="h-4 w-4" aria-hidden="true" />
-              </Link>
-              <Link
-                href="/chat"
-                className="inline-flex items-center gap-2 bg-primary-container text-on-primary px-5 py-2.5 rounded text-sm font-medium hover:bg-tertiary-container transition-colors border border-white/15"
-              >
-                <AudioLines className="h-4 w-4 text-secondary-fixed" aria-hidden="true" />
-                <span>Talk to Mahad</span>
-              </Link>
-            </div>
+            <Link
+              href="/chat?q=Why does Mahad position himself as an AI Product Engineer rather than just a designer or developer?"
+              className="p-4 border-2 border-primary bg-surface hover:bg-surface-container transition-colors flex flex-col justify-between stamp-shadow-sm"
+            >
+              <div>
+                <span className="font-bold text-primary block mb-2">FOR FOUNDERS & EXECS:</span>
+                <p className="font-sans text-xs text-on-surface-variant">
+                  &quot;Why does Mahad position himself as an AI Product Engineer rather than just a designer?&quot;
+                </p>
+              </div>
+              <span className="text-secondary font-bold pt-3 block">Ask Assistant →</span>
+            </Link>
           </div>
-
-          <div className="lg:col-span-5">
-            <div className="relative aspect-[4/3] rounded-xl overflow-hidden border border-white/15">
-              <VisualPlaceholder label="a travel photograph" />
-            </div>
-          </div>
-        </div>
-      </section>
+        </section>
+      </div>
     </div>
   );
 }

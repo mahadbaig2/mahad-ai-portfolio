@@ -1,202 +1,196 @@
+import React from "react";
 import Link from "next/link";
-import type { Metadata } from "next";
-import { VisualPlaceholder } from "@/components/VisualPlaceholder";
-import { ArrowRight, ArrowUpRight, BookOpen } from "lucide-react";
+import { Metadata } from "next";
+import { ArrowUpRight, FileText, Terminal, BookOpen } from "lucide-react";
 import { getArticles } from "@/lib/sanity/loadData";
-import { urlForImage } from "@/lib/sanity/image";
 
 export const metadata: Metadata = {
-  title: "Writing | Mirza Mahad Baig",
-  description: "Essays, engineering breakdowns, and notes on product design and applied AI.",
+  title: "Writing & Monographs | Mirza Mahad Baig // AI Product Engineer",
+  description:
+    "Engineering essays, system breakdowns, product notes, and architecture decisions by Mirza Mahad Baig.",
 };
 
 export default async function WritingPage() {
   const articles = await getArticles();
-  const [featured, ...rest] = articles;
-  const featuredHero = featured?.heroImage
-    ? urlForImage(featured.heroImage)?.width(1000).url()
-    : null;
+  const featuredArticle = articles[0];
+  const remainingArticles = articles.slice(1);
 
   return (
-    <div className="flex flex-col w-full bg-paper min-h-screen">
-      <div className="max-w-[1440px] mx-auto w-full px-5 md:px-10 lg:px-16 py-12 lg:py-16 space-y-12">
-        {/* Hero Editorial Section */}
-        <section className="space-y-5">
-          <h1 className="font-serif text-4xl sm:text-5xl lg:text-[4rem] font-normal text-primary tracking-tight leading-[1.08] max-w-4xl">
-            Notes from building between product and AI.
-          </h1>
+    <div className="w-full bg-background text-on-surface">
+      {/* Top Metadata Ticker */}
+      <div className="w-full bg-surface-container border-b-[1.5px] border-primary px-6 py-2 flex flex-wrap justify-between items-center font-mono text-xs text-on-surface-variant overflow-x-auto gap-4">
+        <div className="flex items-center gap-3">
+          <span className="font-bold text-primary">MONOGRAPH SERIES: #003</span>
+          <span>·</span>
+          <span>DISPATCHES ON APPLIED AI & SYSTEMS DESIGN</span>
+        </div>
+        <div className="flex items-center gap-3">
+          <span>LOC: ISLAMABAD [33.6844° N, 73.0479° E]</span>
+          <span>·</span>
+          <span className="text-secondary font-bold">STATUS: PUBLISHED RECORDS</span>
+        </div>
+      </div>
 
+      <div className="max-w-[1440px] mx-auto px-6 sm:px-8 py-10 sm:py-16 space-y-16">
+        {/* ========================================================================= */}
+        {/* HERO PUBLICATION HEADER                                                   */}
+        {/* ========================================================================= */}
+        <section className="border-2 border-primary bg-surface p-6 sm:p-10 stamp-shadow">
+          <div className="flex flex-col lg:grid lg:grid-cols-12 gap-8 items-start lg:items-end">
+            <div className="lg:col-span-8">
+              <div className="font-mono text-xs font-bold text-secondary uppercase tracking-widest mb-3 flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-secondary inline-block animate-pulse" />
+                <span>ENGINEERING & ARCHITECTURAL DISPATCHES</span>
+              </div>
+              <h1 className="font-headline text-3xl sm:text-5xl lg:text-6xl font-black text-primary uppercase tracking-tight leading-tight">
+                Notes From Building Between Product and AI.
+              </h1>
+            </div>
+            <div className="lg:col-span-4 lg:border-l-2 border-outline-variant lg:pl-8 space-y-3 font-mono text-xs">
+              <p className="font-sans text-sm text-on-surface-variant leading-relaxed">
+                Essays, system breakdowns, product analysis, architecture decisions, and verified lessons from engineering AI systems under real constraints.
+              </p>
+              <div className="pt-3 border-t border-outline-variant text-[11px] text-outline">
+                FORMAT: LONG-FORM SPECIFICATION & EVIDENCE
+              </div>
+            </div>
+          </div>
         </section>
 
-        {/* Featured Article Split Card */}
-        {featured && (
-          <article className="bg-surface-white border-2 border-primary shadow-editorial-sm overflow-hidden p-6 lg:p-10">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-              <div className="lg:col-span-7 flex flex-col justify-between space-y-5">
-                <div className="space-y-4">
-                  <div className="flex flex-wrap items-center gap-3 font-mono text-xs">
-                    <span className="px-2.5 py-1 rounded bg-sage text-primary font-medium">
-                      Featured Essay
-                    </span>
-                    <span className="text-muted-text">{featured.publishedAt}</span>
-                    {featured.readingTime && (
-                      <>
-                        <span className="text-hairline" aria-hidden="true">•</span>
-                        <span className="text-muted-text">{featured.readingTime}</span>
-                      </>
-                    )}
-                  </div>
-
-                  <h2 className="font-serif text-3xl sm:text-4xl font-normal text-primary tracking-tight">
-                    <Link
-                      href={`/writing/${featured.slug}`}
-                      className="hover:text-primary-container transition-colors"
-                    >
-                      {featured.title}
-                    </Link>
-                  </h2>
-
-                  <p className="text-base text-on-surface-variant leading-relaxed">
-                    {featured.summary}
-                  </p>
-
-                  {featured.topics && featured.topics.length > 0 && (
-                    <div className="flex flex-wrap gap-2 pt-1">
-                      {featured.topics.map((topic) => (
-                        <span
-                          key={topic}
-                          className="font-mono text-xs bg-mint text-primary px-2.5 py-1 rounded"
-                        >
-                          {topic}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                <div className="pt-2 flex flex-wrap items-center gap-3">
-                  <Link
-                    href={`/writing/${featured.slug}`}
-                    className="inline-flex items-center gap-2 bg-primary-container text-on-primary hover:bg-primary transition-colors px-5 py-2.5 rounded text-sm font-medium shadow-editorial-sm"
-                  >
-                    <span>Read full article</span>
-                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                  </Link>
-                </div>
+        {/* ========================================================================= */}
+        {/* FEATURED MONOGRAPH SPREAD                                                 */}
+        {/* ========================================================================= */}
+        {featuredArticle && (
+          <section className="border-2 border-primary bg-surface-container-lowest stamp-shadow">
+            {/* Header Ribbon */}
+            <div className="border-b-2 border-primary bg-surface-container px-6 py-2.5 flex flex-wrap items-center justify-between gap-3 font-mono text-xs">
+              <div className="flex items-center gap-2 font-bold text-primary uppercase">
+                <span className="w-2 h-2 bg-primary" />
+                <span>FEATURED MONOGRAPH // ISSUE 01</span>
               </div>
-
-              <div className="lg:col-span-5 flex flex-col justify-between bg-charcoal-gutter text-surface-white rounded-xl p-6">
-                {featuredHero ? (
-                  <div className="relative w-full h-56 rounded-lg overflow-hidden mb-4">
-                    <VisualPlaceholder label={`${featured.title} article imagery`} />
-                  </div>
-                ) : (
-                  <div className="space-y-4 my-auto">
-                    <div className="flex items-center justify-between font-mono text-xs text-secondary-fixed pb-3 border-b border-white/10">
-                      <span className="inline-flex items-center gap-1.5">
-                        <BookOpen className="h-3.5 w-3.5" aria-hidden="true" />
-                        <span>Monograph // 01</span>
-                      </span>
-                      <span>{featured.readingTime}</span>
-                    </div>
-                    <p className="font-serif text-xl sm:text-2xl italic text-surface-white leading-snug">
-                      “{featured.keyTakeaway || featured.summary}”
-                    </p>
-                  </div>
-                )}
-                <div className="pt-4 border-t border-white/10 font-mono text-xs text-on-primary-container">
-                  Slug: /writing/{featured.slug}
-                </div>
+              <div className="flex items-center gap-3 text-on-surface-variant">
+                <span>{featuredArticle.publishedAt}</span>
+                <span>·</span>
+                <span>{featuredArticle.readingTime}</span>
               </div>
             </div>
-          </article>
-        )}
 
-        {/* Chronological Index of Remaining Articles */}
-        {rest.length > 0 && (
-          <section className="space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 pb-2 border-b border-hairline">
+            {/* Content Spread */}
+            <div className="p-6 sm:p-10 flex flex-col justify-between space-y-6">
               <div>
-                <span className="font-mono text-xs text-muted-text uppercase tracking-wider block">
-                  Archive // All Essays &amp; Breakdowns
-                </span>
-                <h2 className="font-serif text-2xl sm:text-3xl font-normal text-primary mt-1">
-                  Chronological Index
+                <div className="inline-flex items-center gap-2 px-2.5 py-0.5 border border-primary bg-surface-container font-mono text-[10px] font-bold text-primary uppercase mb-4">
+                  <span className="w-1.5 h-1.5 bg-secondary rounded-full" />
+                  <span>{featuredArticle.articleType?.replace(/_/g, " ") || "SYSTEM BREAKDOWN"}</span>
+                </div>
+
+                <h2 className="font-headline text-2xl sm:text-4xl font-black uppercase text-primary leading-tight mb-4">
+                  <Link href={`/writing/${featuredArticle.slug}`} className="hover:underline">
+                    {featuredArticle.title}
+                  </Link>
                 </h2>
+
+                <div className="pl-4 border-l-4 border-tertiary-container bg-surface-container-low py-3 pr-4 font-sans text-sm sm:text-base text-on-surface leading-relaxed mb-6">
+                  <span className="font-mono font-bold text-xs block uppercase tracking-wider text-tertiary-container mb-1">
+                    THESIS ABSTRACT:
+                  </span>
+                  {featuredArticle.summary}
+                </div>
+
+                <div className="flex flex-wrap gap-2 mb-6">
+                  {featuredArticle.topics.map((t) => (
+                    <span
+                      key={t}
+                      className="border border-outline-variant bg-surface px-2 py-0.5 font-mono text-[11px] font-bold text-primary"
+                    >
+                      #{t}
+                    </span>
+                  ))}
+                </div>
               </div>
-              <span className="font-mono text-xs text-muted-text">
-                {articles.length} published notes
-              </span>
-            </div>
 
-            <div className="space-y-4">
-              {rest.map((article, idx) => (
-                <article
-                  key={article.slug}
-                  className="bg-surface-white border-2 border-primary p-6 lg:p-8 shadow-editorial-sm hover:shadow-editorial transition-shadow group"
+              <div className="flex flex-wrap items-center justify-between border-t border-outline-variant pt-4 gap-4 font-mono text-xs">
+                <Link
+                  href={`/writing/${featuredArticle.slug}`}
+                  className="px-6 py-3 bg-tertiary-container text-on-tertiary font-bold flex items-center gap-2 stamp-shadow-sm hover:translate-x-[1px] hover:translate-y-[1px] transition-transform uppercase"
                 >
-                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
-                    <div className="lg:col-span-3 space-y-1 font-mono text-xs">
-                      <div className="text-primary font-medium">
-                        NOTE // {String(idx + 2).padStart(2, "0")}
-                      </div>
-                      <div className="text-muted-text">
-                        {article.publishedAt}
-                        {article.readingTime ? ` · ${article.readingTime}` : ""}
-                      </div>
-                    </div>
-
-                    <div className="lg:col-span-7 space-y-2.5">
-                      <h3 className="font-serif text-2xl font-normal text-primary group-hover:text-primary-container transition-colors">
-                        <Link href={`/writing/${article.slug}`}>{article.title}</Link>
-                      </h3>
-                      <p className="text-sm sm:text-base text-on-surface-variant leading-relaxed">
-                        {article.summary}
-                      </p>
-                      {article.topics && article.topics.length > 0 && (
-                        <div className="flex flex-wrap gap-1.5 pt-1">
-                          {article.topics.map((topic) => (
-                            <span
-                              key={topic}
-                              className="font-mono text-xs bg-mint text-primary px-2.5 py-0.5 rounded"
-                            >
-                              {topic}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="lg:col-span-2 lg:text-right pt-1 lg:pt-0">
-                      <Link
-                        href={`/writing/${article.slug}`}
-                        className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:text-primary-container transition-colors"
-                      >
-                        <span>Read article</span>
-                        <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-                      </Link>
-                    </div>
-                  </div>
-                </article>
-              ))}
+                  <span>Read Full Monograph</span>
+                  <ArrowUpRight className="h-4 w-4" />
+                </Link>
+                {featuredArticle.canonicalUrl && (
+                  <a
+                    href={featuredArticle.canonicalUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1 font-semibold"
+                  >
+                    <span>Canonical Publication ↗</span>
+                  </a>
+                )}
+              </div>
             </div>
           </section>
         )}
 
-        {/* Deep Forest Assistant Query Banner */}
-        <section className="bg-primary text-on-primary rounded-2xl p-8 sm:p-12 shadow-editorial flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
-          <div className="space-y-3 max-w-2xl">
-            <h2 className="font-serif text-3xl sm:text-4xl font-normal text-on-primary">
-              Have a question about these articles?
-            </h2>
+        {/* ========================================================================= */}
+        {/* ARCHIVE PUBLICATIONS GRID                                                 */}
+        {/* ========================================================================= */}
+        <section className="space-y-6">
+          <div className="flex items-center justify-between border-b-2 border-primary pb-3 font-mono text-xs">
+            <span className="font-bold text-primary uppercase">ARCHIVAL ARTICLES ({articles.length})</span>
+            <span className="text-on-surface-variant">FORMAT: PEER-ACCESSIBLE DOSSIER</span>
           </div>
-          <Link
-            href="/chat"
-            className="inline-flex items-center gap-2 bg-secondary-fixed text-on-secondary-fixed px-6 py-3 rounded text-sm font-semibold hover:bg-surface-white transition-colors shrink-0"
-          >
-            <span>Open Assistant</span>
-            <ArrowRight className="h-4 w-4" aria-hidden="true" />
-          </Link>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {remainingArticles.map((article, idx) => (
+              <article
+                key={article.slug}
+                className="border-2 border-primary bg-surface-container-lowest p-6 sm:p-8 flex flex-col justify-between stamp-shadow hover:translate-x-[2px] hover:translate-y-[2px] transition-transform"
+              >
+                <div>
+                  <div className="flex items-center justify-between font-mono text-xs text-outline border-b border-outline-variant pb-2 mb-4">
+                    <span>INDEX // 0{idx + 2}</span>
+                    <span>{article.readingTime}</span>
+                  </div>
+
+                  <div className="font-mono text-[10px] text-secondary font-bold uppercase mb-2">
+                    {article.articleType?.replace(/_/g, " ") || "TECHNICAL MONOGRAPH"}
+                  </div>
+
+                  <h3 className="font-headline text-xl sm:text-2xl font-black uppercase text-primary leading-tight mb-3">
+                    <Link href={`/writing/${article.slug}`} className="hover:underline">
+                      {article.title}
+                    </Link>
+                  </h3>
+
+                  <p className="font-sans text-xs sm:text-sm text-on-surface-variant leading-relaxed mb-6">
+                    {article.summary}
+                  </p>
+
+                  <div className="flex flex-wrap gap-1.5 mb-6">
+                    {article.topics.map((t) => (
+                      <span
+                        key={t}
+                        className="px-2 py-0.5 bg-surface-container border border-outline-variant font-mono text-[10px] font-bold text-primary"
+                      >
+                        #{t}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="border-t border-outline-variant pt-4 flex items-center justify-between font-mono text-xs">
+                  <span className="text-on-surface-variant">{article.publishedAt}</span>
+                  <Link
+                    href={`/writing/${article.slug}`}
+                    className="font-bold text-primary hover:text-tertiary-container flex items-center gap-1 uppercase"
+                  >
+                    <span>Read Article</span>
+                    <ArrowUpRight className="h-3.5 w-3.5" />
+                  </Link>
+                </div>
+              </article>
+            ))}
+          </div>
         </section>
       </div>
     </div>
